@@ -15,7 +15,7 @@
 #' pre-existing database. Default is True.
 #' @param verbose Default is FALSE
 #' @return Returns `NULL`, invisibly. 
-#' @importFrom Biobase testBioCConnection
+#' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
@@ -26,9 +26,10 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
     cacheDir <- get("BulkSignalR_CACHEDIR")
     resourcesCacheDir <- paste(cacheDir, "resources", sep = "/")
 
-    www <- Biobase::testBioCConnection()
-
-    if (!www & 
+    hasInternet <- tryCatch(expr={curl::has_internet()}, 
+        error = FALSE)
+    
+    if (!hasInternet & 
     !file.exists(resourcesCacheDir)) {
         cli::cli_alert_danger("Your internet connection is off :")
         stop(
@@ -36,7 +37,7 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
         )   
     }
 
-    if (!www & 
+    if (!hasInternet & 
         onRequest) {
         cli::cli_alert_danger("Your internet connection is off :")
         stop(

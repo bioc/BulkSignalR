@@ -9,7 +9,7 @@
 #' @return Returns `NULL`, invisibly. 
 #' 
 #' @import httr
-#' @importFrom Biobase testBioCConnection
+#' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
@@ -25,8 +25,10 @@ createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
     # databaseFilePath <- paste(databaseCacheDir
     #    ,basename(url)
     #    ,sep = "/")
-    www <- Biobase::testBioCConnection()
-    if (!www & 
+    hasInternet <- tryCatch(expr={curl::has_internet()}, 
+        error = FALSE)
+
+    if (!hasInternet & 
         !file.exists(databaseCacheDir)) {
         cli::cli_alert_danger("Your internet connection is off :")
         stop(
@@ -34,7 +36,7 @@ createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
         )   
     }
 
-    if (!www & 
+    if (!hasInternet & 
         onRequest) {
         cli::cli_alert_danger("Your internet connection is off :")
         stop(

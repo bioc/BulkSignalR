@@ -202,7 +202,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #' @importFrom cli cli_alert_danger cli_alert cli_alert_info
 #' @importFrom cli cli_inform
 #' @import BiocFileCache httr
-#' @importFrom Biobase testBioCConnection
+#' @importFrom curl has_internet
 #' @return Returns `NULL`, invisibly. 
 #'
 #' @export
@@ -234,7 +234,10 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
     word <- ifelse(dir == "resources", "have", "has")
     word2 <- ifelse(dir == "resources", "are", "is")
 
-    if (Biobase::testBioCConnection()) {
+    hasInternet <- tryCatch(expr={curl::has_internet()}, 
+        error = FALSE)
+    
+    if (hasInternet) {
 
         bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
 

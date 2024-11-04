@@ -1,11 +1,7 @@
 .onLoad <- function(...) {
-    ############################
-    ##        Database        ##
-    ############################
-
+    
     # handle directory creation over different OS
-    # same as tools::R_user_dir("BulkSignalR", which="cache")
-    cacheDir <- rappdirs::user_cache_dir("R/BulkSignalR")
+    cacheDir <- tools::R_user_dir("BulkSignalR", which="cache")
 
     nameEnv <- "SignalR-Env"
     myEnv <- new.env(parent = emptyenv()) # globalenv() #emptyenv() #baseenv()
@@ -58,14 +54,4 @@
         envir = as.environment(nameEnv))
     assign("BulkSignalR_Network", BulkSignalR_Network, 
         envir = as.environment(nameEnv))
-}
-
-.onAttach <- function(libname, pkgname) {
-    startupMsg <- r"{
-    ################################
-    ### Welcome to BulkSignalR ! ###
-    ################################
-}"
-
-    packageStartupMessage(startupMsg)
 }
