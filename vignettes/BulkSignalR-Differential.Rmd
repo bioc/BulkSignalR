@@ -23,6 +23,7 @@ output:
       fig_width: 3
       fig_caption: no
       code_folding: show
+package: BulkSignalR
 vignette: >
   %\VignetteIndexEntry{BulkSignalR-Differential}
   %\VignetteEngine{knitr::rmarkdown}
@@ -44,7 +45,6 @@ library(igraph)
 library(dplyr)
 ```
 
-BulkSignalR package version: `r packageVersion("BulkSignalR")`
 
 ## Differential mode 
 

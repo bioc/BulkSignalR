@@ -36,6 +36,7 @@ output:
       fig_width: 3
       fig_caption: no
       code_folding: show
+package: BulkSignalR
 vignette: >
   %\VignetteIndexEntry{BulkSignalR-Main}
   %\VignetteEngine{knitr::rmarkdown}
