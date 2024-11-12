@@ -47,7 +47,87 @@ resetLRdb <- function(db, switch = FALSE) {
     return(invisible(NULL))
 } # resetLRdb
 
+#' Internal function to check and extract
+#' counts matrix if a more complex object
+#' is given as parameter.
+#'
+#' @param counts A table or matrix of read counts.
+#' It can also be a SummarizedExperiment or SpatialExperiment
+#' object from which counts matrix are extracted.
+#' See \code{\link{prepareDataset}}.
+#' @param symbol.col The index of the column containing the gene symbols in case
+#' those are not the row names of \code{counts} already. In a
+#' SpatialExperiment object, the index in the dafaframe returned by rowData().
+#' @param x.col In a SpatialExperiment object, the index of the column
+#' containing x coordinates in the dafaframe returned by rowData(), usually 
+#' named array_row
+#' @param y.col  In a SpatialExperiment object, the index of the column
+#' containing y coordinates in the dafaframe returned by rowData(), usually 
+#' named array_col
+#' @param barcodeID.col   In a SpatialExperiment object, the index of the column
+#' containing barcodeID in the dafaframe returned by colData(), usually named
+#' barcode_id
+#'
+#' @return A matrix of counts
+#'
+#' @import SummarizedExperiment
+#' @import SpatialExperiment
+#' @keywords internal
+.checkInteroperabilityForCounts <- function(counts,
+    symbol.col,x.col,y.col,barcodeID.col) {
+   
+    countsChecked <- NULL 
+    # will be true for SpatialExperiment also
 
+        if(as.character(class(counts))=="SummarizedExperiment"){
+
+            if(length(assays(counts))>1){
+                stop("Only one assay should be defined.")
+            }
+            countsChecked <- assays(counts)[[1]]
+            if(!is.null(symbol.col)){
+                rownames(countsChecked) <- rowData(counts)[[symbol.col]]
+            }
+        }
+
+        else if(as.character(class(counts))=="SpatialExperiment"){
+
+            if(length(assays(counts))>1){
+                stop("Only one assay should be defined.")
+            }
+
+            if (!is.numeric(x.col) || !is.numeric(y.col) ) {
+                stop("x.col or y.col values are not numerics.")
+            }
+            if (is.null(barcodeID.col)) {
+                stop("barcodeID.col should be defined.")
+            }
+            countsChecked <- as.matrix(assays(counts)[[1]])
+            if(!is.null(symbol.col)){
+                rownames(countsChecked) <- rowData(counts)[[symbol.col]]
+            }
+
+            colData(counts)$idSpatial <- paste(colData(counts)[[x.col]],
+                colData(counts)[[y.col]],sep = "x")
+
+            # Match and re-order cols 
+            ord <- match(colnames(countsChecked), 
+                colData(counts)[[barcodeID.col]]) 
+             if(sum(is.na(ord))>0){
+                stop("Some barcodeIDs are missing...")
+            }
+            countsChecked <- countsChecked[,ord]
+
+            if (!all(colnames(countsChecked) == colData(counts)[[barcodeID.col]]))
+                stop("BarcodeIDs are not well ordered.", call. = FALSE)
+
+            colnames(countsChecked) <- colData(counts)[["idSpatial"]]
+        }
+
+    else {countsChecked <- counts}
+    
+    return(countsChecked)
+} # .checkInteroperabilityForCounts
 
 #' Prepare a BSRDataModel object from expression data
 #'
@@ -79,6 +159,15 @@ resetLRdb <- function(db, switch = FALSE) {
 #'   zeros according to \code{min.count} and \code{prop}.
 #' @param conversion.dict  Correspondence table of HUGO gene symbols
 #' human/nonhuman. Not used unless the organism is different from human.
+#' @param x.col In a SpatialExperiment object, the index of the column
+#' containing x coordinates in the dafaframe returned by rowData(), usually 
+#' named array_row
+#' @param y.col  In a SpatialExperiment object, the index of the column
+#' containing y coordinates in the dafaframe returned by rowData(), usually 
+#' named array_col
+#' @param barcodeID.col   In a SpatialExperiment object, the index of the column
+#' containing barcodeID in the dafaframe returned by colData(), usually named
+#' barcode_id
 #'
 #' @return A BSRModelData object with empty model parameters.
 #'
@@ -122,7 +211,8 @@ prepareDataset <- function(
     prop = 0.1, method = c("UQ", "TC"), 
     log.transformed = FALSE, min.LR.found = 80,
     species = "hsapiens", conversion.dict = NULL,
-    UQ.pc = 0.75) {
+    UQ.pc = 0.75,x.col = NULL, y.col = NULL,
+    barcodeID.col = NULL) {
     if ((species != "hsapiens") && is.null(conversion.dict)) {
         stop("Non-human species ",
             "but no conversion.dict provided")
@@ -146,32 +236,40 @@ prepareDataset <- function(
         )
     }
 
-    if (!is.null(symbol.col)) {
-        if (!is.numeric(symbol.col)) {
-            stop("symbol.col must be the index of",
-                "the column containing the gene symbols")
-        }
+    if (is(counts,"SummarizedExperiment")){
 
-        # simple but desperately slow counts <-
-        # aggregate(.~symbol,data=counts,FUN=max)
+    counts <- .checkInteroperabilityForCounts(counts,
+        symbol.col, x.col, y.col, barcodeID.col)
 
-        # home-made but fast
-        symbols <- as.character(counts[, symbol.col])
-        d <- symbols[duplicated(symbols)]
-        bad <- NULL
-        for (s in d) {
-            i <- which(symbols == s)
-            t <- rowSums(counts[i, -symbol.col])
-            bad <- c(bad, i[-which.max(t)])
-        }
+    } else {
 
-        # remove duplicates and the gene symbol column
-        if (!is.null(bad)) {
-            counts <- counts[-bad, -symbol.col]
-            rownames(counts) <- symbols[-bad]
-        } else {
-            counts <- counts[, -symbol.col]
-            rownames(counts) <- symbols
+        if (!is.null(symbol.col)) {
+            if (!is.numeric(symbol.col)) {
+                stop("symbol.col must be the index of",
+                    "the column containing the gene symbols")
+            }
+
+            # simple but desperately slow counts <-
+            # aggregate(.~symbol,data=counts,FUN=max)
+
+            # home-made but fast
+            symbols <- as.character(counts[, symbol.col])
+            d <- symbols[duplicated(symbols)]
+            bad <- NULL
+            for (s in d) {
+                i <- which(symbols == s)
+                t <- rowSums(counts[i, -symbol.col])
+                bad <- c(bad, i[-which.max(t)])
+            }
+
+            # remove duplicates and the gene symbol column
+            if (!is.null(bad)) {
+                counts <- counts[-bad, -symbol.col]
+                rownames(counts) <- symbols[-bad]
+            } else {
+                counts <- counts[, -symbol.col]
+                rownames(counts) <- symbols
+            }
         }
     }
 
@@ -181,9 +279,9 @@ prepareDataset <- function(
     }
 
     # as of now we ensure that counts is a matrix
-    if (!is.matrix(counts)) {
+    if (!is.matrix(counts))
         counts <- data.matrix(counts)
-    }
+
 
     # avoid empty rows even if no normalization is performed here
     counts <- counts[matrixStats::rowSums2(abs(counts)) > 0, ]

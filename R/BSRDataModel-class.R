@@ -389,7 +389,7 @@ setMethod(
         null.model = c(
             "automatic", "mixedNormal", "normal", "kernelEmpirical",
             "empirical", "stable"
-            ), filename = "distribution") {
+            ), filename = NULL) {
         obj@param$n.rand.LR <- as.integer(n.rand.LR)
         if (obj@param$n.rand.LR < 1) {
             stop("Parameter n.rand.LR must be an integer > 0")

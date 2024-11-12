@@ -135,14 +135,17 @@ if (!isGeneric("colA")) {
 #' @export
 setMethod("colA", "BSRClusterComp", function(x) x@colA)
 
-if (!isGeneric("colA<-")) {
-    if (is.function("colA<-")) {
-        fun <- `colA<-`
-    } else {
-        fun <- function(x, value) standardGeneric("colA<-")
-    }
-    setGeneric("colA<-", fun)
-}
+#if (!isGeneric("colA<-")) {
+#    if (is.function("colA<-")) {
+#        fun <- `colA<-`
+#    } else {
+#        fun <- function(x, value) standardGeneric("colA<-")
+#    }
+#    setGeneric("colA<-", fun)
+#}
+setGeneric("colA<-", signature="x",
+    function(x, value) standardGeneric("colA<-")
+)
 #' Cluster A columns setter (internal use only)
 #'
 #' @param x object BSRClusterComp

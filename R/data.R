@@ -8,6 +8,18 @@
 #' @usage data(sdc)
 "sdc"
 
+#' A BSR-DataModel object related to sdc.
+#'
+#' The function `prepareDataset` will create a `bsrdm` 
+#' object with normalised counts. 
+#' Then, the function learnParameters will fulfill
+#' the parameters behind the statistical model.
+#' 
+#' @format An example of an object created by `prepareDataset`
+#'  followed by the call to the `learnParameters` function.
+#' @usage data(bsrdm.example)
+"bsrdm.example"
+
 #' A BSR-Inference object related to sdc.
 #'
 #' From the previous object `bsrdm`, 
