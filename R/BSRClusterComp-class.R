@@ -99,14 +99,9 @@ setMethod(
 
 # Accessors & setters ========================================================
 
-if (!isGeneric("colA")) {
-    if (is.function("colA")) {
-        fun <- colA
-    } else {
-        fun <- function(x) standardGeneric("colA")
-    }
-    setGeneric("colA", fun)
-}
+setGeneric("colA", signature="x",
+    function(x) standardGeneric("colA")
+)
 #' Cluster A columns accessor
 #'
 #' @name colA
@@ -135,15 +130,7 @@ if (!isGeneric("colA")) {
 #' @export
 setMethod("colA", "BSRClusterComp", function(x) x@colA)
 
-#if (!isGeneric("colA<-")) {
-#    if (is.function("colA<-")) {
-#        fun <- `colA<-`
-#    } else {
-#        fun <- function(x, value) standardGeneric("colA<-")
-#    }
-#    setGeneric("colA<-", fun)
-#}
-setGeneric("colA<-", signature="x",
+setGeneric("colA<-", signature=c("x", "value"),
     function(x, value) standardGeneric("colA<-")
 )
 #' Cluster A columns setter (internal use only)
@@ -158,15 +145,9 @@ setMethod("colA<-", "BSRClusterComp", function(x, value) {
     x
 })
 
-
-if (!isGeneric("colB")) {
-    if (is.function("colB")) {
-        fun <- colB
-    } else {
-        fun <- function(x) standardGeneric("colB")
-    }
-    setGeneric("colB", fun)
-}
+setGeneric("colB", signature="x",
+    function(x) standardGeneric("colB")
+)
 #' Cluster B columns accessor
 #'
 #' @name colB
@@ -195,14 +176,9 @@ if (!isGeneric("colB")) {
 #' @export
 setMethod("colB", "BSRClusterComp", function(x) x@colB)
 
-if (!isGeneric("colB<-")) {
-    if (is.function("colB<-")) {
-        fun <- `colB<-`
-    } else {
-        fun <- function(x, value) standardGeneric("colB<-")
-    }
-    setGeneric("colB<-", fun)
-}
+setGeneric("colB<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("colB<-")
+)
 #' Cluster B columns setter (internal use only)
 #'
 #' @param x object BSRClusterComp
@@ -216,14 +192,9 @@ setMethod("colB<-", "BSRClusterComp", function(x, value) {
 })
 
 
-if (!isGeneric("stats")) {
-    if (is.function("stats")) {
-        fun <- stats
-    } else {
-        fun <- function(x) standardGeneric("stats")
-    }
-    setGeneric("stats", fun)
-}
+setGeneric("stats", signature="x",
+    function(x) standardGeneric("stats")
+)
 #' Cluster comparison statistics accessor
 #'
 #' @name stats
@@ -252,14 +223,9 @@ if (!isGeneric("stats")) {
 #' @export
 setMethod("stats", "BSRClusterComp", function(x) x@stats)
 
-if (!isGeneric("stats<-")) {
-    if (is.function("stats<-")) {
-        fun <- `stats<-`
-    } else {
-        fun <- function(x, value) standardGeneric("stats<-")
-    }
-    setGeneric("stats<-", fun)
-}
+setGeneric("stats<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("stats<-")
+)
 #' Cluster comparison statistics setter (internal use only)
 #'
 #' @param x object BSRClusterComp

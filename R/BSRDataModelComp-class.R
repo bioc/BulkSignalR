@@ -85,14 +85,9 @@ setMethod(
 
 # Accessors & setters ========================================================
 
-if (!isGeneric("comp")) {
-    if (is.function("comp")) {
-        fun <- comp
-    } else {
-        fun <- function(x) standardGeneric("comp")
-    }
-    setGeneric("comp", fun)
-}
+setGeneric("comp", signature="x",
+    function(x) standardGeneric("comp")
+)
 #' Comparisons list accessor
 #'
 #' @name comp
@@ -121,14 +116,9 @@ if (!isGeneric("comp")) {
 #' @export
 setMethod("comp", "BSRDataModelComp", function(x) x@comp)
 
-if (!isGeneric("comp<-")) {
-    if (is.function("comp<-")) {
-        fun <- `comp<-`
-    } else {
-        fun <- function(x, value) standardGeneric("comp<-")
-    }
-    setGeneric("comp<-", fun)
-}
+setGeneric("comp<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("comp<-")
+)
 #' Comparisons list setter (internal use only, use addComparison() otherwise)
 #'
 #' @param x object BSRDataModelComp
@@ -141,15 +131,9 @@ setMethod("comp<-", "BSRDataModelComp", function(x, value) {
     x
 })
 
-
-if (!isGeneric("mu")) {
-    if (is.function("mu")) {
-        fun <- mu
-    } else {
-        fun <- function(x) standardGeneric("mu")
-    }
-    setGeneric("mu", fun)
-}
+setGeneric("mu", signature="x",
+    function(x) standardGeneric("mu")
+)
 #' Mu accessor
 #'
 #' @name mu
@@ -179,14 +163,10 @@ if (!isGeneric("mu")) {
 #' @export
 setMethod("mu", "BSRDataModelComp", function(x) x@mu)
 
-if (!isGeneric("mu<-")) {
-    if (is.function("mu<-")) {
-        fun <- `mu<-`
-    } else {
-        fun <- function(x, value) standardGeneric("mu<-")
-    }
-    setGeneric("mu<-", fun)
-}
+
+setGeneric("mu<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("mu<-")
+)
 #' Mu setter (internal use only)
 #'
 #' @param x object BSRDataModelComp
@@ -202,48 +182,28 @@ setMethod("mu<-", "BSRDataModelComp", function(x, value) {
 
 # generation of BSRDataModelComp from BSRDataModel =====================
 
-#' @title conversion of BSRDataModel into BSRDataModelComp
-#'
-#' @description In case ligand-receptor inferences should be obtained
-#' based on gene/protein regulation P-values comparing two clusters of
-#' samples, it is necessary to first promote the BSRDataModel object that
-#' contains the count matrix into a BSRDataModelComp object able to contain
-#' a list of such cluster pairs comparisons. This function performs this
-#' promotion adding an empty list of comparisons.
-#' @param bsrdm    A BSRDataModel object.
-#' @return Returns a BSRDataModelComp object. 
-#' 
-#' @examples
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' @export
-as.BSRDataModelComp <- function(bsrdm) {
-    if (!is(bsrdm, "BSRDataModel")) {
+#' @exportMethod coerce
+setAs("BSRDataModel", "BSRDataModelComp", function(from) {
+
+     if (!is(from, "BSRDataModel")) {
         stop("bsrdm must be of class BSRDataModel")
     }
-    m <- mean(ncounts(bsrdm))
-    if (!logTransformed(bsrdm)) {
+    m <- mean(ncounts(from))
+    if (!logTransformed(from)) {
         m <- log1p(m) / log(2)
     } # approximate of mu on the log2-transformed matrix
-    new("BSRDataModelComp", bsrdm, comp = list(), mu = m)
-} # as.BSRDataModelComp
 
+    new("BSRDataModelComp", from, 
+        comp = list(),
+        mu = m)
+   
+})
 
 # defining/adding a cluster comparison ========================================
 
-if (!isGeneric("defineClusterComp")) {
-    if (is.function("defineClusterComp")) {
-        fun <- defineClusterComp
-    } else {
-        fun <- function(obj, ...) standardGeneric("defineClusterComp")
-    }
-    setGeneric("defineClusterComp", fun)
-}
+setGeneric("defineClusterComp", signature="obj",
+    function(obj, ...) standardGeneric("defineClusterComp")
+)
 #' Definition of the comparison between two clusters of samples
 #'
 #' Define the columns of the expression matrix that belong to each cluster,
@@ -335,14 +295,10 @@ setMethod("defineClusterComp", "BSRDataModelComp", function(obj, colA,
 }) # defineClusterComp
 
 
-if (!isGeneric("addClusterComp")) {
-    if (is.function("addClusterComp")) {
-        fun <- addClusterComp
-    } else {
-        fun <- function(obj, ...) standardGeneric("addClusterComp")
-    }
-    setGeneric("addClusterComp", fun)
-}
+
+setGeneric("addClusterComp", signature="obj",
+    function(obj, ...) standardGeneric("addClusterComp")
+)
 #' Add a comparison between two clusters of samples
 #'
 #' Add a comparison to a BSRDataModelComp object.
@@ -403,14 +359,10 @@ setMethod("addClusterComp", "BSRDataModelComp", function(obj, cmp,
 }) # addClusterComp
 
 
-if (!isGeneric("removeClusterComp")) {
-    if (is.function("removeClusterComp")) {
-        fun <- removeClusterComp
-    } else {
-        fun <- function(obj, ...) standardGeneric("removeClusterComp")
-    }
-    setGeneric("removeClusterComp", fun)
-}
+
+setGeneric("removeClusterComp", signature="obj",
+    function(obj, ...) standardGeneric("removeClusterComp")
+)
 #' Remove a comparison from a BSRDataModelComp object.
 #'
 #' @name removeClusterComp
@@ -474,14 +426,7 @@ setMethod("removeClusterComp", "BSRDataModelComp", function(obj, cmp.name) {
 # performing initial inference ===========================================
 
 
-if (!isGeneric("initialInference")) {
-    if (is.function("initialInference")) {
-        fun <- initialInference
-    } else {
-        fun <- function(obj, ...) standardGeneric("initialInference")
-    }
-    setGeneric("initialInference", fun)
-}
+
 #' Inference of ligand-receptor interactions based on regulation
 #'
 #' This method supports two configurations that we refer to
@@ -625,7 +570,8 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
         "BH", "Bonferroni", "Holm", "Hochberg",
         "SidakSS", "SidakSD", "BY", "ABH", "TSBH"
         )) {
-    
+
+
     if (!(cmp.name %in% names(comp(obj)))) {
         stop("cmp.name must exist in the names ",
             "of comparisons contained in obj")
@@ -767,14 +713,7 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
 
 # Scoring of gene signatures in a BSRSignature object ==========================
 
-if (!isGeneric("scoreLRGeneSignatures")) {
-    if (is.function("scoreLRGeneSignatures")) {
-        fun <- scoreLRGeneSignatures
-    } else {
-        fun <- function(obj, ...) standardGeneric("scoreLRGeneSignatures")
-    }
-    setGeneric("scoreLRGeneSignatures", fun)
-}
+
 #' Score ligand-receptor gene signatures
 #'
 #' Compute ligand-receptor gene signature scores over a BSRDataModelComp

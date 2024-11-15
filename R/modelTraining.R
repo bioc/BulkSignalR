@@ -134,7 +134,7 @@
     # KS test D statistics
     x <- seq(-1, 1, by = 0.005)
     y <- stats::dnorm(x, mu, sigma) / q
-    params$D <- try(stats::ks.test(d, y)$statistic,silent = TRUE)
+    params$D <- stats::ks.test(d, y)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -271,7 +271,7 @@
     y <- alpha * stats::dnorm(x, mu1, sigma1) +
         (1 - alpha) * stats::dnorm(x, mu2, sigma2) / q
 
-    params$D <- try(stats::ks.test(d, y)$statistic,silent = TRUE)
+    params$D <- stats::ks.test(d, y)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -424,7 +424,7 @@
     )
 
     # KS test D statistics
-    params$D <- try(stats::ks.test(d,df$y)$statistic,silent = TRUE)
+    params$D <- stats::ks.test(d,df$y)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }

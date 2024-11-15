@@ -95,14 +95,9 @@ setMethod(
 
 # Accessors & setters ========================================================
 
-if (!isGeneric("LRinter")) {
-    if (is.function("LRinter")) {
-        fun <- LRinter
-    } else {
-        fun <- function(x) standardGeneric("LRinter")
-    }
-    setGeneric("LRinter", fun)
-}
+setGeneric("LRinter", signature="x",
+    function(x) standardGeneric("LRinter")
+)
 #' LRinter accessor
 #'
 #' @name LRinter
@@ -115,14 +110,9 @@ if (!isGeneric("LRinter")) {
 #' @export
 setMethod("LRinter", "BSRInference", function(x) x@LRinter)
 
-if (!isGeneric("LRinter<-")) {
-    if (is.function("LRinter<-")) {
-        fun <- `LRinter<-`
-    } else {
-        fun <- function(x, value) standardGeneric("LRinter<-")
-    }
-    setGeneric("LRinter<-", fun)
-}
+setGeneric("LRinter<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("LRinter<-")
+)
 #' LRinter setter (internal use only)
 #'
 #' @param x BSRInference object
