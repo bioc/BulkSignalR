@@ -24,7 +24,7 @@ setClass("BSRSignatureComp",
         pathways = "path 1",
         ligands = list("A"),
         receptors = list("B"),
-        t.genes = list(c("a", "b", "c")),
+        tg.genes = list(c("a", "b", "c")),
         tg.corr = list(c(0.1, 0.2, 0.3)),
         tg.pval = list(c(0.05, 0.1, 0.008)),
         tg.logFC = list(c(-1, 0, 2))
@@ -59,14 +59,9 @@ setMethod("show", "BSRSignatureComp", function(object) {
 
 # Accessors & setters ========================================================
 
-if (!isGeneric("tgPval")) {
-    if (is.function("tgPval")) {
-        fun <- tgPval
-    } else {
-        fun <- function(x) standardGeneric("tgPval")
-    }
-    setGeneric("tgPval", fun)
-}
+setGeneric("tgPval", signature="x",
+    function(x) standardGeneric("tgPval")
+)
 #' Target gene P-values accessor
 #'
 #' @name tgPval
@@ -75,14 +70,9 @@ if (!isGeneric("tgPval")) {
 #' @export
 setMethod("tgPval", "BSRSignatureComp", function(x) x@tg.pval)
 
-if (!isGeneric("tgLogFC")) {
-    if (is.function("tgLogFC")) {
-        fun <- tgLogFC
-    } else {
-        fun <- function(x) standardGeneric("tgLogFC")
-    }
-    setGeneric("tgLogFC", fun)
-}
+setGeneric("tgLogFC", signature="x",
+    function(x) standardGeneric("tgLogFC")
+)
 #' Target gene logFC accessor
 #'
 #' @name tgLogFC
@@ -91,14 +81,9 @@ if (!isGeneric("tgLogFC")) {
 #' @export
 setMethod("tgLogFC", "BSRSignatureComp", function(x) x@tg.logFC)
 
-if (!isGeneric("cmpName")) {
-    if (is.function("cmpName")) {
-        fun <- cmpName
-    } else {
-        fun <- function(x) standardGeneric("cmpName")
-    }
-    setGeneric("cmpName", fun)
-}
+setGeneric("cmpName", signature="x",
+    function(x) standardGeneric("cmpName")
+)
 #' Comparison name accessor
 #'
 #' @name cmpName

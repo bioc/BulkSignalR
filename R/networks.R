@@ -95,8 +95,8 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #' @param pairs     A ligand-receptor table such as output by
 #' \code{LRinter(BSRInference)}.
 #' @param pw              A table defining the reference pathways.
-#' @param t.genes    Target gene list such as output by
-#' \code{tGenes(BSRInference)}.
+#' @param tg.genes    Target gene list such as output by
+#' \code{tgGenes(BSRInference)}.
 #' @param tg.corr    Target gene correlation list (with the receptor) such as
 #' output by \code{tgCorr(BSRInference)}.
 #' @param id.col Column index or name in \code{pw} for the pathway IDs.
@@ -126,7 +126,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #'
 #' @importFrom foreach %do% %dopar%
 #' @keywords internal
-.edgesLRIntracell <- function(pairs, pw, t.genes, tg.corr, id.col, gene.col,
+.edgesLRIntracell <- function(pairs, pw, tg.genes, tg.corr, id.col, gene.col,
     min.cor = 0.25, pos.targets = FALSE,
     neg.targets = FALSE, tg.pval = NULL,
     max.pval = NULL, tg.logFC = NULL, min.logFC = 0) {
@@ -153,7 +153,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         # for (i in 1:nrow(pairs)) {
         r <- pairs$R[i]
         p <- pairs$pw.id[i]
-        tg <- t.genes[[i]]
+        tg <- tg.genes[[i]]
         if (is.null(max.pval) && is.null(min.logFC)) {
             # selection on correlations
             corr <- tg.corr[[i]]
@@ -265,7 +265,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #' which can be changed afterwards if necessary.
 #'
 #' The target genes to which the \code{min.cor} correlation is imposed are
-#' those listed in \code{tGenes(bsrinf)}, correlations are in
+#' those listed in \code{tgGenes(bsrinf)}, correlations are in
 #' \code{tgCorr(bsrinf)}.
 #' The construction of shortest paths from the receptors to those selected
 #' targets adds other genes, which were either some targets with too low
@@ -321,7 +321,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 
     # get unique LR pairs with required statistical significance
     pairs <- LRinter(bsrinf)
-    t.genes <- tGenes(bsrinf)
+    tg.genes <- tgGenes(bsrinf)
     tg.corr <- tgCorr(bsrinf)
     if (!is.null(pval.thres)) {
         good <- pairs$pval <= pval.thres
@@ -329,7 +329,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         good <- pairs$qval <= qval.thres
     }
     pairs <- pairs[good, ]
-    t.genes <- t.genes[good]
+    tg.genes <- tg.genes[good]
     tg.corr <- tg.corr[good]
     if (comp.obj) {
         tg.pval <- tgPval(bsrinf)[good]
@@ -342,7 +342,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     # reactome pathways
     i.react <- grep("^R-", pairs$pw.id)
     pairs.react <- pairs[i.react, ]
-    t.genes.react <- t.genes[i.react]
+    tg.genes.react <- tg.genes[i.react]
     tg.corr.react <- tg.corr[i.react]
     if (comp.obj) {
         tg.pval.react <- tg.pval[i.react]
@@ -351,7 +351,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     if (!is.null(restrict.pw)) {
         i.react <- which(pairs.react$pw.id %in% restrict.pw)
         pairs.react <- pairs.react[i.react, ]
-        t.genes.react <- t.genes.react[i.react]
+        tg.genes.react <- tg.genes.react[i.react]
         tg.corr.react <- tg.corr.react[i.react]
         if (comp.obj) {
             tg.pval.react <- tg.pval.react[i.react]
@@ -368,7 +368,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
             BulkSignalR_Reactome$`Reactome ID` %in% restrict.pw, ]
         }
         all.edges <- .edgesLRIntracell(
-            pairs.react, react, t.genes.react,
+            pairs.react, react, tg.genes.react,
             tg.corr.react, "Reactome ID", "Gene name", min.cor,
             pos.targets, neg.targets, tg.pval.react, max.pval,
             tg.logFC.react, min.logFC
@@ -378,7 +378,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     # GOBP
     i.go <- grep("^GO:", pairs$pw.id)
     pairs.go <- pairs[i.go, ]
-    t.genes.go <- t.genes[i.go]
+    tg.genes.go <- tg.genes[i.go]
     tg.corr.go <- tg.corr[i.go]
     if (comp.obj) {
         tg.pval.go <- tg.pval[i.go]
@@ -387,7 +387,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     if (!is.null(restrict.pw)) {
         i.go <- which(pairs.go$pw.id %in% restrict.pw)
         pairs.go <- pairs.go[i.go, ]
-        t.genes.go <- t.genes.go[i.go]
+        tg.genes.go <- tg.genes.go[i.go]
         tg.corr.go <- tg.corr.go[i.go]
         if (comp.obj) {
             tg.pval.go <- tg.pval.go[i.go]
@@ -405,7 +405,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         all.edges <- unique(rbind(
             all.edges,
             .edgesLRIntracell(
-                pairs.go, go, t.genes.go,
+                pairs.go, go, tg.genes.go,
                 tg.corr.go, "GO ID", "Gene name", min.cor,
                 pos.targets, neg.targets, tg.pval.go, max.pval,
                 tg.logFC.go, min.logFC

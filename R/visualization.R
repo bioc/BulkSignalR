@@ -307,7 +307,7 @@ signatureHeatmaps <- function(pathway,
         hcl_palette = palette.L, reverse = TRUE)
 
     filter.R <- receptors(bsrsig)[[idx.path.sig]]
-    filter.T <- tGenes(bsrsig)[[idx.path.sig]]
+    filter.T <- tgGenes(bsrsig)[[idx.path.sig]]
 
     # Remove in receptors, genes that are potential targets.
     filter.R <- filter.R[!filter.R %in% filter.T]
@@ -731,7 +731,7 @@ alluvialPlot <- function(bsrinf, keywords, type = c("L", "R", "pw.id"),
         pw.name = LRinter(bsrinf)$pw.name,
         pw.id = LRinter(bsrinf)$pw.id,
         qval = LRinter(bsrinf)$qval,
-        targets = vapply(tGenes(bsrinf),
+        targets = vapply(tgGenes(bsrinf),
             FUN = function(x) paste(x, collapse = "  "),
             character(1)
         )

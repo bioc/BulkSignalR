@@ -32,7 +32,7 @@
     if (!is(ds, "BSRDataModel")) {
         stop("ds must be an object of class BSRDataModel")
     }
-
+   
     lrgenes <- intersect(c(
         BulkSignalR_LRdb$ligand,
         BulkSignalR_LRdb$receptor

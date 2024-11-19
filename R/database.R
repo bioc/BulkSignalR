@@ -19,9 +19,9 @@
 #' }
 createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
     # Default directory
-    cacheDir <- get("BulkSignalR_CACHEDIR")
+    cacheDir <- BulkSignalR_CACHEDIR
     databaseCacheDir <- paste(cacheDir, "database", sep = "/")
-    url <- get("BulkSignalR_DB_URL")
+    url <- BulkSignalR_DB_URL
     # databaseFilePath <- paste(databaseCacheDir
     #    ,basename(url)
     #    ,sep = "/")

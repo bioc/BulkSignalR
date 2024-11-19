@@ -601,18 +601,7 @@
 #' \code{.checkReceptorSignaling} based on randomized expression data and
 #' ligand-receptor pairs selected from the same randomized data.
 #'
-#' @param ncounts         A matrix or table of normalized read counts.
-#' @param n.rand          The number of repetitions.
-#' @param min.cor         The minimum ligand-receptor Spearman correlation
-#'   required.
-#' @param max.pw.size     Maximum pathway size to consider from the pathway
-#'   reference.
-#' @param min.pw.size     Minimum pathway size to consider from the pathway
-#'   reference.
-#' @param min.positive    Minimum number of target genes to be found in a given
-#'   pathway.
-#' @param with.complex    A logical indicating whether receptor co-complex
-#'   members should be included in the target genes.
+#' @param obj   A BSRDatamodel without learned paramaters.
 #'
 #' @return A list of \code{n.rand} tables such as output by
 #'   \code{.checkReceptorSignaling}. Each table is computed from a randomized
@@ -629,31 +618,30 @@
 #'
 #' @importFrom foreach %do% %dopar%
 #' @keywords internal
-.getEmpiricalNull <- function(ncounts, n.rand = 5, min.cor = -1,
-    with.complex = TRUE, max.pw.size = 400,
-    min.pw.size = 5, min.positive = 4) {
-    pindices <- .buildPermutationIndices(ncounts)
-    r.ds <- prepareDataset(ncounts,
+.getEmpiricalNull <- function(obj){
+
+    pindices <- .buildPermutationIndices(obj@ncounts)
+    r.ds <- prepareDataset(obj@ncounts,
         normalize = FALSE, method = "ALREADY",
         min.LR.found = 0
     )
     if (foreach::getDoParWorkers() > 1) {
-        foreach::foreach(k = seq_len(n.rand), .combine = c) %dopar% {
-            ncounts(r.ds) <- .buildPermutatedCountMatrix(ncounts, pindices)
-            r.LR <- .getCorrelatedLR(r.ds, min.cor = min.cor)
+        foreach::foreach(k = seq_len(obj@param$n.rand.RT), .combine = c) %dopar% {
+            ncounts(r.ds) <- .buildPermutatedCountMatrix(obj@ncounts, pindices)
+            r.LR <- .getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR)
             list(.checkReceptorSignaling(r.ds, r.LR,
-                with.complex = with.complex, max.pw.size = max.pw.size,
-                min.pw.size = min.pw.size, min.positive = min.positive,
+                with.complex = obj@param$with.complex, max.pw.size = obj@param$max.pw.size,
+                min.pw.size = obj@param$min.pw.size, min.positive = obj@param$min.positive,
                 use.full.network = FALSE
             ))
         }
     } else {
-        foreach::foreach(k = seq_len(n.rand), .combine = c) %do% {
-            ncounts(r.ds) <- .buildPermutatedCountMatrix(ncounts, pindices)
-            r.LR <- .getCorrelatedLR(r.ds, min.cor = min.cor)
+        foreach::foreach(k = seq_len(obj@param$n.rand.RT), .combine = c) %do% {
+            ncounts(r.ds) <- .buildPermutatedCountMatrix(obj@ncounts, pindices)
+            r.LR <- .getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR)
             list(.checkReceptorSignaling(r.ds, r.LR,
-                with.complex = with.complex, max.pw.size = max.pw.size,
-                min.pw.size = min.pw.size, min.positive = min.positive,
+                with.complex = obj@param$with.complex, max.pw.size = obj@param$max.pw.size,
+                min.pw.size = obj@param$min.pw.size, min.positive = obj@param$min.positive,
                 use.full.network = FALSE
             ))
         }
@@ -666,42 +654,41 @@
 #' Perform a ligand-receptor Spearman correlation analysis based
 #' on randomized expression data.
 #'
-#' @param ncounts         A matrix or table of normalized read counts.
-#' @param n.rand          The number of repetitions.
-#' @param min.cor         The minimum ligand-receptor correlation required.
+#' @param obj   A BSRDatamodel without learned paramaters.
 #'
-#' @return A list of \code{n.rand} tables such as output by
+#' @return A list of \code{n.rand.LR} tables such as output by
 #'   \code{\link{.getCorrelatedLR}}. Each table is computed from a randomized
 #'   expression matrix (randomized \code{ncounts}).
 #'
 #' @details A large number of correlations is reported in each randomized
-#'   matrix. Therefore,
-#'   \code{n.rand} should be given a modest value to avoid unnecessarily long
+#'   matrix. Therefore, \code{n.rand.LR} 
+#'   should be given a modest value to avoid unnecessarily long
 #'   computations.
 #'
 #'   See \code{\link{.getCorrelatedLR}} for more details about the parameters.
 #'
 #' @importFrom foreach %do% %dopar%
 #' @keywords internal
-.getEmpiricalNullCorrLR <- function(ncounts, n.rand = 5, min.cor = -1) {
-    pindices <- .buildPermutationIndices(ncounts)
-    r.ds <- prepareDataset(ncounts,
+.getEmpiricalNullCorrLR <- function(obj) {
+
+    pindices <- .buildPermutationIndices(obj@ncounts)
+    r.ds <- prepareDataset(obj@ncounts,
         normalize = FALSE, method = "ALREADY",
         min.LR.found = 0
     )
 
     if (foreach::getDoParWorkers() > 1) {
         foreach::foreach(
-            k = seq_len(n.rand), .combine = "c",
+            k = seq_len(obj@param$n.rand.LR), .combine = "c",
             .packages = "BulkSignalR"
         ) %dopar% {
-            ncounts(r.ds) <- .buildPermutatedCountMatrix(ncounts, pindices)
-            list(.getCorrelatedLR(r.ds, min.cor = min.cor))
+            ncounts(r.ds) <- .buildPermutatedCountMatrix(obj@ncounts, pindices)
+            list(.getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR))
         }
     } else {
-        foreach::foreach(k = seq_len(n.rand), .combine = c) %do% {
-            ncounts(r.ds) <- .buildPermutatedCountMatrix(ncounts, pindices)
-            list(.getCorrelatedLR(r.ds, min.cor = min.cor))
+        foreach::foreach(k = seq_len(obj@param$n.rand.LR), .combine = c) %do% {
+            ncounts(r.ds) <- .buildPermutatedCountMatrix(obj@ncounts, pindices)
+            list(.getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR))
         }
     }
 } # .getEmpiricalNullCorrLR

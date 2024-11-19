@@ -12,11 +12,10 @@
 #' @importFrom dplyr left_join group_by mutate distinct
 #' @export
 #' @examples
-#' print("getComplexes")
 #' getComplexes(idRelease=1)
 getComplexes <- function(idRelease = NULL) {
-    cacheDir <- get("BulkSignalR_CACHEDIR")
-    url <- get("BulkSignalR_DB_URL")
+    cacheDir <- BulkSignalR_CACHEDIR
+    url <- BulkSignalR_DB_URL
 
     name <- stoichiometry <- pool.stoichiometry <- NULL
 
@@ -100,11 +99,10 @@ where Comp."id.release_fk" = ?;', release$id)
 #' @importFrom dplyr left_join
 #' @export
 #' @examples
-#' print("getInteractions")
 #' getInteractions(idRelease=1)
 getInteractions <- function(idRelease = NULL) {
-    cacheDir <- get("BulkSignalR_CACHEDIR")
-    url <- get("BulkSignalR_DB_URL")
+    cacheDir <- BulkSignalR_CACHEDIR
+    url <- BulkSignalR_DB_URL
 
     # Retrieve database from cache
     cacheDir <- paste(cacheDir, "database", sep = "/")

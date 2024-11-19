@@ -112,14 +112,10 @@ setMethod(
 
 # Accessors & setters ========================================================
 
-if (!isGeneric("cmpName")) {
-    if (is.function("cmpName")) {
-        fun <- cmpName
-    } else {
-        fun <- function(x) standardGeneric("cmpName")
-    }
-    setGeneric("cmpName", fun)
-}
+
+setGeneric("cmpName", signature="x",
+    function(x) standardGeneric("cmpName")
+)
 #' Comparison name accessor
 #'
 #' @name cmpName
@@ -153,14 +149,10 @@ if (!isGeneric("cmpName")) {
 #' @export
 setMethod("cmpName", "BSRInferenceComp", function(x) x@cmp.name)
 
-if (!isGeneric("cmpName<-")) {
-    if (is.function("cmpName<-")) {
-        fun <- `cmpName<-`
-    } else {
-        fun <- function(x, value) standardGeneric("cmpName<-")
-    }
-    setGeneric("cmpName<-", fun)
-}
+
+setGeneric("cmpName<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("cmpName<-")
+)
 #' Comparison name setter (internal use only)
 #' 
 #' @param x BSRInferenceComp object
@@ -174,14 +166,9 @@ setMethod("cmpName<-", "BSRInferenceComp", function(x, value) {
 })
 
 
-if (!isGeneric("srcCmpName")) {
-    if (is.function("srcCmpName")) {
-        fun <- srcCmpName
-    } else {
-        fun <- function(x) standardGeneric("srcCmpName")
-    }
-    setGeneric("srcCmpName", fun)
-}
+setGeneric("srcCmpName", signature="x",
+    function(x) standardGeneric("srcCmpName")
+)
 #' Source comparison name accessor
 #'
 #' @name srcCmpName
@@ -216,14 +203,9 @@ if (!isGeneric("srcCmpName")) {
 #' @export
 setMethod("srcCmpName", "BSRInferenceComp", function(x) x@src.cmp.name)
 
-if (!isGeneric("srcCmpName<-")) {
-    if (is.function("srcCmpName<-")) {
-        fun <- `srcCmpName<-`
-    } else {
-        fun <- function(x, value) standardGeneric("srcCmpName<-")
-    }
-    setGeneric("srcCmpName<-", fun)
-}
+setGeneric("srcCmpName<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("srcCmpName<-")
+)
 #' Source comparison name setter (internal use only)
 #' @param x BSRInferenceComp object
 #' @param value value to be set for bsrinf
@@ -235,15 +217,9 @@ setMethod("srcCmpName<-", "BSRInferenceComp", function(x, value) {
     x
 })
 
-
-if (!isGeneric("tgPval")) {
-    if (is.function("tgPval")) {
-        fun <- tgPval
-    } else {
-        fun <- function(x) standardGeneric("tgPval")
-    }
-    setGeneric("tgPval", fun)
-}
+setGeneric("tgPval", signature="x",
+    function(x) standardGeneric("tgPval")
+)
 #' Target gene P-values accessor
 #'
 #' @name tgPval
@@ -278,14 +254,9 @@ if (!isGeneric("tgPval")) {
 #' @export
 setMethod("tgPval", "BSRInferenceComp", function(x) x@tg.pval)
 
-if (!isGeneric("tgPval<-")) {
-    if (is.function("tgPval<-")) {
-        fun <- `tgPval<-`
-    } else {
-        fun <- function(x, value) standardGeneric("tgPval<-")
-    }
-    setGeneric("tgPval<-", fun)
-}
+setGeneric("tgPval<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("tgPval<-")
+)
 #' Target gene P-values setter (internal use only)
 #'
 #' @param x BSRInferenceComp object
@@ -299,14 +270,9 @@ setMethod("tgPval<-", "BSRInferenceComp", function(x, value) {
 })
 
 
-if (!isGeneric("tgLogFC")) {
-    if (is.function("tgLogFC")) {
-        fun <- tgLogFC
-    } else {
-        fun <- function(x) standardGeneric("tgLogFC")
-    }
-    setGeneric("tgLogFC", fun)
-}
+setGeneric("tgLogFC", signature="x",
+    function(x) standardGeneric("tgLogFC")
+)
 #' Target gene logFC accessor
 #'
 #' @name tgLogFC
@@ -341,14 +307,10 @@ if (!isGeneric("tgLogFC")) {
 #' @export
 setMethod("tgLogFC", "BSRInferenceComp", function(x) x@tg.logFC)
 
-if (!isGeneric("tgLogFC<-")) {
-    if (is.function("tgLogFC<-")) {
-        fun <- `tgLogFC<-`
-    } else {
-        fun <- function(x, value) standardGeneric("tgLogFC<-")
-    }
-    setGeneric("tgLogFC<-", fun)
-}
+
+setGeneric("tgLogFC<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("tgLogFC<-")
+)
 #' Target gene logFC setter (internal use only)
 #' @param x BSRInferenceComp object
 #' @param value value to be set for bsrinf
@@ -360,15 +322,9 @@ setMethod("tgLogFC<-", "BSRInferenceComp", function(x, value) {
     x
 })
 
-
-if (!isGeneric("tgExpr")) {
-    if (is.function("tgExpr")) {
-        fun <- tgExpr
-    } else {
-        fun <- function(x) standardGeneric("tgExpr")
-    }
-    setGeneric("tgExpr", fun)
-}
+setGeneric("tgExpr", signature="x",
+    function(x) standardGeneric("tgExpr")
+)
 #' Target gene expression accessor
 #'
 #' @name tgExpr
@@ -403,14 +359,9 @@ if (!isGeneric("tgExpr")) {
 #' @export
 setMethod("tgExpr", "BSRInferenceComp", function(x) x@tg.expr)
 
-if (!isGeneric("tgExpr<-")) {
-    if (is.function("tgExpr<-")) {
-        fun <- `tgExpr<-`
-    } else {
-        fun <- function(x, value) standardGeneric("tgExpr<-")
-    }
-    setGeneric("tgExpr<-", fun)
-}
+setGeneric("tgExpr<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("tgExpr<-")
+)
 #' Target gene expression setter (internal use only)
 #'
 #' @param x BSRInferenceComp object
@@ -426,14 +377,6 @@ setMethod("tgExpr<-", "BSRInferenceComp", function(x, value) {
 
 # simplified table views =======================================================
 
-if (!isGeneric("LRinterShort")) {
-    if (is.function("LRinterShort")) {
-        fun <- LRinterShort
-    } else {
-        fun <- function(x) standardGeneric("LRinterShort")
-    }
-    setGeneric("LRinterShort", fun)
-}
 #' Simplified LRinter accessor reporting the essential columns
 #'
 #' @name LRinterShort
@@ -475,15 +418,9 @@ setMethod(
     }
 )
 
-
-if (!isGeneric("LRinterScore")) {
-    if (is.function("LRinterScore")) {
-        fun <- LRinterScore
-    } else {
-        fun <- function(x) standardGeneric("LRinterScore")
-    }
-    setGeneric("LRinterScore", fun)
-}
+setGeneric("LRinterScore", signature="x",
+    function(x) standardGeneric("LRinterScore")
+)
 #' Simplified LRinter accessor with focus on the LR-score
 #'
 #' @name LRinterScore
@@ -528,14 +465,7 @@ setMethod(
 
 # Rescoring & updating ===========
 
-if (!isGeneric("rescoreInference")) {
-    if (is.function("rescoreInference")) {
-        fun <- rescoreInference
-    } else {
-        fun <- function(obj, ...) standardGeneric("rescoreInference")
-    }
-    setGeneric("rescoreInference", fun)
-}
+
 #' Inference re-scoring
 #'
 #' A method to re-score an existing BSRInferenceComp object
@@ -598,13 +528,13 @@ setMethod("rescoreInference", "BSRInferenceComp", function(obj, param,
 
     # extract the necessary data from the BSRInferenceComp object
     pairs <- LRinter(obj)
-    t.genes <- tGenes(obj)
+    tg.genes <- tgGenes(obj)
     tg.pval <- tgPval(obj)
     tg.corr <- tgCorr(obj)
 
     # recompute P-values, LR- and LRT-scores
     for (i in seq_len(nrow(pairs))) {
-        tg <- t.genes[[i]]
+        tg <- tg.genes[[i]]
         spvals <- tg.pval[[i]]
 
         # get the LR correlation P-value
@@ -644,14 +574,10 @@ setMethod("rescoreInference", "BSRInferenceComp", function(obj, param,
 }) # rescoreInference
 
 
-if (!isGeneric("updateInference")) {
-    if (is.function("updateInference")) {
-        fun <- updateInference
-    } else {
-        fun <- function(obj, ...) standardGeneric("updateInference")
-    }
-    setGeneric("updateInference", fun)
-}
+
+setGeneric("updateInference", signature="obj",
+    function(obj,...) standardGeneric("updateInference")
+)
 #' Inference updating
 #'
 #' A method to update the data underlying statistical significance estimations
@@ -764,7 +690,7 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     inter <- LRinter(obj)
     L <- ligands(obj)
     R <- receptors(obj)
-    t <- tGenes(obj)
+    t <- tgGenes(obj)
     c <- tgCorr(obj)
     lfc <- tgLogFC(obj)
     p <- tgPval(obj)
@@ -912,7 +838,7 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     LRinter(obj) <- inter
     ligands(obj) <- L
     receptors(obj) <- R
-    tGenes(obj) <- t
+    tgGenes(obj) <- t
     tgCorr(obj) <- c
     tgPval(obj) <- p
     tgLogFC(obj) <- lfc
@@ -929,14 +855,6 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
 # Reduction and pathway stat methods ===========================================
 
 
-if (!isGeneric("reduceToBestPathway")) {
-    if (is.function("reduceToBestPathway")) {
-        fun <- reduceToBestPathway
-    } else {
-        fun <- function(obj, ...) standardGeneric("reduceToBestPathway")
-    }
-    setGeneric("reduceToBestPathway", fun)
-}
 #' Keep one pathway per ligand-receptor pair
 #'
 #' @name reduceToBestPathway
@@ -990,7 +908,7 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
     # get best p-value pathway per LR pair
     ligands <- list()
     receptors <- list()
-    t.genes <- list()
+    tg.genes <- list()
     tg.corr <- list()
     tg.pval <- list()
     tg.logFC <- list()
@@ -1008,7 +926,7 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
         j <- which(pairs$L == L & pairs$R == R & pairs$pw.id == pwr$pw.id[k])
         ligands <- c(ligands, obj@ligands[j])
         receptors <- c(receptors, obj@receptors[j])
-        t.genes <- c(t.genes, obj@t.genes[j])
+        tg.genes <- c(tg.genes, obj@tg.genes[j])
         tg.corr <- c(tg.corr, obj@tg.corr[j])
         tg.pval <- c(tg.pval, obj@tg.pval[j])
         tg.logFC <- c(tg.logFC, obj@tg.logFC[j])
@@ -1020,7 +938,7 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
     obj@LRinter <- LRinter
     obj@ligands <- ligands
     obj@receptors <- receptors
-    obj@t.genes <- t.genes
+    obj@tg.genes <- tg.genes
     obj@tg.corr <- tg.corr
     obj@tg.pval <- tg.pval
     obj@tg.logFC <- tg.logFC
@@ -1031,14 +949,6 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
 }) # reduceToBestPathway
 
 
-if (!isGeneric("reduceToReceptor")) {
-    if (is.function("reduceToReceptor")) {
-        fun <- reduceToReceptor
-    } else {
-        fun <- function(obj, ...) standardGeneric("reduceToReceptor")
-    }
-    setGeneric("reduceToReceptor", fun)
-}
 #' Aggregate the ligands of a same receptor
 #'
 #' Simplifies a ligand-receptor table to focus on the receptors.
@@ -1096,7 +1006,7 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
     # pool the ligands
     ligands <- list()
     receptors <- list()
-    t.genes <- list()
+    tg.genes <- list()
     tg.corr <- list()
     tg.pval <- list()
     tg.logFC <- list()
@@ -1109,7 +1019,7 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
         j <- which(pairs$R == lig$R[k] & pairs$pw.id == lig$pw.id[k])[1]
         ligands <- c(ligands, list(unique(lig$L)))
         receptors <- c(receptors, list(R))
-        t.genes <- c(t.genes, obj@t.genes[j])
+        tg.genes <- c(tg.genes, obj@tg.genes[j])
         tg.corr <- c(tg.corr, obj@tg.corr[j])
         tg.pval <- c(tg.pval, obj@tg.pval[j])
         tg.logFC <- c(tg.logFC, obj@tg.logFC[j])
@@ -1125,7 +1035,7 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
     obj@LRinter <- LRinter
     obj@ligands <- ligands
     obj@receptors <- receptors
-    obj@t.genes <- t.genes
+    obj@tg.genes <- tg.genes
     obj@tg.corr <- tg.corr
     obj@tg.pval <- tg.pval
     obj@tg.logFC <- tg.logFC
@@ -1137,14 +1047,6 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
 }) # reduceToReceptor
 
 
-if (!isGeneric("reduceToLigand")) {
-    if (is.function("reduceToLigand")) {
-        fun <- reduceToLigand
-    } else {
-        fun <- function(obj, ...) standardGeneric("reduceToLigand")
-    }
-    setGeneric("reduceToLigand", fun)
-}
 #' Aggregate the receptors of a same ligand
 #'
 #' Simplifies a ligand-receptor table to focus on the ligands.
@@ -1202,7 +1104,7 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
     # pool the receptors
     ligands <- list()
     receptors <- list()
-    t.genes <- list()
+    tg.genes <- list()
     tg.corr <- list()
     tg.pval <- list()
     tg.logFC <- list()
@@ -1217,7 +1119,7 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
             pairs$pw.id == rec$pw.id[k])
         ligands <- c(ligands, list(L))
         receptors <- c(receptors, list(unique(rec$R)))
-        t.genes <- c(t.genes, obj@t.genes[j])
+        tg.genes <- c(tg.genes, obj@tg.genes[j])
         tg.corr <- c(tg.corr, obj@tg.corr[j])
         tg.pval <- c(tg.pval, obj@tg.pval[j])
         tg.logFC <- c(tg.logFC, obj@tg.logFC[j])
@@ -1233,7 +1135,7 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
     obj@LRinter <- LRinter
     obj@ligands <- ligands
     obj@receptors <- receptors
-    obj@t.genes <- t.genes
+    obj@tg.genes <- tg.genes
     obj@tg.corr <- tg.corr
     obj@tg.pval <- tg.pval
     obj@tg.logFC <- tg.logFC
@@ -1245,14 +1147,6 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
 }) # reduceToLigand
 
 
-if (!isGeneric("reduceToPathway")) {
-    if (is.function("reduceToPathway")) {
-        fun <- reduceToPathway
-    } else {
-        fun <- function(obj, ...) standardGeneric("reduceToPathway")
-    }
-    setGeneric("reduceToPathway", fun)
-}
 #' Aggregate ligands and receptors at the pathway level
 #'
 #' Simplifies a ligand-receptor inference object to focus on
@@ -1318,7 +1212,7 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
     # reduce to unique pathways
     ligands <- list()
     receptors <- list()
-    t.genes <- list()
+    tg.genes <- list()
     tg.corr <- list()
     tg.pval <- list()
     tg.logFC <- list()
@@ -1329,7 +1223,7 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
         j <- which(pairs$pw.id == p)[1]
         ligands <- c(ligands, list(unique(pairs$L[pairs$pw.id == p])))
         receptors <- c(receptors, list(unique(pairs$R[pairs$pw.id == p])))
-        t.genes <- c(t.genes, obj@t.genes[j])
+        tg.genes <- c(tg.genes, obj@tg.genes[j])
         tg.corr <- c(tg.corr, obj@tg.corr[j])
         tg.pval <- c(tg.pval, obj@tg.pval[j])
         tg.logFC <- c(tg.logFC, obj@tg.logFC[j])
@@ -1351,7 +1245,7 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
     obj@LRinter <- LRinter
     obj@ligands <- ligands
     obj@receptors <- receptors
-    obj@t.genes <- t.genes
+    obj@tg.genes <- tg.genes
     obj@tg.corr <- tg.corr
     obj@tg.pval <- tg.pval
     obj@tg.logFC <- tg.logFC
@@ -1365,14 +1259,6 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
 
 # Obtain gene signatures from a BSRInference object ============================
 
-if (!isGeneric("getLRGeneSignatures")) {
-    if (is.function("getLRGeneSignatures")) {
-        fun <- getLRGeneSignatures
-    } else {
-        fun <- function(obj, ...) standardGeneric("getLRGeneSignatures")
-    }
-    setGeneric("getLRGeneSignatures", fun)
-}
 #' Extract gene signatures of LR pair activity
 #'
 #' Obtains gene signatures reflecting ligand-receptor as well as
@@ -1448,14 +1334,14 @@ setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,
     } else {
         pathways <- pairs$pw.name
     }
-    t.genes <- tGenes(obj)[selected]
+    tg.genes <- tgGenes(obj)[selected]
     t.corrs <- tgCorr(obj)[selected]
     t.pvals <- tgPval(obj)[selected]
     t.logFCs <- tgLogFC(obj)[selected]
 
     for (i in seq_len(nrow(pairs))) {
-        tg <- t.genes[[i]]
-        t.genes[[i]] <- tg[pairs$rank[i]:length(tg)]
+        tg <- tg.genes[[i]]
+        tg.genes[[i]] <- tg[pairs$rank[i]:length(tg)]
         tc <- t.corrs[[i]]
         t.corrs[[i]] <- tc[pairs$rank[i]:length(tc)]
         tp <- t.pvals[[i]]
@@ -1466,7 +1352,7 @@ setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,
 
     new("BSRSignatureComp",
         pathways = pathways, ligands = ligands,
-        receptors = receptors, t.genes = t.genes, tg.corr = t.corrs,
+        receptors = receptors, tg.genes = tg.genes, tg.corr = t.corrs,
         tg.pval = t.pvals, tg.logFC = t.logFCs,
         cmp.name = cmpName(obj)
     )

@@ -41,8 +41,10 @@ setClass("BSRDataModelComp",
     prototype = list(
         initial.organism = "hsapiens",
         initial.orthologs = list("A", "B", "C"),
-        ncounts = matrix(1.0, nrow = 2, ncol = 1,
-        dimnames = list(c("A", "B"), "C")),
+        ncounts = matrix(1.0,
+            nrow = 2, ncol = 1,
+            dimnames = list(c("A", "B"), "C")
+        ),
         log.transformed = FALSE,
         normalization = "UQ",
         param = list(spatial.smooth = FALSE),
@@ -702,7 +704,7 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
             "rank", "len", "rank.pval", "rank.corr",
             "LR.score", "L.expr", "R.expr"
         )],
-        ligands = ligands, receptors = receptors, t.genes = tg, 
+        ligands = ligands, receptors = receptors, tg.genes = tg, 
         tg.corr = tgcorr,
         tg.pval = tgpval, tg.logFC = tglogFC, tg.expr = tgexpr, 
         inf.param = inf.param,
@@ -807,7 +809,7 @@ setMethod("scoreLRGeneSignatures", "BSRDataModelComp", function(obj,
     # intersect signature gene names with RNA-seq data
     ligands <- list()
     receptors <- list()
-    t.genes <- list()
+    tg.genes <- list()
 
     for (i in seq_along(ligands(sig))) {
         ligands[[i]] <- intersect(ligands(sig)[[i]], all.genes)
@@ -815,17 +817,17 @@ setMethod("scoreLRGeneSignatures", "BSRDataModelComp", function(obj,
     for (i in seq_along(receptors(sig))) {
         receptors[[i]] <- intersect(receptors(sig)[[i]], all.genes)
     }
-    for (i in seq_along(tGenes(sig))) {
-        t.genes[[i]] <- intersect(tGenes(sig)[[i]], all.genes)
+    for (i in seq_along(tgGenes(sig))) {
+        tg.genes[[i]] <- intersect(tgGenes(sig)[[i]], all.genes)
     }
 
     good <- vapply(ligands, length, integer(1)) > 0 &
         vapply(receptors, length, integer(1)) > 0 &
-        vapply(t.genes, length, integer(1)) > 0
+        vapply(tg.genes, length, integer(1)) > 0
 
     ligands <- ligands[good]
     receptors <- receptors[good]
-    t.genes <- t.genes[good]
+    tg.genes <- tg.genes[good]
     pathways <- pathways(sig)[good]
 
     # scale ncounts
@@ -887,9 +889,9 @@ setMethod("scoreLRGeneSignatures", "BSRDataModelComp", function(obj,
         }
 
         # average target gene z-score
-        zz <- z[t.genes[[i]], ]
+        zz <- z[tg.genes[[i]], ]
         if (is.matrix(zz)) {
-            mT <- matrixStats::colSums2(zz) / length(t.genes[[i]])
+            mT <- matrixStats::colSums2(zz) / length(tg.genes[[i]])
         } else {
             mT <- zz
         }

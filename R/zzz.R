@@ -3,8 +3,8 @@
     # handle directory creation over different OS
     cacheDir <- tools::R_user_dir("BulkSignalR", which="cache")
 
-    nameEnv <- "SignalR-Env"
-    myEnv <- new.env(parent = emptyenv()) # globalenv() #emptyenv() #baseenv()
+    nameEnv <- ".SignalR-Env"
+    myEnv <- new.env(parent = emptyenv()) 
     attach(myEnv, name = nameEnv)
     assign("nameEnv", nameEnv, envir = as.environment(nameEnv))
 
@@ -54,4 +54,6 @@
         envir = as.environment(nameEnv))
     assign("BulkSignalR_Network", BulkSignalR_Network, 
         envir = as.environment(nameEnv))
+    
+
 }

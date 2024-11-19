@@ -425,7 +425,7 @@ relateToGeneSet <- function(bsrinf, gs, min.cor = 0.25, qval.thres = 0.001) {
     i <- NULL
     # get target gens and L-R interactions
     inter <- LRinter(bsrinf)
-    tg <- tGenes(bsrinf)
+    tg <- tgGenes(bsrinf)
     tcor <- tgCorr(bsrinf)
 
     # impose threshold on FDR

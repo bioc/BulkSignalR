@@ -22,7 +22,7 @@ resetLRdb <- function(db, switch = FALSE) {
     if (colnames(db)[1] == "ligand" & colnames(db)[2] == "receptor") {
         if (switch) {
             assign("BulkSignalR_LRdb", unique(db[, c("ligand", "receptor")]),
-                envir = as.environment(get("nameEnv"))
+                envir = as.environment(nameEnv)
             )
         } else {
             db <- rbind(
@@ -30,7 +30,7 @@ resetLRdb <- function(db, switch = FALSE) {
                 db[, c("ligand", "receptor")]
             )
             assign("BulkSignalR_LRdb", unique(db), 
-                envir = as.environment(get("nameEnv")))
+                envir = as.environment(nameEnv))
         }
     } else {
         stop(

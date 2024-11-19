@@ -85,17 +85,11 @@ setMethod(
     }
 )
 
-
 # Accessors & setters ========================================================
 
-if (!isGeneric("initialOrganism")) {
-    if (is.function("initialOrganism")) {
-        fun <- initialOrganism
-    } else {
-        fun <- function(x) standardGeneric("initialOrganism")
-    }
-    setGeneric("initialOrganism", fun)
-}
+setGeneric("initialOrganism", signature="x",
+    function(x) standardGeneric("initialOrganism")
+)
 #' organism accessor
 #'
 #' @name initialOrganism
@@ -116,14 +110,9 @@ if (!isGeneric("initialOrganism")) {
 setMethod("initialOrganism", "BSRDataModel", function(x) x@initial.organism)
 
 
-if (!isGeneric("initialOrthologs")) {
-    if (is.function("initialOrthologs")) {
-        fun <- initialOrthologs
-    } else {
-        fun <- function(x) standardGeneric("initialOrthologs")
-    }
-    setGeneric("initialOrthologs", fun)
-}
+setGeneric("initialOrthologs", signature="x",
+    function(x) standardGeneric("initialOrthologs")
+)
 #' Model parameter accessor
 #'
 #' @name initialOrthologs
@@ -144,14 +133,9 @@ if (!isGeneric("initialOrthologs")) {
 setMethod("initialOrthologs", "BSRDataModel", function(x) x@initial.orthologs)
 
 
-if (!isGeneric("ncounts")) {
-    if (is.function("ncounts")) {
-        fun <- ncounts
-    } else {
-        fun <- function(x) standardGeneric("ncounts")
-    }
-    setGeneric("ncounts", fun)
-}
+setGeneric("ncounts", signature="x",
+    function(x) standardGeneric("ncounts")
+)
 #' Normalized count matrix accessor
 #'
 #' @name ncounts
@@ -171,14 +155,9 @@ if (!isGeneric("ncounts")) {
 #' @export
 setMethod("ncounts", "BSRDataModel", function(x) x@ncounts)
 
-if (!isGeneric("ncounts<-")) {
-    if (is.function("ncounts<-")) {
-        fun <- `ncounts<-`
-    } else {
-        fun <- function(x, value) standardGeneric("ncounts<-")
-    }
-    setGeneric("ncounts<-", fun)
-}
+setGeneric("ncounts<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("ncounts<-")
+)
 #' Normalized count matrix setter (internal use only)
 #'
 #' @param x object BSRDataModel
@@ -192,14 +171,9 @@ setMethod("ncounts<-", "BSRDataModel", function(x, value) {
 })
 
 
-if (!isGeneric("param")) {
-    if (is.function("param")) {
-        fun <- param
-    } else {
-        fun <- function(x) standardGeneric("param")
-    }
-    setGeneric("param", fun)
-}
+setGeneric("param", signature="x",
+    function(x) standardGeneric("param")
+)
 #' Model parameter accessor
 #'
 #' @name param
@@ -219,14 +193,10 @@ if (!isGeneric("param")) {
 #' @export
 setMethod("param", "BSRDataModel", function(x) x@param)
 
-if (!isGeneric("logTransformed")) {
-    if (is.function("logTransformed")) {
-        fun <- logTransformed
-    } else {
-        fun <- function(x) standardGeneric("logTransformed")
-    }
-    setGeneric("logTransformed", fun)
-}
+
+setGeneric("logTransformed", signature="x",
+    function(x) standardGeneric("logTransformed")
+)
 #' log.transformed accessor
 #'
 #' @name logTransformed
@@ -246,14 +216,9 @@ if (!isGeneric("logTransformed")) {
 #' @export
 setMethod("logTransformed", "BSRDataModel", function(x) x@log.transformed)
 
-if (!isGeneric("normalization")) {
-    if (is.function("normalization")) {
-        fun <- normalization
-    } else {
-        fun <- function(x) standardGeneric("normalization")
-    }
-    setGeneric("normalization", fun)
-}
+setGeneric("normalization", signature="x",
+    function(x) standardGeneric("normalization")
+)
 #' Normalization accessor
 #'
 #' @name normalization
@@ -273,16 +238,9 @@ if (!isGeneric("normalization")) {
 #' @export
 setMethod("normalization", "BSRDataModel", function(x) x@normalization)
 
-
-
-if (!isGeneric("learnParameters")) {
-    if (is.function("learnParameters")) {
-        fun <- learnParameters
-    } else {
-        fun <- function(obj, ...) standardGeneric("learnParameters")
-    }
-    setGeneric("learnParameters", fun)
-}
+setGeneric("learnParameters", signature="obj",
+    function(obj, ...) standardGeneric("learnParameters")
+)
 #' Training of BulkSignalR model parameters
 #'
 #' Unique entry point for training the parameters behind
@@ -311,7 +269,8 @@ if (!isGeneric("learnParameters")) {
 #'   for the receptor-target correlations should be used.
 #' @param null.model      The null model to use for Spearman correlation
 #'   null distributions.
-#'
+#' @param min.corr.LR      The minimum ligand-receptor correlation required.
+#'  
 #' @details Estimates the model parameters that are stored in the
 #'   slot \code{param}.
 #'
@@ -389,7 +348,9 @@ setMethod(
         null.model = c(
             "automatic", "mixedNormal", "normal", "kernelEmpirical",
             "empirical", "stable"
-            ), filename = NULL) {
+            ), 
+        filename = NULL, min.corr.LR = -1) {
+
         obj@param$n.rand.LR <- as.integer(n.rand.LR)
         if (obj@param$n.rand.LR < 1) {
             stop("Parameter n.rand.LR must be an integer > 0")
@@ -420,6 +381,11 @@ setMethod(
         if (obj@param$min.positive < 1) {
             stop("Parameter min.positive must be an integer > 0")
         }
+
+        if (min.corr.LR < -1 || min.corr.LR > 1) {
+            stop("min.corr.LR must lie in [-1;1]")
+        }
+
         obj@param$quick <- quick
         null.model <- match.arg(null.model)
         if (null.model == "normal") {
@@ -443,11 +409,11 @@ setMethod(
         if (verbose) {
             message("Learning ligand-receptor correlation null distribution...")
         }
-        obj@param$min.corr.LR <- -1.0
-        ds.LR.null <- .getEmpiricalNullCorrLR(obj@ncounts,
-            n.rand = obj@param$n.rand.LR,
-            min.cor = obj@param$min.corr.LR
-        )
+
+        obj@param$min.corr.LR <- min.corr.LR
+
+        ds.LR.null <- .getEmpiricalNullCorrLR(obj)
+       
         rc <- ds.LR.null[[1]]$corr
         if (length(ds.LR.null) > 1) {
             for (i in 2:length(ds.LR.null)) rc <- c(rc, ds.LR.null[[i]]$corr)
@@ -543,14 +509,8 @@ setMethod(
                 message("Learning receptor-target ",
                 "correlation null distribution...")
             }
-            ds.RT.null <- .getEmpiricalNull(obj@ncounts,
-                n.rand = obj@param$n.rand.RT,
-                with.complex = obj@param$with.complex,
-                max.pw.size = obj@param$max.pw.size,
-                min.pw.size = obj@param$min.pw.size,
-                min.positive = obj@param$min.positive,
-                min.cor = obj@param$min.corr.LR
-            )
+            ds.RT.null <- .getEmpiricalNull(obj)
+            
             t <- ds.RT.null[[1]]
             if (length(ds.RT.null) > 1) {
                 for (i in 2:length(ds.RT.null)) t <- rbind(t, ds.RT.null[[i]])
@@ -589,15 +549,9 @@ setMethod(
 
 # performing initial inference ===========================================
 
-
-if (!isGeneric("initialInference")) {
-    if (is.function("initialInference")) {
-        fun <- initialInference
-    } else {
-        fun <- function(obj, ...) standardGeneric("initialInference")
-    }
-    setGeneric("initialInference", fun)
-}
+setGeneric("initialInference", signature="obj",
+    function(obj, ...) standardGeneric("initialInference")
+)
 #' Inference of ligand-receptor interactions
 #'
 #' Computes putative LR interactions along with their statistical confidence.
@@ -745,7 +699,7 @@ setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
             "L", "R", "pw.id", "pw.name", "pval", "qval",
             "LR.corr", "rank", "len", "rank.corr"
         )], ligands = ligands,
-        receptors = receptors, t.genes = tg, tg.corr = tgcorr,
+        receptors = receptors, tg.genes = tg, tg.corr = tgcorr,
         inf.param = inf.param
     )
 }) # initialInference
@@ -753,14 +707,10 @@ setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
 
 # Scoring of gene signatures in a BSRSignature object ==========================
 
-if (!isGeneric("scoreLRGeneSignatures")) {
-    if (is.function("scoreLRGeneSignatures")) {
-        fun <- scoreLRGeneSignatures
-    } else {
-        fun <- function(obj, ...) standardGeneric("scoreLRGeneSignatures")
-    }
-    setGeneric("scoreLRGeneSignatures", fun)
-}
+
+setGeneric("scoreLRGeneSignatures", signature="obj",
+    function(obj, ...) standardGeneric("scoreLRGeneSignatures")
+)
 #' Score ligand-receptor gene signatures
 #'
 #' Compute ligand-receptor gene signature scores over a BSRDataModel.
@@ -826,9 +776,10 @@ setMethod("scoreLRGeneSignatures", "BSRDataModel", function(obj,
     # intersect signature gene names with RNA-seq data
     ncounts <- ncounts(obj)
 
-    ligands <- list()
-    receptors <- list()
-    t.genes <- list()
+    ligands <- vector("list", length(ligands(sig)))
+    receptors <- vector("list", length(receptors(sig)))
+    tg.genes <- vector("list", length(tgGenes(sig)))
+
 
     for (i in seq_along(ligands(sig))) {
         ligands[[i]] <- intersect(ligands(sig)[[i]], all.genes)
@@ -836,17 +787,17 @@ setMethod("scoreLRGeneSignatures", "BSRDataModel", function(obj,
     for (i in seq_along(receptors(sig))) {
         receptors[[i]] <- intersect(receptors(sig)[[i]], all.genes)
     }
-    for (i in seq_along(tGenes(sig))) {
-        t.genes[[i]] <- intersect(tGenes(sig)[[i]], all.genes)
+    for (i in seq_along(tgGenes(sig))) {
+        tg.genes[[i]] <- intersect(tgGenes(sig)[[i]], all.genes)
     }
 
-    good <- vapply(ligands, length, integer(1)) > 0 &
-        vapply(receptors, length, integer(1)) > 0 &
-        vapply(t.genes, length, integer(1)) > 0
+    good <- lengths(ligands) > 0 &
+        lengths(receptors) > 0 &
+        lengths(tg.genes)  > 0
 
     ligands <- ligands[good]
     receptors <- receptors[good]
-    t.genes <- t.genes[good]
+    tg.genes <- tg.genes[good]
     pathways <- pathways(sig)[good]
 
     # scale ncounts
@@ -908,9 +859,9 @@ setMethod("scoreLRGeneSignatures", "BSRDataModel", function(obj,
         }
 
         # average target gene z-score
-        zz <- z[t.genes[[i]], ]
+        zz <- z[tg.genes[[i]], ]
         if (is.matrix(zz)) {
-            mT <- matrixStats::colSums2(zz) / length(t.genes[[i]])
+            mT <- matrixStats::colSums2(zz) / length(tg.genes[[i]])
         } else {
             mT <- zz
         }
