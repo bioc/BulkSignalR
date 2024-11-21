@@ -6,7 +6,7 @@
 #'
 #' @slot ligands   A list of ligands, one entry per LR interaction.
 #' @slot receptors   A list of receptors, one entry per LR interaction.
-#' @slot tg.genes  A list of target genes, one entry per LR interaction.
+#' @slot t.genes  A list of target genes, one entry per LR interaction.
 #' @slot pathways  An atomic vector of pathway names, one per interaction.
 #' @slot tg.corr  A list of target genes correlation.
 #'
@@ -14,23 +14,19 @@
 #' @examples
 #' new("BSRSignature")
 setClass("BSRSignature",
-    contains = "BSRInference",
     slots = c(
-        pathways = "character"
+        pathways = "character",
+        ligands = "list",
+        receptors = "list",
+        tg.genes = "list",
+        tg.corr = "list"
     ),
     prototype = list(
         pathways = "path 1",
         ligands = list("A"),
         receptors = list("B"),
         tg.genes = list(c("a", "b", "c")),
-        tg.corr = list(c(0.1, 0.2, 0.3)),
-        LRinter = data.frame(
-            L = "A", R = "B", pw.id = "123", pw.name = "one pw",
-            pval = 1.0, qval = 1.0, LR.corr = 0.6, rank = 2,
-            len = 50, rank.corr = 0.6,
-            stringsAsFactors = FALSE
-        ),
-        inf.param = list()
+        tg.corr = list(c(0.1, 0.2, 0.3))
     )
 )
 
@@ -92,9 +88,6 @@ setGeneric("pathways", signature="x",
 #' @export
 setMethod("pathways", "BSRSignature", function(x) x@pathways)
 
-#setGeneric("ligands",  signature="x",
-#    function(x) standardGeneric("ligands")
-#)
 #' ligands accessor
 #'
 #' @name ligands

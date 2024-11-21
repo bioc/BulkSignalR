@@ -863,12 +863,12 @@ setMethod("getLRGeneSignatures", "BSRInference", function(obj,
         tg.corrs[[i]] <- tc[pairs$rank[i]:length(tc)]
     }
 
-
     new("BSRSignature",
-        LRinter =  pairs,
-        pathways = pathways, ligands = ligands,
-        receptors = receptors, tg.genes = tg.genes, tg.corr = tg.corrs,
-        inf.param = infParam(obj)
+        ligands = ligands,
+        receptors = receptors, 
+        tg.genes = tg.genes, 
+        tg.corr = tg.corrs,
+        pathways =  pathways
     )
 }) # getLRGeneSignatures
 

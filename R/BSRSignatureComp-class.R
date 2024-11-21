@@ -16,16 +16,13 @@ setClass("BSRSignatureComp",
     contains = c("BSRSignature"),
     slots = c(
         cmp.name = "character",
+        tg.expr = "list",
         tg.pval = "list",
         tg.logFC = "list"
     ),
     prototype = list(
-        cmp.name = "happy",
-        pathways = "path 1",
-        ligands = list("A"),
-        receptors = list("B"),
-        tg.genes = list(c("a", "b", "c")),
-        tg.corr = list(c(0.1, 0.2, 0.3)),
+        cmp.name = "myComparison",
+        tg.expr = list(c(1, 2, 3)),
         tg.pval = list(c(0.05, 0.1, 0.008)),
         tg.logFC = list(c(-1, 0, 2))
     )
@@ -39,6 +36,9 @@ setValidity(
         }
         if (length(object@cmp.name) == 0) {
             return("cmp.name must have a length > 0")
+        }
+        if (!is.list(object@tg.expr)) {
+            return("tg.expr is not a list")
         }
         if (!is.list(object@tg.pval)) {
             return("tg.pval is not a list")
@@ -59,9 +59,18 @@ setMethod("show", "BSRSignatureComp", function(object) {
 
 # Accessors & setters ========================================================
 
-setGeneric("tgPval", signature="x",
-    function(x) standardGeneric("tgPval")
-)
+#' Target gene expression accessor
+#'
+#' @name tgExpr
+#' @aliases tgExpr,BSRSignatureComp-method
+#' @param x BSRSignatureComp object
+#' @return tgExpr
+#' @examples
+#' if(FALSE){
+#' }
+#' @export
+setMethod("tgExpr", "BSRSignatureComp", function(x) x@tg.expr)
+
 #' Target gene P-values accessor
 #'
 #' @name tgPval
@@ -70,9 +79,7 @@ setGeneric("tgPval", signature="x",
 #' @export
 setMethod("tgPval", "BSRSignatureComp", function(x) x@tg.pval)
 
-setGeneric("tgLogFC", signature="x",
-    function(x) standardGeneric("tgLogFC")
-)
+
 #' Target gene logFC accessor
 #'
 #' @name tgLogFC
@@ -81,9 +88,6 @@ setGeneric("tgLogFC", signature="x",
 #' @export
 setMethod("tgLogFC", "BSRSignatureComp", function(x) x@tg.logFC)
 
-setGeneric("cmpName", signature="x",
-    function(x) standardGeneric("cmpName")
-)
 #' Comparison name accessor
 #'
 #' @name cmpName

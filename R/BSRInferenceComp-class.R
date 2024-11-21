@@ -58,16 +58,8 @@ setClass("BSRInferenceComp",
         tg.expr = "list"
     ),
     prototype = list(
-        cmp.name = "happy",
+        cmp.name = "myComparison",
         src.cmp.name = "",
-        LRinter = data.frame(
-            L = "A", R = "B", pw.id = "123",
-            pw.name = "one pw", pval = 1.0, qval = 1.0, L.logFC = 2,
-            R.logFC = 1.5, LR.pval = 0.6, LR.corr = 0.5,
-            rank = 2, len = 50, rank.pval = 0.6, rank.corr = 0.34,
-            LR.score = 0.6, L.expr = 2, R.expr = 3,
-            stringsAsFactors = FALSE
-        ),
         tg.pval = list(c(0.05, 0.1, 0.008)),
         tg.logFC = list(c(-1, 0, 2)),
         tg.expr = list(c(1, 2, 3))
@@ -220,6 +212,7 @@ setMethod("srcCmpName<-", "BSRInferenceComp", function(x, value) {
 setGeneric("tgPval", signature="x",
     function(x) standardGeneric("tgPval")
 )
+
 #' Target gene P-values accessor
 #'
 #' @name tgPval
@@ -1338,6 +1331,7 @@ setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,
     t.corrs <- tgCorr(obj)[selected]
     t.pvals <- tgPval(obj)[selected]
     t.logFCs <- tgLogFC(obj)[selected]
+    t.exprs <- tgExpr(obj)[selected]
 
     for (i in seq_len(nrow(pairs))) {
         tg <- tg.genes[[i]]
@@ -1348,12 +1342,20 @@ setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,
         t.pvals[[i]] <- tp[pairs$rank[i]:length(tp)]
         tl <- t.logFCs[[i]]
         t.logFCs[[i]] <- tl[pairs$rank[i]:length(tl)]
+        te <- t.exprs[[i]]
+        t.exprs[[i]] <- te[pairs$rank[i]:length(te)]
+
     }
 
     new("BSRSignatureComp",
-        pathways = pathways, ligands = ligands,
-        receptors = receptors, tg.genes = tg.genes, tg.corr = t.corrs,
-        tg.pval = t.pvals, tg.logFC = t.logFCs,
-        cmp.name = cmpName(obj)
+        ligands = ligands,
+        receptors = receptors, 
+        tg.genes = tg.genes, 
+        tg.corr = t.corrs,
+        pathways = pathways, 
+        cmp.name = cmpName(obj),
+        tg.pval = t.pvals, 
+        tg.logFC = t.logFCs,        
+        tg.expr = t.exprs
     )
 }) # getLRGeneSignatures

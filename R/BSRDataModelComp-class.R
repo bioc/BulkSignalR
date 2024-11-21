@@ -41,10 +41,8 @@ setClass("BSRDataModelComp",
     prototype = list(
         initial.organism = "hsapiens",
         initial.orthologs = list("A", "B", "C"),
-        ncounts = matrix(1.0,
-            nrow = 2, ncol = 1,
-            dimnames = list(c("A", "B"), "C")
-        ),
+        ncounts = matrix(1.0, nrow = 2, ncol = 1,
+            dimnames = list(c("A", "B"), "C")),
         log.transformed = FALSE,
         normalization = "UQ",
         param = list(spatial.smooth = FALSE),
@@ -697,6 +695,7 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
     } else {
         src.cmp.name.char <- src.cmp.name
     }
+
     new("BSRInferenceComp",
         LRinter = inter[, c(
             "L", "R", "pw.id", "pw.name", "pval", "qval",
@@ -704,10 +703,11 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
             "rank", "len", "rank.pval", "rank.corr",
             "LR.score", "L.expr", "R.expr"
         )],
-        ligands = ligands, receptors = receptors, tg.genes = tg, 
-        tg.corr = tgcorr,
+        ligands = ligands, 
+        receptors = receptors, 
+        tg.genes = tg, 
+        tg.corr = tgcorr, inf.param = inf.param,
         tg.pval = tgpval, tg.logFC = tglogFC, tg.expr = tgexpr, 
-        inf.param = inf.param,
         cmp.name = cmp.name, src.cmp.name = src.cmp.name.char
     )
 }) # initialInference

@@ -345,8 +345,10 @@ prepareDataset <- function(
     }
 
     new("BSRDataModel",
-        ncounts = ncounts, log.transformed = log.transformed,
-        normalization = toupper(method), initial.organism = species,
+        ncounts = ncounts, 
+        log.transformed = log.transformed,
+        normalization = toupper(method), 
+        initial.organism = species,
         initial.orthologs = homolog.genes
     )
 } # prepareDataset
