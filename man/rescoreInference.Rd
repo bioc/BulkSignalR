@@ -76,7 +76,8 @@ bsrdm <- learnParameters(bsrdm,
     verbose = TRUE
 )
 bsrinf <- initialInference(bsrdm)
-bsrinf.new <- rescoreInference(bsrinf, param = param(bsrdm), rank.p = 0.75)
+bsrinf.new <- rescoreInference(bsrinf, 
+param = parameters(bsrdm), rank.p = 0.75)
 }
 if(FALSE){
 print("rescoreInference")
@@ -104,6 +105,6 @@ bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
 
 # rescore
 bsrinf.less <- rescoreInference(bsrinf, 
-param = param(bsrdm.comp), rank.p = 0.75)
+param = parameters(bsrdm.comp), rank.p = 0.75)
 }
 }

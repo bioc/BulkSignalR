@@ -7,7 +7,7 @@
 .edgesLRIntracell(
   pairs,
   pw,
-  t.genes,
+  tg.genes,
   tg.corr,
   id.col,
   gene.col,
@@ -26,8 +26,8 @@
 
 \item{pw}{A table defining the reference pathways.}
 
-\item{t.genes}{Target gene list such as output by
-\code{tGenes(BSRInference)}.}
+\item{tg.genes}{Target gene list such as output by
+\code{tgGenes(BSRInference)}.}
 
 \item{tg.corr}{Target gene correlation list (with the receptor) such as
 output by \code{tgCorr(BSRInference)}.}

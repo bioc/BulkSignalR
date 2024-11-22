@@ -18,6 +18,5 @@ Fetch LR interactions from database and
 and return a dataframe
 }
 \examples{
-print("getInteractions")
 getInteractions(idRelease=1)
 }

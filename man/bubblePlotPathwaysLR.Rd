@@ -10,13 +10,8 @@ bubblePlotPathwaysLR(
   qval.thres = 1,
   filter.L = NULL,
   filter.R = NULL,
-  path = "./",
-  filename = NULL,
   color = "#16a647",
-  width = 16,
-  height = 7,
-  pointsize = 6,
-  format = c("pdf", "svg", "png")
+  pointsize = 6
 )
 }
 \arguments{
@@ -30,19 +25,9 @@ bubblePlotPathwaysLR(
 
 \item{filter.R}{Vector of receptors to keep.}
 
-\item{path}{Path directory to plot.}
-
-\item{filename}{An output filename, NULL by default to display on screen.}
-
 \item{color}{Main color used for the gradient.}
 
-\item{width}{Global image width in cm.}
-
-\item{height}{Global image height in cm.}
-
 \item{pointsize}{Global pointsize.}
-
-\item{format}{File format.}
 }
 \value{
 A bubble plot displayed in the current viewport or in a file
@@ -65,11 +50,7 @@ pathways <- LRinter(bsrinf.example)[1,c("pw.name")]
 bubblePlotPathwaysLR(bsrinf.example,
     pathways = pathways,
     qval.thres = 1,
-    path = "./",
     color = "red",
-    filename = "sdc_bubble",
-    width = 16,
-    height = 7,
     pointsize = 8
 )
 }

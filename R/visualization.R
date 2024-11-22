@@ -435,8 +435,6 @@ signatureHeatmaps <- function(pathway,
 #'
 #' @param mat.c         A matrix with the signature scores such as output by
 #' \code{scoreLRGeneSignatures()}.
-#' @param path directory where to plot file.
-#' @param filename file name, NULL by default to display on screen.
 #' @param dend.row       A precomputed row dendrogram.
 #' @param dend.spl       A precompute sample (column) dendrogram.
 #' @param cols           A vector of colors to use for the heatmap.

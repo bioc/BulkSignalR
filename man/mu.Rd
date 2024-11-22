@@ -23,7 +23,7 @@ normal <- grep("^N", names(sdc))
 bsrdm <- prepareDataset(sdc[, -normal])
 
 # define the comparison
-bsrdm.comp <- as.BSRDataModelComp(bsrdm)
+bsrdm.comp <- as.BSRDataModelcomparison(bsrdm)
 colA <- as.integer(1:5)
 colB <- as.integer(8:15)
 n <- nrow(ncounts(bsrdm.comp))
@@ -32,8 +32,8 @@ stats <- data.frame(
     expr = runif(n, 0, 10)
 )
 rownames(stats) <- rownames(ncounts(bsrdm.comp))
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
+bsrcc <- defineClustercomparison(bsrdm.comp, colA, colB, stats)
+bsrdm.comp <- addClustercomparison(bsrdm.comp, bsrcc, "random.example")
 
 mu(bsrdm.comp)
 }

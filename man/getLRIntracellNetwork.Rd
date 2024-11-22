@@ -51,7 +51,7 @@ signaling network. Default colors and node sizes are assigned,
 which can be changed afterwards if necessary.
 
 The target genes to which the \code{min.cor} correlation is imposed are
-those listed in \code{tGenes(bsrinf)}, correlations are in
+those listed in \code{tgGenes(bsrinf)}, correlations are in
 \code{tgCorr(bsrinf)}.
 The construction of shortest paths from the receptors to those selected
 targets adds other genes, which were either some targets with too low

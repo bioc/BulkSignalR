@@ -15,7 +15,7 @@ gene names for source species and Homo Sapiens.}
 \value{
 Depend type of input genes
 LRinter return a vector of genes
-tGenes receptors ligands : return list of list of genes
+tgGenes receptors ligands : return list of list of genes
 }
 \description{
 Convert gene symbol to another organism

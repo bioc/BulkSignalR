@@ -18,7 +18,8 @@
   quick = FALSE,
   null.model = c("automatic", "mixedNormal", "normal", "kernelEmpirical", "empirical",
     "stable"),
-  filename = "distribution"
+  filename = NULL,
+  min.corr.LR = -1
 )
 }
 \arguments{
@@ -53,6 +54,8 @@ for the receptor-target correlations should be used.}
 null distributions.}
 
 \item{filename}{Name of the output plot.}
+
+\item{min.corr.LR}{The minimum ligand-receptor correlation required.}
 }
 \value{
 A BSRDataModel object with trained model parameters

@@ -4,9 +4,10 @@
 #' infer LR interactions based on the resulting P-values,
 #' log-fold-changes (logFC), and expression values.
 #'
-#' @slot colA   Column indices for the samples in cluster A.
-#' @slot colB   Column indices for the samples in cluster B.
-#' @slot stats  Comparison statistics A versus B as a data.frame and
+#' @slot col.clusterA   Column indices for the samples in cluster A.
+#' @slot col.clusterB   Column indices for the samples in cluster B.
+#' @slot differential.stats  Comparison statistics A versus B 
+#' as a data.frame and
 #' containing at least two columns named 'pval', 'logFC', and 'expr'.
 #'
 #' @export
@@ -33,14 +34,14 @@
 #' }
 setClass("BSRClusterComp",
     slots = c(
-        colA = "integer",
-        colB = "integer",
-        stats = "data.frame"
+        col.clusterA = "integer",
+        col.clusterB = "integer",
+        differential.stats = "data.frame"
     ),
     prototype = list(
-        colA = as.integer(c(1, 2)),
-        colB = as.integer(c(3, 4)),
-        stats = data.frame(
+        col.clusterA = as.integer(c(1, 2)),
+        col.clusterB = as.integer(c(3, 4)),
+        differential.stats = data.frame(
             pval = c(0.01, 0.01),
             logFC = c(1, -1), expr = c(1, 2)
         )
@@ -50,22 +51,23 @@ setClass("BSRClusterComp",
 setValidity(
     "BSRClusterComp",
     function(object) {
-        if (!is.integer(object@colA)) {
-            return("colA indices are not all integers")
+        if (!is.integer(object@col.clusterA)) {
+            return("col.clusterA indices are not all integers")
         }
-        if (length(object@colA) < 1) {
-            return("colA empty")
+        if (length(object@col.clusterA) < 1) {
+            return("col.clusterA empty")
         }
-        if (!is.integer(object@colB)) {
-            return("colB indices are not all integers")
+        if (!is.integer(object@col.clusterB)) {
+            return("col.clusterB indices are not all integers")
         }
-        if (length(object@colB) < 1) {
-            return("colB empty")
+        if (length(object@col.clusterB) < 1) {
+            return("col.clusterB empty")
         }
-        if (length(intersect(object@colA, object@colB)) > 0) {
-            return("colA and colB are not disjoint")
+        if (length(intersect(object@col.clusterA, 
+        object@col.clusterB)) > 0) {
+            return("col.cluster1 and col.clusterB are not disjoint")
         }
-        if (!is.data.frame(object@stats)) {
+        if (!is.data.frame(object@differential.stats)) {
             return("specified stats are not a data.frame")
         }
 
@@ -76,38 +78,41 @@ setValidity(
 setMethod(
     "show", "BSRClusterComp",
     function(object) {
-        if (length(object@colA) > 5) {
-            cat("Cluster A columns:", object@colA[seq_len(5)], "...\n")
+        if (length(object@col.clusterA) > 5) {
+            cat("Cluster A columns:", 
+            object@col.clusterA[seq_len(5)], "...\n")
         } else {
             cat(
                 "Cluster A columns:",
-                object@colA[seq_len(length(object@colA))], "\n"
+                object@col.clusterA[
+                    seq_len(length(object@col.clusterA))], "\n"
             )
         }
-        if (length(object@colB) > 5) {
-            cat("Cluster B columns:", object@colB[seq_len(5)], "...\n")
+        if (length(object@col.clusterB) > 5) {
+            cat("Cluster B columns:", object@col.clusterB[seq_len(5)], "...\n")
         } else {
             cat(
                 "Cluster B columns:",
-                object@colB[seq_len(length(object@colB))], "\n"
+                object@col.clusterB[
+                    seq_len(length(object@col.clusterB))], "\n"
             )
         }
-        print(utils::head(object@stats))
+        print(utils::head(object@differential.stats))
     }
 )
 
 
 # Accessors & setters ========================================================
 
-setGeneric("colA", signature="x",
-    function(x) standardGeneric("colA")
+setGeneric("colClusterA", signature="x",
+    function(x) standardGeneric("colClusterA")
 )
 #' Cluster A columns accessor
 #'
-#' @name colA
-#' @aliases colA,BSRClusterComp-method
+#' @name colClusterA
+#' @aliases colClusterA,BSRClusterComp-method
 #' @param x object BSRClusterComp
-#' @return colA
+#' @return col.clusterA
 #' @examples
 #' bsrdm <- new("BSRDataModel",
 #'     ncounts = matrix(1.5,
@@ -126,12 +131,12 @@ setGeneric("colA", signature="x",
 #' )
 #' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
-#' colA(bsrcc)
+#' colClusterA(bsrcc)
 #' @export
-setMethod("colA", "BSRClusterComp", function(x) x@colA)
+setMethod("colClusterA", "BSRClusterComp", function(x) x@col.clusterA)
 
-setGeneric("colA<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("colA<-")
+setGeneric("colClusterA<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("colClusterA<-")
 )
 #' Cluster A columns setter (internal use only)
 #'
@@ -139,21 +144,21 @@ setGeneric("colA<-", signature=c("x", "value"),
 #' @param value value to be set for BSRClusterComp
 #' @return returns \code{NULL}
 #' @keywords internal
-setMethod("colA<-", "BSRClusterComp", function(x, value) {
-    x@colA <- value
+setMethod("colClusterA<-", "BSRClusterComp", function(x, value) {
+    x@col.clusterA <- value
     methods::validObject(x)
     x
 })
 
-setGeneric("colB", signature="x",
-    function(x) standardGeneric("colB")
+setGeneric("colClusterB", signature="x",
+    function(x) standardGeneric("colClusterB")
 )
 #' Cluster B columns accessor
 #'
-#' @name colB
-#' @aliases colB,BSRClusterComp-method
+#' @name colClusterB
+#' @aliases colClusterB,BSRClusterComp-method
 #' @param x object BSRClusterComp
-#' @return colB
+#' @return col.clusterB
 #' @examples
 #' bsrdm <- new("BSRDataModel",
 #'     ncounts = matrix(1.5,
@@ -172,12 +177,12 @@ setGeneric("colB", signature="x",
 #' )
 #' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
-#' colB(bsrcc)
+#' colClusterB(bsrcc)
 #' @export
-setMethod("colB", "BSRClusterComp", function(x) x@colB)
+setMethod("colClusterB", "BSRClusterComp", function(x) x@col.clusterB)
 
-setGeneric("colB<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("colB<-")
+setGeneric("colClusterB<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("colClusterB<-")
 )
 #' Cluster B columns setter (internal use only)
 #'
@@ -185,22 +190,22 @@ setGeneric("colB<-", signature=c("x", "value"),
 #' @param value value to be set for BSRClusterComp
 #' @return returns \code{NULL}
 #' @keywords internal
-setMethod("colB<-", "BSRClusterComp", function(x, value) {
-    x@colB <- value
+setMethod("colClusterB<-", "BSRClusterComp", function(x, value) {
+    x@col.clusterB <- value
     methods::validObject(x)
     x
 })
 
 
-setGeneric("stats", signature="x",
-    function(x) standardGeneric("stats")
+setGeneric("differentialStats", signature="x",
+    function(x) standardGeneric("differentialStats")
 )
 #' Cluster comparison statistics accessor
 #'
-#' @name stats
-#' @aliases stats,BSRClusterComp-method
+#' @name differentialStats
+#' @aliases differentialStats,BSRClusterComp-method
 #' @param x BSRClusterComp object
-#' @return stats
+#' @return diffferential.stats
 #' @examples
 #' bsrdm <- new("BSRDataModel",
 #'     ncounts = matrix(1.5,
@@ -219,12 +224,12 @@ setGeneric("stats", signature="x",
 #' )
 #' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
-#' stats(bsrcc)
+#' differentialStats(bsrcc)
 #' @export
-setMethod("stats", "BSRClusterComp", function(x) x@stats)
+setMethod("differentialStats", "BSRClusterComp", function(x) x@differential.stats)
 
-setGeneric("stats<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("stats<-")
+setGeneric("differentialStats<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("differentialStats<-")
 )
 #' Cluster comparison statistics setter (internal use only)
 #'
@@ -232,8 +237,8 @@ setGeneric("stats<-", signature=c("x", "value"),
 #' @param value value to be set for BSRClusterComp
 #' @return returns \code{NULL}
 #' @keywords internal
-setMethod("stats<-", "BSRClusterComp", function(x, value) {
-    x@stats <- value
+setMethod("differentialStats<-", "BSRClusterComp", function(x, value) {
+    x@differential.stats <- value
     methods::validObject(x)
     x
 })

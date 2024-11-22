@@ -48,8 +48,8 @@
 smoothSpatialCounts <- function(bsrdm, areas, nnn = 4,
                                 radius = NULL, weight.ratio = 0.5,
                                 x.col = "array_col", y.col = "array_row") {
-    if (!is.null(param(bsrdm)$spatial.smooth) && 
-        (param(bsrdm)$spatial.smooth)) {
+    if (!is.null(parameters(bsrdm)$spatial.smooth) && 
+        (parameters(bsrdm)$spatial.smooth)) {
         warning("Spatial smoothing or ligand max ",
             "has been already applied to these data")
     }
@@ -151,8 +151,8 @@ smoothSpatialCounts <- function(bsrdm, areas, nnn = 4,
 #' }
 maxLigandSpatialCounts <- function(bsrdm, areas, nnn = 4, radius = NULL,
     x.col = "array_col", y.col = "array_row") {
-    if (!is.null(param(bsrdm)$spatial.smooth) && 
-        (param(bsrdm)$spatial.smooth)) {
+    if (!is.null(parameters(bsrdm)$spatial.smooth) && 
+        (parameters(bsrdm)$spatial.smooth)) {
         warning("Spatial smoothing or ligand max has",
         " been already applied to these data")
     }

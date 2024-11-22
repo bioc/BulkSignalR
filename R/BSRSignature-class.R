@@ -6,7 +6,7 @@
 #'
 #' @slot ligands   A list of ligands, one entry per LR interaction.
 #' @slot receptors   A list of receptors, one entry per LR interaction.
-#' @slot t.genes  A list of target genes, one entry per LR interaction.
+#' @slot tg.genes  A list of target genes, one entry per LR interaction.
 #' @slot pathways  An atomic vector of pathway names, one per interaction.
 #' @slot tg.corr  A list of target genes correlation.
 #'

@@ -232,31 +232,31 @@ setMethod("tgCorr<-", "BSRInference", function(x, value) {
     x
 })
 
-setGeneric("infParam", signature="x",
-    function(x) standardGeneric("infParam")
+setGeneric("inferenceParameters", signature="x",
+    function(x) standardGeneric("inferenceParameters")
 )
 #' Inference parameters accessor
 #'
-#' @name infParam
-#' @aliases infParam,BSRInference-method
+#' @name inferenceParameters
+#' @aliases inferenceParameters,BSRInference-method
 #' @param x BRSInference object.
-#' @return infParam
+#' @return inf.param
 #' @examples
 #' data(bsrinf.example, package = "BulkSignalR")
-#' infParam(bsrinf.example)
+#' inferenceParameters(bsrinf.example)
 #' @export
-setMethod("infParam", "BSRInference", function(x) x@inf.param)
+setMethod("inferenceParameters", "BSRInference", function(x) x@inf.param)
 
-setGeneric("infParam<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("infParam<-")
+setGeneric("inferenceParameters<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("inferenceParameters<-")
 )
 #' Inference parameters setter (internal use only)
-#' @param x BRSInferecence object.
+#' @param x BRSInference object.
 #' @param value value to be set.
 #' @return returns \code{NULL}
 #' 
 #' @keywords internal
-setMethod("infParam<-", "BSRInference", function(x, value) {
+setMethod("inferenceParameters<-", "BSRInference", function(x, value) {
     x@inf.param <- value
     methods::validObject(x)
     x
@@ -334,7 +334,8 @@ setGeneric("rescoreInference", signature="obj",
 #'     verbose = TRUE
 #' )
 #' bsrinf <- initialInference(bsrdm)
-#' bsrinf.new <- rescoreInference(bsrinf, param = param(bsrdm), rank.p = 0.75)
+#' bsrinf.new <- rescoreInference(bsrinf, 
+#' param = parameters(bsrdm), rank.p = 0.75)
 #' }
 setMethod("rescoreInference", "BSRInference", function(obj, param, 
     rank.p = 0.55, fdr.proc = c("BH", "Bonferroni", "Holm",
@@ -402,10 +403,10 @@ setMethod("rescoreInference", "BSRInference", function(obj, param,
     pairs$qval <- adj$adjp[order(adj$index), fdr.proc]
 
     # update the BSRInference object
-    inf.param <- infParam(obj)
+    inf.param <- inferenceParameters(obj)
     inf.param$fdr.proc <- fdr.proc
     inf.param$rank.p <- rank.p
-    infParam(obj) <- inf.param
+    inferenceParameters(obj) <- inf.param
     LRinter(obj) <- pairs
 
     obj
@@ -452,7 +453,7 @@ setGeneric("getPathwayStats", signature="obj",
 #' @importFrom foreach %do% %dopar%
 setMethod("getPathwayStats", "BSRInference", function(obj,
     pval.thres = NULL, qval.thres = NULL) {
-    if (infParam(obj)$ligand.reduced || infParam(obj)$receptor.reduced) {
+    if (inferenceParameters(obj)$ligand.reduced || inferenceParameters(obj)$receptor.reduced) {
         stop(
             "Cannot be applied to interactions involving",
             " reduced receptors or ligands"
@@ -607,7 +608,7 @@ setMethod("reduceToReceptor", "BSRInference", function(obj) {
     # Here we access the object slots directly as this procedure
     # is dependent of actual data representation
 
-    if (infParam(obj)$ligand.reduced) {
+    if (inferenceParameters(obj)$ligand.reduced) {
         stop("Already reduced to receptor")
     } # because ligands were reduced
 
@@ -675,7 +676,7 @@ setMethod("reduceToLigand", "BSRInference", function(obj) {
     # Here we access the object slots directly as this procedure
     # is dependent of actual representation
 
-    if (infParam(obj)$receptor.reduced) {
+    if (inferenceParameters(obj)$receptor.reduced) {
         stop("Already reduced to ligand")
     } # because receptors were reduced
 
@@ -749,10 +750,10 @@ setMethod("reduceToPathway", "BSRInference", function(obj) {
     # Here we access the object slots directly as this procedure
     # is dependent of actual representation
 
-    if (infParam(obj)$receptor.reduced) {
+    if (inferenceParameters(obj)$receptor.reduced) {
         stop("Already reduced to ligand")
     } # because receptors were reduced
-    if (infParam(obj)$ligand.reduced) {
+    if (inferenceParameters(obj)$ligand.reduced) {
         stop("Already reduced to receptor")
     } # because ligands were reduced
 

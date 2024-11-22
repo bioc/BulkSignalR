@@ -9,7 +9,7 @@
 }
 \arguments{
 \item{obj}{A BSRDataModelComp object output by
-\code{\link{as.BSRDataModelComp}}.}
+\code{\link{setAs}}.}
 
 \item{cmp.name}{The name of the comparison to remove.}
 }

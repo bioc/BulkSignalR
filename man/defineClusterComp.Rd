@@ -5,18 +5,20 @@
 \alias{defineClusterComp,BSRDataModelComp-method}
 \title{Definition of the comparison between two clusters of samples}
 \usage{
-\S4method{defineClusterComp}{BSRDataModelComp}(obj, colA, colB, stats)
+\S4method{defineClusterComp}{BSRDataModelComp}(obj, col.clusterA, col.clusterB, differential.stats)
 }
 \arguments{
 \item{obj}{A BSRDataModelComp object output by
-\code{\link{as.BSRDataModelComp}}.}
+\code{\link{setAs}}.}
 
-\item{colA}{Cluster A column indices.}
+\item{col.clusterA}{Cluster A column indices.}
 
-\item{colB}{Cluster B column indices.}
+\item{col.clusterB}{Cluster B column indices.}
 
-\item{stats}{A data.frame containing statistics about the differential
-analysis cluster A versus B. \code{stats} must contain at least the
+\item{differential.stats}{A data.frame containing statistics about
+the differential
+analysis cluster A versus B. \code{differentialStats} must contain 
+at least the
 columns 'pval' (for P-values), 'logFC' for log-fold-changes A/B, and
 'expr' for the expression of the genes in cluster A.}
 }
@@ -35,8 +37,9 @@ in the BSRDataModelComp object \code{obj}. Such a cluster comparison
 description is the basis for inferring LRIs from differential
 expression P-values instead of correlation analysis.
 
-The rows of \code{stats} must be in the same order as those of the count
-matrix in \code{obj}. Alternatively, \code{stats}
+The rows of \code{differentialStats} must be in the same order 
+as those of the count
+matrix in \code{obj}. Alternatively, \code{differentialStats}
 rows can be named and a 1-1 correspondence must exist between these names
 and those of the count matrix.
 }
@@ -47,7 +50,7 @@ normal <- grep("^N", names(sdc))
 bsrdm <- prepareDataset(sdc[, -normal])
 
 # define the comparison
-bsrdm.comp <- as.BSRDataModelComp(bsrdm)
+bsrdm.comp <- as.BSRDataModelcomparison(bsrdm)
 colA <- as.integer(1:5)
 colB <- as.integer(8:15)
 n <- nrow(ncounts(bsrdm.comp))
@@ -56,6 +59,6 @@ stats <- data.frame(
     expr = runif(n, 0, 10)
 )
 rownames(stats) <- rownames(ncounts(bsrdm.comp))
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
+bsrcc <- defineClustercomparison(bsrdm.comp, colA, colB, stats)
 
 }

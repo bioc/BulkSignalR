@@ -8,12 +8,9 @@ signatureHeatmaps(
   pathway,
   bsrdm,
   bsrsig,
-  path = "./",
-  filename = NULL,
   h.width = 6,
   h.height = 9,
   fontsize = 6,
-  format = c("pdf", "svg", "png"),
   show_column_names = FALSE
 )
 }
@@ -22,11 +19,7 @@ signatureHeatmaps(
 
 \item{bsrdm}{BulkSignalR data model object.}
 
-\item{bsrsig}{BulkSignalR signature object.}
-
-\item{path}{Path to write your ouput.}
-
-\item{filename}{An output filename, NULL by default
+\item{bsrsig}{BulkSignalR signature object.
 to display on screen.}
 
 \item{h.width}{Heatmap width in cm.}
@@ -34,8 +27,6 @@ to display on screen.}
 \item{h.height}{Heatmap height in cm.}
 
 \item{fontsize}{Fontsize.}
-
-\item{format}{File format.}
 
 \item{show_column_names}{Add column names on heatmap.}
 }

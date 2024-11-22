@@ -171,13 +171,13 @@ setMethod("ncounts<-", "BSRDataModel", function(x, value) {
 })
 
 
-setGeneric("param", signature="x",
-    function(x) standardGeneric("param")
+setGeneric("parameters", signature="x",
+    function(x) standardGeneric("parameters")
 )
 #' Model parameter accessor
 #'
-#' @name param
-#' @aliases param,BSRDataModel-method
+#' @name parameters
+#' @aliases parameters,BSRDataModel-method
 #' @param x BSRDataModel oject
 #' @return param
 #' @examples
@@ -189,10 +189,24 @@ setGeneric("param", signature="x",
 #'     log.transformed = TRUE,
 #'     normalization = "TC"
 #' )
-#' param(bsrdm)
+#' parameters(bsrdm)
 #' @export
-setMethod("param", "BSRDataModel", function(x) x@param)
+setMethod("parameters", "BSRDataModel", function(x) x@param)
 
+setGeneric("parameters<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("parameters<-")
+)
+#' Parameters dataModel setter (internal use only)
+#'
+#' @param x object BSRDataModel
+#' @param value value to be set for BSRDataModel
+#' @return returns \code{NULL}
+#' @keywords internal
+setMethod("parameters<-", "BSRDataModel", function(x, value) {
+    x@param <- value
+    methods::validObject(x)
+    x
+})
 
 setGeneric("logTransformed", signature="x",
     function(x) standardGeneric("logTransformed")
@@ -351,34 +365,35 @@ setMethod(
             ), 
         filename = NULL, min.corr.LR = -1) {
 
-        obj@param$n.rand.LR <- as.integer(n.rand.LR)
-        if (obj@param$n.rand.LR < 1) {
+
+        parameters(obj)$n.rand.LR <- as.integer(n.rand.LR)
+        if (parameters(obj)$n.rand.LR < 1) {
             stop("Parameter n.rand.LR must be an integer > 0")
         }
-        obj@param$n.rand.RT <- as.integer(n.rand.RT)
-        if (obj@param$n.rand.RT < 1) {
+        parameters(obj)$n.rand.RT <- as.integer(n.rand.RT)
+        if (parameters(obj)$n.rand.RT < 1) {
             stop("Parameter n.rand.RT must be an integer > 0")
         }
-        obj@param$plot.folder <- plot.folder
+        parameters(obj)$plot.folder <- plot.folder
         if (!is.null(plot.folder) && !file.exists(plot.folder)) {
             stop("The provided plot.folder does not exist")
         }
-        obj@param$file.name <- filename
-        obj@param$with.complex <- with.complex
-        obj@param$max.pw.size <- trunc(max.pw.size)
-        if (obj@param$max.pw.size < 1) {
+        parameters(obj)$file.name <- filename
+        parameters(obj)$with.complex <- with.complex
+        parameters(obj)$max.pw.size <- trunc(max.pw.size)
+        if (parameters(obj)$max.pw.size < 1) {
             stop("Parameter max.pw.size must be an integer > 0")
         }
-        obj@param$min.pw.size <- trunc(min.pw.size)
-        if (obj@param$min.pw.size < 1 || 
-            obj@param$min.pw.size > obj@param$max.pw.size) {
+        parameters(obj)$min.pw.size <- trunc(min.pw.size)
+        if (parameters(obj)$min.pw.size < 1 || 
+            parameters(obj)$min.pw.size > parameters(obj)$max.pw.size) {
             stop(
                 "Parameter min.pw.size must be",
                 "an integer > 0 and <= than max.pw.size"
             )
         }
-        obj@param$min.positive <- trunc(min.positive)
-        if (obj@param$min.positive < 1) {
+        parameters(obj)$min.positive <- trunc(min.positive)
+        if (parameters(obj)$min.positive < 1) {
             stop("Parameter min.positive must be an integer > 0")
         }
 
@@ -386,7 +401,7 @@ setMethod(
             stop("min.corr.LR must lie in [-1;1]")
         }
 
-        obj@param$quick <- quick
+        parameters(obj)$quick <- quick
         null.model <- match.arg(null.model)
         if (null.model == "normal") {
             trainModel <- .getGaussianParam
@@ -410,7 +425,7 @@ setMethod(
             message("Learning ligand-receptor correlation null distribution...")
         }
 
-        obj@param$min.corr.LR <- min.corr.LR
+        parameters(obj)$min.corr.LR <- min.corr.LR
 
         ds.LR.null <- .getEmpiricalNullCorrLR(obj)
        
@@ -418,7 +433,7 @@ setMethod(
         if (length(ds.LR.null) > 1) {
             for (i in 2:length(ds.LR.null)) rc <- c(rc, ds.LR.null[[i]]$corr)
         }
-        obj@param$LR.0$n <- length(rc)
+        parameters(obj)$LR.0$n <- length(rc)
 
         # Null distribution model
         if (!is.null(plot.folder)) {
@@ -491,18 +506,18 @@ setMethod(
             verbose = verbose,
             file.name = file.name
         )
-        obj@param$LR.0$model <- gp
+        parameters(obj)$LR.0$model <- gp
 
         # RT correlation null ------------------------------------
 
-        if (obj@param$quick) {
+        if (parameters(obj)$quick) {
             # RT correlations are assumed to be equal to LR correlations
             if (verbose) {
                 message("Quick learning, receptor-target correlation null ",
                     "distribution assumed to be equal to ligand-receptor...")
             }
-            obj@param$RT.0$n <- obj@param$LR.0$n
-            obj@param$RT.0$model <- obj@param$LR.0$model
+            parameters(obj)$RT.0$n <- parameters(obj)$LR.0$n
+            parameters(obj)$RT.0$model <- parameters(obj)$LR.0$model
         } else {
             # RT correlations are actually learnt
             if (verbose) {
@@ -523,9 +538,9 @@ setMethod(
             }
             if (null.model == "stable") {
                 # sub-sample randomized R-T correlations to limit compute time
-                r.corrs <- sample(r.corrs, obj@param$LR.0$n)
+                r.corrs <- sample(r.corrs, parameters(obj)$LR.0$n)
             }
-            obj@param$RT.0$n <- length(r.corrs)
+            parameters(obj)$RT.0$n <- length(r.corrs)
 
             # fit null model
             if (!is.null(plot.folder)) {
@@ -536,7 +551,7 @@ setMethod(
             gp <- trainModel(r.corrs, "RT correlation (null)",
                 verbose = verbose, file.name = file.name
             )
-            obj@param$RT.0$model <- gp
+            parameters(obj)$RT.0$model <- gp
         }
 
         if (verbose) {
@@ -639,19 +654,19 @@ setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
         "SidakSS", "SidakSD", "BY", "ABH", "TSBH")) {
 
     if (is.null(max.pw.size)) {
-        max.pw.size <- param(obj)$max.pw.size
+        max.pw.size <- parameters(obj)$max.pw.size
     }
     if (is.null(min.pw.size)) {
-        min.pw.size <- param(obj)$min.pw.size
+        min.pw.size <- parameters(obj)$min.pw.size
     }
     if (is.null(min.positive)) {
-        min.positive <- param(obj)$min.positive
+        min.positive <- parameters(obj)$min.positive
     }
     if (is.null(with.complex)) {
-        with.complex <- param(obj)$with.complex
+        with.complex <- parameters(obj)$with.complex
     }
     if (is.null(use.full.network)) {
-        use.full.network <- param(obj)$use.full.network
+        use.full.network <- parameters(obj)$use.full.network
     }
     reference <- match.arg(reference)
     fdr.proc <- match.arg(fdr.proc)
@@ -681,7 +696,7 @@ setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
 
     inf.param$fdr.proc <- fdr.proc
     inf.param$rank.p <- rank.p
-    inter <- .pValuesLR(pairs, param(obj), rank.p = rank.p, fdr.proc = fdr.proc)
+    inter <- .pValuesLR(pairs, parameters(obj), rank.p = rank.p, fdr.proc = fdr.proc)
 
     ligands <- strsplit(inter$L, ";")
     receptors <- strsplit(inter$R, ";")

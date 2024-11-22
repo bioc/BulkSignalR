@@ -15,7 +15,10 @@ prepareDataset(
   min.LR.found = 80,
   species = "hsapiens",
   conversion.dict = NULL,
-  UQ.pc = 0.75
+  UQ.pc = 0.75,
+  x.col = NULL,
+  y.col = NULL,
+  barcodeID.col = NULL
 )
 }
 \arguments{
@@ -52,6 +55,18 @@ human/nonhuman. Not used unless the organism is different from human.}
 \item{UQ.pc}{Percentile for upper-quartile normalization, number
 between 0 and 1 (in case the default 0.75 - hence the name - is not
 appropriate).}
+
+\item{x.col}{In a SpatialExperiment object, the index of the column
+containing x coordinates in the dafaframe returned by rowData(), usually 
+named array_row}
+
+\item{y.col}{In a SpatialExperiment object, the index of the column
+containing y coordinates in the dafaframe returned by rowData(), usually 
+named array_col}
+
+\item{barcodeID.col}{In a SpatialExperiment object, the index of the column
+containing barcodeID in the dafaframe returned by colData(), usually named
+barcode_id}
 }
 \value{
 A BSRModelData object with empty model parameters.

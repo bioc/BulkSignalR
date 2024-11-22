@@ -7,6 +7,7 @@
 #' @slot cmp.name   The name of the comparison.
 #' @slot tg.pval    A list of target genes P-values.
 #' @slot tg.logFC   A list of target genes logFC.
+#' @slot tg.expr   A list of target genes expression
 #'
 #' @export
 #' @examples
@@ -64,7 +65,7 @@ setMethod("show", "BSRSignatureComp", function(object) {
 #' @name tgExpr
 #' @aliases tgExpr,BSRSignatureComp-method
 #' @param x BSRSignatureComp object
-#' @return tgExpr
+#' @return tg.expr
 #' @examples
 #' if(FALSE){
 #' }
@@ -75,7 +76,8 @@ setMethod("tgExpr", "BSRSignatureComp", function(x) x@tg.expr)
 #'
 #' @name tgPval
 #' @aliases tgPval,BSRSignatureComp-method
-#' @param x BSRSignature
+#' @param x BSRSignatureComp object
+#' @return tg.pval
 #' @export
 setMethod("tgPval", "BSRSignatureComp", function(x) x@tg.pval)
 
@@ -84,16 +86,17 @@ setMethod("tgPval", "BSRSignatureComp", function(x) x@tg.pval)
 #'
 #' @name tgLogFC
 #' @aliases tgLogFC,BSRSignatureComp-method
-#' @param x BSRSignature
+#' @param x BSRSignatureComp object
+#' @return tg.logFC
 #' @export
 setMethod("tgLogFC", "BSRSignatureComp", function(x) x@tg.logFC)
 
 #' Comparison name accessor
 #'
-#' @name cmpName
-#' @aliases cmpName,BSRSignatureComp-method
-#' @param x BSRSignature
-#' @return cmpName
+#' @name comparisonName
+#' @aliases comparisonName,BSRSignatureComp-method
+#' @param x BSRSignatureComp object
+#' @return cmp.name
 #' 
 #' @export
-setMethod("cmpName", "BSRSignatureComp", function(x) x@cmp.name)
+setMethod("comparisonName", "BSRSignatureComp", function(x) x@cmp.name)

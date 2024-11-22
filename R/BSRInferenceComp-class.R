@@ -105,15 +105,15 @@ setMethod(
 # Accessors & setters ========================================================
 
 
-setGeneric("cmpName", signature="x",
-    function(x) standardGeneric("cmpName")
+setGeneric("comparisonName", signature="x",
+    function(x) standardGeneric("comparisonName")
 )
 #' Comparison name accessor
 #'
-#' @name cmpName
-#' @aliases cmpName,BSRInferenceComp-method
+#' @name comparisonName
+#' @aliases comparisonName,BSRInferenceComp-method
 #' @param x BSRInferenceComp object
-#' @return cmpName
+#' @return cmp.name
 #' @examples
 #' if(FALSE){
 #' # prepare data
@@ -136,14 +136,14 @@ setGeneric("cmpName", signature="x",
 #'
 #' # infer ligand-receptor interactions from the comparison
 #' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#' cmpName(bsrinf)
+#' comparisonName(bsrinf)
 #' }
 #' @export
-setMethod("cmpName", "BSRInferenceComp", function(x) x@cmp.name)
+setMethod("comparisonName", "BSRInferenceComp", function(x) x@cmp.name)
 
 
-setGeneric("cmpName<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("cmpName<-")
+setGeneric("comparisonName<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("comparisonName<-")
 )
 #' Comparison name setter (internal use only)
 #' 
@@ -151,22 +151,22 @@ setGeneric("cmpName<-", signature=c("x", "value"),
 #' @param value value to be set for bsrinf
 #' @return returns \code{NULL}
 #' @keywords internal
-setMethod("cmpName<-", "BSRInferenceComp", function(x, value) {
+setMethod("comparisonName<-", "BSRInferenceComp", function(x, value) {
     x@cmp.name <- value
     methods::validObject(x)
     x
 })
 
 
-setGeneric("srcCmpName", signature="x",
-    function(x) standardGeneric("srcCmpName")
+setGeneric("sourceComparisonName", signature="x",
+    function(x) standardGeneric("sourceComparisonName")
 )
 #' Source comparison name accessor
 #'
-#' @name srcCmpName
-#' @aliases srcCmpName,BSRInferenceComp-method
+#' @name sourceComparisonName
+#' @aliases sourceComparisonName,BSRInferenceComp-method
 #' @param x BSRInferenceComp object
-#' @return srcCmpName
+#' @return src.comp.name
 #' @examples
 #' if(FALSE){
 #' # prepare data
@@ -190,20 +190,20 @@ setGeneric("srcCmpName", signature="x",
 #' # infer ligand-receptor interactions from the comparison
 #' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
 #'
-#' srcCmpName(bsrinf)
+#' sourceComparisonName(bsrinf)
 #' }
 #' @export
-setMethod("srcCmpName", "BSRInferenceComp", function(x) x@src.cmp.name)
+setMethod("sourceComparisonName", "BSRInferenceComp", function(x) x@src.cmp.name)
 
-setGeneric("srcCmpName<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("srcCmpName<-")
+setGeneric("sourceComparisonName<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("sourceComparisonName<-")
 )
 #' Source comparison name setter (internal use only)
 #' @param x BSRInferenceComp object
 #' @param value value to be set for bsrinf
 #' @return returns \code{NULL}
 #' @keywords internal
-setMethod("srcCmpName<-", "BSRInferenceComp", function(x, value) {
+setMethod("sourceComparisonName<-", "BSRInferenceComp", function(x, value) {
     x@src.cmp.name <- value
     methods::validObject(x)
     x
@@ -506,7 +506,7 @@ setMethod(
 #'
 #' # rescore
 #' bsrinf.less <- rescoreInference(bsrinf, 
-#' param = param(bsrdm.comp), rank.p = 0.75)
+#' param = parameters(bsrdm.comp), rank.p = 0.75)
 #' }
 setMethod("rescoreInference", "BSRInferenceComp", function(obj, param, 
     rank.p = 0.55,
@@ -557,10 +557,10 @@ setMethod("rescoreInference", "BSRInferenceComp", function(obj, param,
     pairs$qval <- adj$adjp[order(adj$index), fdr.proc]
 
     # update the BSRInference object
-    inf.param <- infParam(obj)
+    inf.param <- inferenceParameters(obj)
     inf.param$fdr.proc <- fdr.proc
     inf.param$rank.p <- rank.p
-    infParam(obj) <- inf.param
+    inferenceParameters(obj) <- inf.param
     LRinter(obj) <- pairs
 
     obj
@@ -688,26 +688,26 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     lfc <- tgLogFC(obj)
     p <- tgPval(obj)
     e <- tgExpr(obj)
-    par <- infParam(obj)
+    par <- inferenceParameters(obj)
     mu <- par$mu
     logTransf <- par$log.transformed.data
-    R.stats <- stats(bsrcc)
+    R.stats <- differentialStats(bsrcc)
     if (!is.null(src.bsrcc)) {
-        L.stats <- stats(src.bsrcc)
+        L.stats <- differentialStats(src.bsrcc)
     } # paracrine
     else {
         L.stats <- R.stats
     } # autocrine
 
     # update parameters
-    par$colA <- colA(bsrcc)
-    par$colB <- colB(bsrcc)
+    par$col.clusterA <- colClusterA(bsrcc)
+    par$col.clusterB <- colClusterB(bsrcc)
     if (is.null(src.bsrcc)) {
         par$inference.type <- "autocrine"
     } else {
         par$inference.type <- "paracrine"
-        par$src.colA <- colA(src.bsrcc)
-        par$src.colB <- colB(src.bsrcc)
+        par$src.colA <- colClusterA(src.bsrcc)
+        par$src.colB <- colClusterB(src.bsrcc)
     }
     par$max.pval <- max.pval
     par$min.logFC <- min.logFC
@@ -836,7 +836,7 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     tgPval(obj) <- p
     tgLogFC(obj) <- lfc
     tgExpr(obj) <- e
-    infParam(obj) <- par
+    inferenceParameters(obj) <- par
 
     # rescore and return
     rescoreInference(obj, par, rank.p = rank.p, fdr.proc = fdr.proc)
@@ -992,7 +992,7 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
     # is dependent of actual data representation
 
-    if (infParam(obj)$ligand.reduced) {
+    if (inferenceParameters(obj)$ligand.reduced) {
         stop("Already reduced to receptor")
     } # because ligands were reduced
 
@@ -1090,7 +1090,7 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
     # is dependent of actual representation
 
-    if (infParam(obj)$receptor.reduced) {
+    if (inferenceParameters(obj)$receptor.reduced) {
         stop("Already reduced to ligand")
     } # because receptors were reduced
 
@@ -1195,10 +1195,10 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
     # is dependent of actual representation
 
-    if (infParam(obj)$receptor.reduced) {
+    if (inferenceParameters(obj)$receptor.reduced) {
         stop("Already reduced to ligand")
     } # because receptors were reduced
-    if (infParam(obj)$ligand.reduced) {
+    if (inferenceParameters(obj)$ligand.reduced) {
         stop("Already reduced to receptor")
     } # because ligands were reduced
 
@@ -1353,7 +1353,7 @@ setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,
         tg.genes = tg.genes, 
         tg.corr = t.corrs,
         pathways = pathways, 
-        cmp.name = cmpName(obj),
+        cmp.name = comparisonName(obj),
         tg.pval = t.pvals, 
         tg.logFC = t.logFCs,        
         tg.expr = t.exprs

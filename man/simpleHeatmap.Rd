@@ -6,10 +6,8 @@
 \usage{
 simpleHeatmap(
   mat.c,
-  width,
-  height,
-  path = "./",
-  filename = NULL,
+  width = 4,
+  height = 3,
   dend.row = NULL,
   dend.spl = NULL,
   cols = NULL,
@@ -22,21 +20,16 @@ simpleHeatmap(
   row.names = TRUE,
   column.names = TRUE,
   hcl.palette = NULL,
-  reverse = FALSE,
-  format = c("pdf", "svg", "png")
+  reverse = FALSE
 )
 }
 \arguments{
 \item{mat.c}{A matrix with the signature scores such as output by
 \code{scoreLRGeneSignatures()}.}
 
-\item{width}{PDF width.}
+\item{width}{Heatmap width.}
 
-\item{height}{PDF height.}
-
-\item{path}{directory where to plot file.}
-
-\item{filename}{file name, NULL by default to display on screen.}
+\item{height}{Heatmap height.}
 
 \item{dend.row}{A precomputed row dendrogram.}
 
@@ -44,7 +37,7 @@ simpleHeatmap(
 
 \item{cols}{A vector of colors to use for the heatmap.}
 
-\item{pointsize}{PDF pointsize.}
+\item{pointsize}{Heatmap fontsize}
 
 \item{bottom.annotation}{\code{ComplexHeatmap} package bottom annotations.}
 
@@ -67,8 +60,6 @@ palettes are listed in grDevides::hcl.pals().
 of row (gene) names.}
 
 \item{reverse}{A logicial to reverse or not colors in hcl.palette.}
-
-\item{format}{File format.}
 }
 \value{
 A heatmap. Since heatmap plotting tend to be slow on the screen,
@@ -94,8 +85,9 @@ signature scores.
 \examples{
 print("simpleHeatmap")
 data(sdc, package = "BulkSignalR")
+data(bsrdm.example, package = "BulkSignalR")
 data(bsrinf.example, package = "BulkSignalR")
-bsrdm <- prepareDataset(counts = sdc)
+
 bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
 bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP,
     qval.thres = 0.001
@@ -105,11 +97,7 @@ scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
     name.by.pathway = FALSE
 )
 simpleHeatmap(scoresLR[1:20, ],
-    path = "./",
-    filename = "sdc_scoresLR",
     column.names = TRUE,
-    height = 5, width = 9,
-    pointsize = 10,
     hcl.palette = "Cividis"
 )
 }

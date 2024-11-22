@@ -56,7 +56,7 @@
     lrgenes <- intersect(c(
         BulkSignalR_LRdb$ligand,
         BulkSignalR_LRdb$receptor
-    ), rownames(stats(cc)))
+    ), rownames(differentialStats(cc)))
     if (!is.null(restrict.genes)) {
         lrgenes <- intersect(lrgenes, restrict.genes)
     }
@@ -64,18 +64,18 @@
     # # compute all the correlations at once
     # if (is.null(scc)){
     #   corlr <- stats::cor(t(ncounts(ds)[lrgenes,
-    # c(colA(cc),colB(cc))]), method = "spearman")
+    # c(colClusterA(cc),colClusterB(cc))]), method = "spearman")
     # }
     # else {
     #   corlr <- stats::cor(t(ncounts(ds)[lrgenes,
-    # c(colA(cc),colA(scc))]), method = "spearman")
+    # c(colClusterA(cc),colClusterA(scc))]), method = "spearman")
     # }
     # get the pairs
-    R.stats <- stats(cc)
+    R.stats <- differentialStats(cc)
     if (is.null(scc)) {
-        L.stats <- stats(cc)
+        L.stats <- differentialStats(cc)
     } else {
-        L.stats <- stats(scc)
+        L.stats <- differentialStats(scc)
     }
     pairs <- NULL
     for (i in seq_len(nrow(BulkSignalR_LRdb))) {
@@ -398,9 +398,9 @@
 #'
 #' In case \code{ds} is set, then correlations between the receptor and
 #' target genes will be computed for documentation or additional use. The
-#' row names of \code{stats(cc)} and \code{ncounts(ds)} must match
+#' row names of \code{differentialStats(cc)} and \code{ncounts(ds)} must match
 #' exactly (not necessarily in the same order). The same is true for
-#' \code{stats(scc)} in case \code{scc} is provided.
+#' \code{differentialStats(scc)} in case \code{scc} is provided.
 #'
 #' In a pathway of the reference, i.e., a Reactome pathway or the genes of a
 #' GOBP term, the target genes are the
@@ -432,8 +432,9 @@
     if (!is(ds, "BSRDataModelComp")) {
         stop("ds must be a BSRDataModelComp object")
     }
-    if (!all(rownames(stats(cc)) %in% rownames(ncounts(ds)))) {
-        stop("The row names of stats(cc) and ncounts(ds) must match exactly")
+    if (!all(rownames(differentialStats(cc)) %in% rownames(ncounts(ds)))) {
+        stop("The row names of differentialStats(cc)",
+        " and ncounts(ds) must match exactly")
     }
     if (neg.targets && pos.targets) {
         stop("neg.targets and pos.targets cannot be TRUE simultaneously")
@@ -453,7 +454,7 @@
             react <- BulkSignalR_Reactome
         } else {
             react <- BulkSignalR_Reactome[
-            BulkSignalR_Reactome$`Gene name` %in% rownames(stats(cc)), ]
+            BulkSignalR_Reactome$`Gene name` %in% rownames(differentialStats(cc)), ]
         }
         if (!is.null(restrict.pw)) {
             react <- react[react$`Reactome ID` %in% restrict.pw, ]
@@ -461,12 +462,13 @@
         contains.receptors <- react[react$`Gene name` %in% lr$R, "Reactome ID"]
         pw.size <- pw.size[names(pw.size) %in% contains.receptors]
         corgenes <- intersect(
-            rownames(stats(cc)),
+            rownames(differentialStats(cc)),
             c(lr$R, react[react$`Reactome ID` %in% names(pw.size), "Gene name"])
         )
         results$reactome.pairs <- .downstreamRegulatedSignaling(lr,
             react, pw.size,
-            ncounts(ds)[corgenes, c(colA(cc), colB(cc))], stats(cc)[corgenes, ],
+            ncounts(ds)[corgenes, c(colClusterA(cc), colClusterB(cc))], 
+            differentialStats(cc)[corgenes, ],
             id.col = "Reactome ID", gene.col = "Gene name",
             pw.col = "Reactome name", min.positive = min.positive,
             pos.targets = pos.targets, neg.targets = neg.targets,
@@ -483,7 +485,7 @@
             go <- BulkSignalR_Gobp
         } else {
             go <- BulkSignalR_Gobp[
-            BulkSignalR_Gobp$`Gene name` %in% rownames(stats(cc)), ]
+            BulkSignalR_Gobp$`Gene name` %in% rownames(differentialStats(cc)), ]
         }
         if (!is.null(restrict.pw)) {
             go <- go[go$`GO ID` %in% restrict.pw, ]
@@ -491,11 +493,11 @@
         contains.receptors <- go[go$`Gene name` %in% lr$R, "GO ID"]
         pw.size <- pw.size[names(pw.size) %in% contains.receptors]
         corgenes <- intersect(
-            rownames(stats(cc)),
+            rownames(differentialStats(cc)),
             c(lr$R, go[go$`GO ID` %in% names(pw.size), "Gene name"])
         )
         results$gobp.pairs <- .downstreamRegulatedSignaling(lr, go, pw.size,
-            ncounts(ds)[corgenes, c(colA(cc), colB(cc))], stats(cc)[corgenes, ],
+            ncounts(ds)[corgenes, c(colClusterA(cc), colClusterB(cc))], differentialStats(cc)[corgenes, ],
             id.col = "GO ID", gene.col = "Gene name", pw.col = "GO name",
             pos.targets = pos.targets, neg.targets = neg.targets,
             min.t.logFC = min.t.logFC,

@@ -12,11 +12,12 @@ log-fold-changes (logFC), and expression values.
 \section{Slots}{
 
 \describe{
-\item{\code{colA}}{Column indices for the samples in cluster A.}
+\item{\code{col.clusterA}}{Column indices for the samples in cluster A.}
 
-\item{\code{colB}}{Column indices for the samples in cluster B.}
+\item{\code{col.clusterB}}{Column indices for the samples in cluster B.}
 
-\item{\code{stats}}{Comparison statistics A versus B as a data.frame and
+\item{\code{differential.stats}}{Comparison statistics A versus B 
+as a data.frame and
 containing at least two columns named 'pval', 'logFC', and 'expr'.}
 }}
 

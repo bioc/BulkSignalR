@@ -75,19 +75,23 @@ associated pvalues from DGE ouputs.
 colA <- as.integer(1:3)
 colB <- as.integer(12:15)
 
+# We then coerce the initial **BSRDataModel** object to 
+# a **BSRDataModelComp** object. 
+
+bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+
+
 n <- nrow(ncounts(bsrdm.comp))
 stats <- data.frame(pval = runif(n),
 logFC = rnorm(n, 0, 2),
 expr = runif(n, 0, 10))
 rownames(stats) <- rownames(ncounts(bsrdm.comp))
-```
+```    
 
-We then coerce the initial **BSRDataModel** object to 
-a **BSRDataModelComp** object.  
 We define the cluster comparison and add it.  
 
+  
 ```{r diffmode3,eval=TRUE}
-bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 
 bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")

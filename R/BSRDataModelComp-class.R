@@ -85,13 +85,13 @@ setMethod(
 
 # Accessors & setters ========================================================
 
-setGeneric("comp", signature="x",
-    function(x) standardGeneric("comp")
+setGeneric("comparison", signature="x",
+    function(x) standardGeneric("comparison")
 )
 #' Comparisons list accessor
 #'
-#' @name comp
-#' @aliases comp,BSRDataModelComp-method
+#' @name comparison
+#' @aliases comparison,BSRDataModelComp-method
 #' @param x object BSRDataModelComp
 #' @return comp
 #' @examples
@@ -112,12 +112,12 @@ setGeneric("comp", signature="x",
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#' comp(bsrdm.comp)
+#' comparison(bsrdm.comp)
 #' @export
-setMethod("comp", "BSRDataModelComp", function(x) x@comp)
+setMethod("comparison", "BSRDataModelComp", function(x) x@comp)
 
-setGeneric("comp<-", signature=c("x", "value"),
-    function(x, value) standardGeneric("comp<-")
+setGeneric("comparison<-", signature=c("x", "value"),
+    function(x, value) standardGeneric("comparison<-")
 )
 #' Comparisons list setter (internal use only, use addComparison() otherwise)
 #'
@@ -125,7 +125,7 @@ setGeneric("comp<-", signature=c("x", "value"),
 #' @param value value to be set for BSRDataModelComp
 #' @return returns \code{NULL}
 #' @keywords internal
-setMethod("comp<-", "BSRDataModelComp", function(x, value) {
+setMethod("comparison<-", "BSRDataModelComp", function(x, value) {
     x@comp <- value
     methods::validObject(x)
     x
@@ -147,7 +147,7 @@ setGeneric("mu", signature="x",
 #' bsrdm <- prepareDataset(sdc[, -normal])
 #'
 #' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
+#' bsrdm.comp <- as.BSRDataModelcomparison(bsrdm)
 #' colA <- as.integer(1:5)
 #' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
@@ -156,8 +156,8 @@ setGeneric("mu", signature="x",
 #'     expr = runif(n, 0, 10)
 #' )
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
+#' bsrcc <- defineClustercomparison(bsrdm.comp, colA, colB, stats)
+#' bsrdm.comp <- addClustercomparison(bsrdm.comp, bsrcc, "random.example")
 #'
 #' mu(bsrdm.comp)
 #' @export
@@ -180,8 +180,15 @@ setMethod("mu<-", "BSRDataModelComp", function(x, value) {
 })
 
 
-# generation of BSRDataModelComp from BSRDataModel =====================
-
+#' Convert BSRDataModel toBSRDataModelComp
+#' @name coerce
+#' @param from  BSRDataModel object  
+#' @return A BSRDataModelComp object
+#' @examples
+#' bsrdm <- new("BSRDataModel")
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#'
+#' @importFrom methods is new
 #' @exportMethod coerce
 setAs("BSRDataModel", "BSRDataModelComp", function(from) {
 
@@ -214,11 +221,13 @@ setGeneric("defineClusterComp", signature="obj",
 #' @aliases defineClusterComp,BSRDataModelComp-method
 #'
 #' @param obj    A BSRDataModelComp object output by
-#'   \code{\link{as.BSRDataModelComp}}.
-#' @param colA   Cluster A column indices.
-#' @param colB   Cluster B column indices.
-#' @param stats  A data.frame containing statistics about the differential
-#' analysis cluster A versus B. \code{stats} must contain at least the
+#'   \code{\link{setAs}}.
+#' @param col.clusterA   Cluster A column indices.
+#' @param col.clusterB   Cluster B column indices.
+#' @param differential.stats  A data.frame containing statistics about
+#' the differential
+#' analysis cluster A versus B. \code{differentialStats} must contain 
+#' at least the
 #' columns 'pval' (for P-values), 'logFC' for log-fold-changes A/B, and
 #' 'expr' for the expression of the genes in cluster A.
 #'
@@ -228,8 +237,9 @@ setGeneric("defineClusterComp", signature="obj",
 #' description is the basis for inferring LRIs from differential
 #' expression P-values instead of correlation analysis.
 #'
-#' The rows of \code{stats} must be in the same order as those of the count
-#' matrix in \code{obj}. Alternatively, \code{stats}
+#' The rows of \code{differentialStats} must be in the same order 
+#' as those of the count
+#' matrix in \code{obj}. Alternatively, \code{differentialStats}
 #' rows can be named and a 1-1 correspondence must exist between these names
 #' and those of the count matrix.
 #'
@@ -244,7 +254,7 @@ setGeneric("defineClusterComp", signature="obj",
 #' bsrdm <- prepareDataset(sdc[, -normal])
 #'
 #' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
+#' bsrdm.comp <- as.BSRDataModelcomparison(bsrdm)
 #' colA <- as.integer(1:5)
 #' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
@@ -253,45 +263,48 @@ setGeneric("defineClusterComp", signature="obj",
 #'     expr = runif(n, 0, 10)
 #' )
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
+#' bsrcc <- defineClustercomparison(bsrdm.comp, colA, colB, stats)
 #'
 #' @importFrom methods new
-setMethod("defineClusterComp", "BSRDataModelComp", function(obj, colA,
-                                                            colB, stats) {
-    if (!is.integer(colA)) {
-        stop("colA must contain integer indices")
+setMethod("defineClusterComp", "BSRDataModelComp", 
+function(obj, col.clusterA, col.clusterB, differential.stats) {
+    if (!is.integer(col.clusterA)) {
+        stop("col.clusterA must contain integer indices")
     }
-    if (!is.integer(colB)) {
-        stop("colB must contain integer indices")
+    if (!is.integer(col.clusterB)) {
+        stop("col.clusterB must contain integer indices")
     }
-    if (length(intersect(colA, colB)) > 0) {
-        stop("colA and colB must be disjoint")
+    if (length(intersect(col.clusterA, col.clusterB)) > 0) {
+        stop("col.clusterA and col.clusterB must be disjoint")
     }
-    if (any(colA < 1 | colA > ncol(ncounts(obj)))) {
-        stop("colA indices must fall in [1; ncol(ncounts)]")
+    if (any(col.clusterA < 1 | col.clusterA > ncol(ncounts(obj)))) {
+        stop("col.clusterA indices must fall in [1; ncol(ncounts)]")
     }
-    if (any(colB < 1 | colB > ncol(ncounts(obj)))) {
-        stop("colB indices must fall in [1; ncol(ncounts)]")
+    if (any(col.clusterB < 1 | col.clusterB > ncol(ncounts(obj)))) {
+        stop("col.clusterB indices must fall in [1; ncol(ncounts)]")
     }
-    if (!is.data.frame(stats)) {
-        stop("stats must be a data.frame")
+    if (!is.data.frame(differential.stats)) {
+        stop("differential.stats must be a data.frame")
     }
-    if (!all(c("pval", "logFC", "expr") %in% names(stats))) {
-        stop("stats data.frame must contain",
+    if (!all(c("pval", "logFC", "expr") %in% names(differential.stats))) {
+        stop("differential.stats data.frame must contain",
             " columns named 'pval', 'logFC', and 'expr'")
     }
-    if (nrow(stats) != nrow(ncounts(obj))) {
-        stop("stats and ncounts(obj) number of rows differ")
+    if (nrow(differential.stats) != nrow(ncounts(obj))) {
+        stop("differential.stats and ncounts(obj) number of rows differ")
     }
-    if (!is.null(rownames(stats)) &&
-        (sum(rownames(stats) %in% rownames(ncounts(obj))) != nrow(stats))) {
-        stop("stats rownames defined but do not all match ncounts(obs)")
+    if (!is.null(rownames(differential.stats)) &&
+        (sum(rownames(differential.stats) %in% 
+        rownames(ncounts(obj))) != nrow(differential.stats))) {
+        stop("differential.stats rownames defined but do not all match ncounts(obs)")
     }
-    if (is.null(rownames(stats))) {
-        rownames(stats) <- rownames(ncounts(obj))
+    if (is.null(rownames(differential.stats))) {
+        rownames(differential.stats) <- rownames(ncounts(obj))
     }
 
-    new("BSRClusterComp", colA = colA, colB = colB, stats = stats)
+    new("BSRClusterComp", col.clusterA = col.clusterA, 
+    col.clusterB = col.clusterB, 
+    differential.stats = differential.stats)
 }) # defineClusterComp
 
 
@@ -307,7 +320,7 @@ setGeneric("addClusterComp", signature="obj",
 #' @aliases addClusterComp,BSRDataModelComp-method
 #'
 #' @param obj    A BSRDataModelComp object output by
-#'   \code{\link{as.BSRDataModelComp}}.
+#'   \code{\link{setAs}}.
 #' @param cmp   A BSRClusterComp object to add.
 #' @param cmp.name  The name of the comparison to add.
 #'
@@ -325,7 +338,7 @@ setGeneric("addClusterComp", signature="obj",
 #' bsrdm <- prepareDataset(sdc[, -normal])
 #'
 #' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
+#' bsrdm.comp <- as.BSRDataModelcomparison(bsrdm)
 #' colA <- as.integer(1:5)
 #' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
@@ -334,8 +347,8 @@ setGeneric("addClusterComp", signature="obj",
 #'     expr = runif(n, 0, 10)
 #' )
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
+#' bsrcc <- defineClustercomparison(bsrdm.comp, colA, colB, stats)
+#' bsrdm.comp <- addClustercomparison(bsrdm.comp, bsrcc, "random.example")
 #' @importFrom methods new
 setMethod("addClusterComp", "BSRDataModelComp", function(obj, cmp,
     cmp.name) {
@@ -348,13 +361,13 @@ setMethod("addClusterComp", "BSRDataModelComp", function(obj, cmp,
     if (length(cmp.name) == 0) {
         stop("cmp.name must have length > 0")
     }
-    if (cmp.name %in% names(comp(obj))) {
+    if (cmp.name %in% names(comparison(obj))) {
         stop("cmp.name is already in the list of comparisons")
     }
 
-    tmp <- c(comp(obj), list(cmp))
+    tmp <- c(comparison(obj), list(cmp))
     names(tmp)[length(tmp)] <- cmp.name
-    comp(obj) <- tmp
+    comparison(obj) <- tmp
     obj
 }) # addClusterComp
 
@@ -369,7 +382,7 @@ setGeneric("removeClusterComp", signature="obj",
 #' @aliases removeClusterComp,BSRDataModelComp-method
 #'
 #' @param obj    A BSRDataModelComp object output by
-#'   \code{\link{as.BSRDataModelComp}}.
+#'   \code{\link{setAs}}.
 #' @param cmp.name  The name of the comparison to remove.
 #'
 #' @details Remove the comparison with \code{cmp.name} from the list of
@@ -409,14 +422,14 @@ setMethod("removeClusterComp", "BSRDataModelComp", function(obj, cmp.name) {
     if (length(cmp.name) == 0) {
         stop("cmp.name must have length > 0")
     }
-    if (!(cmp.name %in% names(comp(obj)))) {
+    if (!(cmp.name %in% names(comparison(obj)))) {
         stop("cmp.name must be in the list of comparisons")
     }
 
-    if (length(comp(obj)) == 1) {
-        comp(obj) <- list()
+    if (length(comparison(obj)) == 1) {
+        comparison(obj) <- list()
     } else {
-        comp(obj) <- comp(obj)[names(comp(obj)) != cmp.name]
+        comparison(obj) <- comparison(obj)[names(comparison(obj)) != cmp.name]
     }
 
     obj
@@ -572,11 +585,11 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
         )) {
 
 
-    if (!(cmp.name %in% names(comp(obj)))) {
+    if (!(cmp.name %in% names(comparison(obj)))) {
         stop("cmp.name must exist in the names ",
             "of comparisons contained in obj")
     }
-    if (!is.null(src.cmp.name) && !(src.cmp.name %in% names(comp(obj)))) {
+    if (!is.null(src.cmp.name) && !(src.cmp.name %in% names(comparison(obj)))) {
         stop("src.cmp.name must exist in the names",
         " of comparisons contained in obj")
     }
@@ -596,9 +609,9 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
     }
 
     # retrieve the BSRClusterComp object(s)
-    cc <- comp(obj)[[cmp.name]]
+    cc <- comparison(obj)[[cmp.name]]
     if (!is.null(src.cmp.name)) {
-        scc <- comp(obj)[[src.cmp.name]]
+        scc <- comparison(obj)[[src.cmp.name]]
     } else {
         scc <- NULL
     }
@@ -607,14 +620,14 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
     inf.param <- list()
     inf.param$log.transformed.data <- logTransformed(obj)
     inf.param$mu <- mu(obj)
-    inf.param$colA <- colA(cc)
-    inf.param$colB <- colB(cc)
+    inf.param$col.clusterA <- colClusterA(cc)
+    inf.param$col.clusterB <- colClusterB(cc)
     if (is.null(src.cmp.name)) {
         inf.param$inference.type <- "autocrine"
     } else {
         inf.param$inference.type <- "paracrine"
-        inf.param$src.colA <- colA(scc)
-        inf.param$src.colB <- colB(scc)
+        inf.param$src.colA <- colClusterA(scc)
+        inf.param$src.colB <- colClusterB(scc)
     }
     inf.param$max.pval <- max.pval
     inf.param$min.logFC <- min.logFC
@@ -649,15 +662,15 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
 
     # compute P-values
     inter <- .pValuesRegulatedLR(pairs, 
-        param(obj), rank.p = rank.p, fdr.proc = fdr.proc)
+        parameters(obj), rank.p = rank.p, fdr.proc = fdr.proc)
 
     # compute LR-score for compatibility with SingleCellSignalR version 1
     if (is.null(scc)) {
-        inter$L.expr <- stats(cc)[inter$L, "expr"]
+        inter$L.expr <- differentialStats(cc)[inter$L, "expr"]
     } else {
-        inter$L.expr <- stats(scc)[inter$L, "expr"]
+        inter$L.expr <- differentialStats(scc)[inter$L, "expr"]
     }
-    inter$R.expr <- stats(cc)[inter$R, "expr"]
+    inter$R.expr <- differentialStats(cc)[inter$R, "expr"]
     if (inf.param$log.transformed.data) {
         sq <- sqrt(inter$L.expr * inter$R.expr)
     } else {
@@ -790,11 +803,11 @@ setMethod("scoreLRGeneSignatures", "BSRDataModelComp", function(obj,
     }
 
     # retrieve the BSRClusterComp object
-    cmp.name <- cmpName(sig)
-    if (!(cmp.name %in% names(comp(obj)))) {
+    cmp.name <- comparisonName(sig)
+    if (!(cmp.name %in% names(comparison(obj)))) {
         stop("The comparison name in sig is not present in obj")
     }
-    cc <- comp(obj)[[cmp.name]]
+    cc <- comparison(obj)[[cmp.name]]
 
     # species management
     if (initialOrganism(obj) != "hsapiens") {
@@ -804,7 +817,7 @@ setMethod("scoreLRGeneSignatures", "BSRDataModelComp", function(obj,
     }
 
     # get the ncount matrix with proper columns
-    ncounts <- ncounts(obj)[, c(colA(cc), colB(cc))]
+    ncounts <- ncounts(obj)[, c(colClusterA(cc), colClusterB(cc))]
 
     # intersect signature gene names with RNA-seq data
     ligands <- list()

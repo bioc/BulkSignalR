@@ -31,7 +31,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     if (is.null(pval.thres) && is.null(qval.thres)) {
         stop("Either a P- or a Q-value threshold must be provided")
     }
-    ipar <- infParam(bsrinf)
+    ipar <- inferenceParameters(bsrinf)
     if (ipar$ligand.reduced || ipar$receptor.reduced) {
         stop(
             "Does not work with inferences already reduced to the ",
@@ -308,7 +308,7 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     if (is.null(pval.thres) && is.null(qval.thres)) {
         stop("Either a P- or a Q-value threshold must be provided")
     }
-    ipar <- infParam(bsrinf)
+    ipar <- inferenceParameters(bsrinf)
     if (ipar$ligand.reduced || ipar$receptor.reduced) {
         stop(
             "Does not work with inferences already reduced to the ",
