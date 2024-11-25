@@ -43,11 +43,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r main, include = FALSE}
-knitr::opts_chunk$set(
-    collapse = TRUE,
-    comment = "##"
-)
+```{r setup, include = FALSE}
 knitr::knit_hooks$set(optipng = knitr::hook_optipng)
 ```
 
@@ -324,7 +320,7 @@ signature scoring and display.
 bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP, qval.thres = 0.001)
 
 scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
-  name.by.pathway = FALSE
+    name.by.pathway = FALSE
 )
 
 simpleHeatmap(scoresLR[1:20, ],
@@ -346,10 +342,8 @@ scoresPathway <- scoreLRGeneSignatures(bsrdm, bsrsig.redPBP,
 simpleHeatmap(scoresPathway,
     hcl.palette = "Blue-Red 2",
     pointsize=8,width=6,height=2)
-   
 ```
 
-    
 ## Other visualization utilities
 
 
@@ -522,7 +516,7 @@ lay <- layout_with_fr(gLRintra.res)
 #     vertex.label.cex=0.4)
 ```
 
-     
+
 # Non human data
 
 \
@@ -614,8 +608,8 @@ starting point to execute our workflow.
 We can also directly work with an object from the `SpatialExperiment` 
 Bioconductor class.  
 
-Also you can check out the `VisiumIO` package that allows users to readily import 
-Visium data from the 10X Space Ranger pipeline.   
+Also you can check out the `VisiumIO` package that allows users
+to readily import Visium data from the 10X Space Ranger pipeline.
 `VisiumIO` package provides a convenient function to easily retrieve 
 SpatialExperiment object.
 
@@ -627,7 +621,7 @@ SpatialExperiment object.
 # We re-initialise the environment variable of Reactome
 # whith the whole set. (because we previously made a subset before)
 BulkSignalR_Reactome <- getResource(resourceName = "Reactome",
- cache = TRUE)
+    cache = TRUE)
 
 dim(BulkSignalR_Reactome)
 
@@ -701,7 +695,7 @@ displayed on the slide.
 
 
 ```{r spatialPlot3,eval=TRUE,fig.dim = c(6,4.5)}
- # Visualization ============================================
+# Visualization ============================================
 
 # plot one specific interaction
 
@@ -784,7 +778,7 @@ https://github.com/jcolinge/BulkSignalR_companion).
 
 
 See the reference manual for all the details.  
- 
+
 
 ```{r inferCells,eval=FALSE,include=FALSE}
 

@@ -30,11 +30,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-    collapse = FALSE,
-    comment = "##"
-)
+```{r setup, include = FALSE}
 knitr::knit_hooks$set(optipng = knitr::hook_optipng)
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
@@ -90,7 +86,7 @@ rownames(stats) <- rownames(ncounts(bsrdm.comp))
 
 We define the cluster comparison and add it.  
 
-  
+
 ```{r diffmode3,eval=TRUE}
 
 bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
@@ -113,9 +109,9 @@ BulkSignalR_Reactome <- BulkSignalR_Reactome[
 BulkSignalR_Reactome$`Reactome name` %in% subset,]
 
 bsrinf.comp <- initialInference(bsrdm.comp,
-  reference="REACTOME",
-  max.pval = 1, 
-  "random.example")
+reference="REACTOME",
+max.pval = 1, 
+"random.example")
 
 head(LRinter(bsrinf.comp))
 

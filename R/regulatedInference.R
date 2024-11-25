@@ -454,7 +454,8 @@
             react <- BulkSignalR_Reactome
         } else {
             react <- BulkSignalR_Reactome[
-            BulkSignalR_Reactome$`Gene name` %in% rownames(differentialStats(cc)), ]
+            BulkSignalR_Reactome$`Gene name` %in% 
+            rownames(differentialStats(cc)), ]
         }
         if (!is.null(restrict.pw)) {
             react <- react[react$`Reactome ID` %in% restrict.pw, ]
@@ -485,7 +486,8 @@
             go <- BulkSignalR_Gobp
         } else {
             go <- BulkSignalR_Gobp[
-            BulkSignalR_Gobp$`Gene name` %in% rownames(differentialStats(cc)), ]
+            BulkSignalR_Gobp$`Gene name` %in% 
+            rownames(differentialStats(cc)), ]
         }
         if (!is.null(restrict.pw)) {
             go <- go[go$`GO ID` %in% restrict.pw, ]
@@ -497,7 +499,8 @@
             c(lr$R, go[go$`GO ID` %in% names(pw.size), "Gene name"])
         )
         results$gobp.pairs <- .downstreamRegulatedSignaling(lr, go, pw.size,
-            ncounts(ds)[corgenes, c(colClusterA(cc), colClusterB(cc))], differentialStats(cc)[corgenes, ],
+            ncounts(ds)[corgenes, c(colClusterA(cc), colClusterB(cc))],
+            differentialStats(cc)[corgenes, ],
             id.col = "GO ID", gene.col = "Gene name", pw.col = "GO name",
             pos.targets = pos.targets, neg.targets = neg.targets,
             min.t.logFC = min.t.logFC,

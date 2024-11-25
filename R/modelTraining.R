@@ -626,22 +626,28 @@
         min.LR.found = 0
     )
     if (foreach::getDoParWorkers() > 1) {
-        foreach::foreach(k = seq_len(obj@param$n.rand.RT), .combine = c) %dopar% {
+        foreach::foreach(k = seq_len(obj@param$n.rand.RT), 
+        .combine = c) %dopar% {
             ncounts(r.ds) <- .buildPermutatedCountMatrix(obj@ncounts, pindices)
             r.LR <- .getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR)
             list(.checkReceptorSignaling(r.ds, r.LR,
-                with.complex = obj@param$with.complex, max.pw.size = obj@param$max.pw.size,
-                min.pw.size = obj@param$min.pw.size, min.positive = obj@param$min.positive,
+                with.complex = obj@param$with.complex,
+                max.pw.size = obj@param$max.pw.size,
+                min.pw.size = obj@param$min.pw.size,
+                min.positive = obj@param$min.positive,
                 use.full.network = FALSE
             ))
         }
     } else {
-        foreach::foreach(k = seq_len(obj@param$n.rand.RT), .combine = c) %do% {
+        foreach::foreach(k = seq_len(obj@param$n.rand.RT), 
+        .combine = c) %do% {
             ncounts(r.ds) <- .buildPermutatedCountMatrix(obj@ncounts, pindices)
             r.LR <- .getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR)
             list(.checkReceptorSignaling(r.ds, r.LR,
-                with.complex = obj@param$with.complex, max.pw.size = obj@param$max.pw.size,
-                min.pw.size = obj@param$min.pw.size, min.positive = obj@param$min.positive,
+                with.complex = obj@param$with.complex, 
+                max.pw.size = obj@param$max.pw.size,
+                min.pw.size = obj@param$min.pw.size, 
+                min.positive = obj@param$min.positive,
                 use.full.network = FALSE
             ))
         }

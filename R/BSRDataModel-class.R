@@ -426,9 +426,9 @@ setMethod(
         }
 
         parameters(obj)$min.corr.LR <- min.corr.LR
-
+        
         ds.LR.null <- .getEmpiricalNullCorrLR(obj)
-       
+
         rc <- ds.LR.null[[1]]$corr
         if (length(ds.LR.null) > 1) {
             for (i in 2:length(ds.LR.null)) rc <- c(rc, ds.LR.null[[i]]$corr)
@@ -696,7 +696,10 @@ setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
 
     inf.param$fdr.proc <- fdr.proc
     inf.param$rank.p <- rank.p
-    inter <- .pValuesLR(pairs, parameters(obj), rank.p = rank.p, fdr.proc = fdr.proc)
+    inter <- .pValuesLR(pairs, 
+        parameters(obj), 
+        rank.p = rank.p, 
+        fdr.proc = fdr.proc)
 
     ligands <- strsplit(inter$L, ";")
     receptors <- strsplit(inter$R, ";")

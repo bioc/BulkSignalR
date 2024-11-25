@@ -75,11 +75,10 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @keywords internal
 .checkInteroperabilityForCounts <- function(counts,
     symbol.col,x.col,y.col,barcodeID.col) {
-   
+    
     countsChecked <- NULL 
-    # will be true for SpatialExperiment also
 
-        if(as.character(class(counts))=="SummarizedExperiment"){
+        if(is(counts,"SummarizedExperiment")){
 
             if(length(assays(counts))>1){
                 stop("Only one assay should be defined.")
@@ -90,7 +89,7 @@ resetLRdb <- function(db, switch = FALSE) {
             }
         }
 
-        else if(as.character(class(counts))=="SpatialExperiment"){
+        else if(is(counts,"SpatialExperiment")){
 
             if(length(assays(counts))>1){
                 stop("Only one assay should be defined.")
@@ -113,18 +112,19 @@ resetLRdb <- function(db, switch = FALSE) {
             # Match and re-order cols 
             ord <- match(colnames(countsChecked), 
                 colData(counts)[[barcodeID.col]]) 
-             if(sum(is.na(ord))>0){
+            if(sum(is.na(ord))>0){
                 stop("Some barcodeIDs are missing...")
             }
             countsChecked <- countsChecked[,ord]
 
-            if (!all(colnames(countsChecked) == colData(counts)[[barcodeID.col]]))
+            if (!all(colnames(countsChecked) == colData(counts)
+            [[barcodeID.col]]))
                 stop("BarcodeIDs are not well ordered.", call. = FALSE)
 
             colnames(countsChecked) <- colData(counts)[["idSpatial"]]
         }
 
-    else {countsChecked <- counts}
+        else {countsChecked <- counts}
     
     return(countsChecked)
 } # .checkInteroperabilityForCounts

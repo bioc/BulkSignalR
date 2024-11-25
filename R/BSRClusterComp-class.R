@@ -102,7 +102,7 @@ setMethod(
 )
 
 
-# Accessors & setters ========================================================
+# Accessors & setters ====================================
 
 setGeneric("colClusterA", signature="x",
     function(x) standardGeneric("colClusterA")
@@ -226,7 +226,8 @@ setGeneric("differentialStats", signature="x",
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
 #' differentialStats(bsrcc)
 #' @export
-setMethod("differentialStats", "BSRClusterComp", function(x) x@differential.stats)
+setMethod("differentialStats", "BSRClusterComp", 
+    function(x) x@differential.stats)
 
 setGeneric("differentialStats<-", signature=c("x", "value"),
     function(x, value) standardGeneric("differentialStats<-")

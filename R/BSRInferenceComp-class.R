@@ -193,7 +193,8 @@ setGeneric("sourceComparisonName", signature="x",
 #' sourceComparisonName(bsrinf)
 #' }
 #' @export
-setMethod("sourceComparisonName", "BSRInferenceComp", function(x) x@src.cmp.name)
+setMethod("sourceComparisonName", "BSRInferenceComp", 
+    function(x) x@src.cmp.name)
 
 setGeneric("sourceComparisonName<-", signature=c("x", "value"),
     function(x, value) standardGeneric("sourceComparisonName<-")

@@ -453,7 +453,8 @@ setGeneric("getPathwayStats", signature="obj",
 #' @importFrom foreach %do% %dopar%
 setMethod("getPathwayStats", "BSRInference", function(obj,
     pval.thres = NULL, qval.thres = NULL) {
-    if (inferenceParameters(obj)$ligand.reduced || inferenceParameters(obj)$receptor.reduced) {
+    if (inferenceParameters(obj)$ligand.reduced || 
+        inferenceParameters(obj)$receptor.reduced) {
         stop(
             "Cannot be applied to interactions involving",
             " reduced receptors or ligands"

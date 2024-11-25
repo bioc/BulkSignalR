@@ -106,8 +106,8 @@ setGeneric("comparison", signature="x",
 #' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
 #' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
+#' pval = runif(n), logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10)
 #' )
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
@@ -194,7 +194,7 @@ setMethod("mu<-", "BSRDataModelComp", function(x, value) {
 #' @exportMethod coerce
 setAs("BSRDataModel", "BSRDataModelComp", function(from) {
 
-     if (!is(from, "BSRDataModel")) {
+    if (!is(from, "BSRDataModel")) {
         stop("bsrdm must be of class BSRDataModel")
     }
     m <- mean(ncounts(from))
@@ -204,8 +204,7 @@ setAs("BSRDataModel", "BSRDataModelComp", function(from) {
 
     new("BSRDataModelComp", from, 
         comp = list(),
-        mu = m)
-   
+        mu = m) 
 })
 
 # defining/adding a cluster comparison ========================================
@@ -298,7 +297,8 @@ function(obj, col.clusterA, col.clusterB, differential.stats) {
     if (!is.null(rownames(differential.stats)) &&
         (sum(rownames(differential.stats) %in% 
         rownames(ncounts(obj))) != nrow(differential.stats))) {
-        stop("differential.stats rownames defined but do not all match ncounts(obs)")
+        stop("differential.stats rownames defined",
+            " but do not all match ncounts(obj)")
     }
     if (is.null(rownames(differential.stats))) {
         rownames(differential.stats) <- rownames(ncounts(obj))
