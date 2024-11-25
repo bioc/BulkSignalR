@@ -2,7 +2,8 @@
 % Please edit documentation in R/BSRDataModelComp-class.R
 \name{coerce}
 \alias{coerce}
-\title{Convert BSRDataModel toBSRDataModelComp}
+\alias{coerce,BSRDataModel,BSRDataModelComp-method}
+\title{Convert BSRDataModel to BSRDataModelComp}
 \arguments{
 \item{from}{BSRDataModel object}
 }
@@ -10,7 +11,7 @@
 A BSRDataModelComp object
 }
 \description{
-Convert BSRDataModel toBSRDataModelComp
+Convert BSRDataModel to BSRDataModelComp
 }
 \examples{
 bsrdm <- new("BSRDataModel")

@@ -180,8 +180,10 @@ setMethod("mu<-", "BSRDataModelComp", function(x, value) {
 })
 
 
-#' Convert BSRDataModel toBSRDataModelComp
+#' Convert BSRDataModel to BSRDataModelComp
+#' 
 #' @name coerce
+#' @aliases coerce,BSRDataModel,BSRDataModelComp-method
 #' @param from  BSRDataModel object  
 #' @return A BSRDataModelComp object
 #' @examples
