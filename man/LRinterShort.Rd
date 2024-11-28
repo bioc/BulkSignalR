@@ -25,27 +25,32 @@ Simplified LRinter accessor reporting the essential columns
 Simplified LRinter accessor reporting the essential columns
 }
 \examples{
-if(FALSE){
-# prepare data
-data(sdc, package = "BulkSignalR")
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
+data(bsrdm, package = "BulkSignalR")
+colA <- as.integer(1:2)
+colB <- as.integer(3:4)
 
-# define the comparison
-bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-colA <- as.integer(1:5)
-colB <- as.integer(8:15)
+bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+
 n <- nrow(ncounts(bsrdm.comp))
-stats <- data.frame(
-    pval = runif(n), logFC = rnorm(n, 0, 2),
-    expr = runif(n, 0, 10)
-)
+stats <- data.frame(pval = runif(n),
+logFC = rnorm(n, 0, 2),
+expr = runif(n, 0, 10))
 rownames(stats) <- rownames(ncounts(bsrdm.comp))
+
 bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 
-# infer ligand-receptor interactions from the comparison
-bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-LRinterShort(bsrinf)
-}
+subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+"REACTOME_SYNDECAN_INTERACTIONS",
+"REACTOME_ECM_PROTEOGLYCANS",
+"REACTOME_CELL_JUNCTION_ORGANIZATION")
+
+BulkSignalR_Reactome <- BulkSignalR_Reactome[
+BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
+
+bsrinf.comp <- initialInference(bsrdm.comp,
+reference="REACTOME",
+max.pval = 1, 
+"random.example")
+LRinterShort(bsrinf.comp)[5,]
 }

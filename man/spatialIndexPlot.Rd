@@ -93,8 +93,37 @@ in a PDF. Not limited to BulkSignalR gene signature scores.
 A PDF file is created that contains the index.
 }
 \examples{
-print("spatialIndexPlot")
-if (FALSE) {
-    spatialIndexPlot(scores, areas, out.file)
-}
+data(bsrdm.spa)
+data(bsrinf.spa)
+
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+set.seed(123)
+
+speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
+
+idx <- sample(ncol(speSubset), 10)
+speSubset <- speSubset[, idx]
+
+
+colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+                colData(speSubset)[[5]],sep = "x")
+
+annotation <- colData(speSubset)
+
+thres <- 0.01
+bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+
+separatedLRPlot(scores.red, "SLIT2", "GPC1", 
+ncounts(bsrdm.spa), 
+annotation,
+label.col = "ground_truth")
+
+# generate visual index on disk in pdf file
+spatialIndexPlot(scores.red, annotation,  
+label.col = "ground_truth",
+out.file = "spatialIndexPlot")
+
 }

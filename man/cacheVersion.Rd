@@ -18,5 +18,5 @@ Check to see if some ressources has
 has been updated.
 }
 \examples{
-print("cacheVersion")
+cacheVersion()
 }

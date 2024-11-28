@@ -24,7 +24,6 @@ receptors accessor
 receptors accessor
 }
 \examples{
-if(FALSE){
-receptors(new("BSRSignature"))
-}
+bsr.sig <- new("BSRSignature")
+ligands(bsr.sig)
 }

@@ -61,9 +61,26 @@ neighbors only, whereas to simply set a maximum of four neighbors for
 instance would retrieve the four closest neighbors in every case.
 }
 \examples{
-print("maxLigandSpatialCounts")
-if (FALSE) {
-    max.bsrdm <- maxLigandSpatialCounts(bsrdm, areas,
-    radius = 1.2, nnn.radius = 4)
-}
+data(bsrdm.spa)
+data(bsrinf.spa)
+
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+set.seed(123)
+
+speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
+
+idx <- sample(ncol(speSubset), 10)
+speSubset <- speSubset[, idx]
+
+
+colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+                colData(speSubset)[[5]],sep = "x")
+
+
+annotation <- colData(speSubset)
+
+# max.bsrdm <- maxLigandSpatialCounts(bsrdm.spa, annotation,
+# radius = 1.2, nnn = 4)
+
 }

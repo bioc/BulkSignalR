@@ -17,6 +17,6 @@ LRinter
 LRinter accessor
 }
 \examples{
-data(bsrinf.example, package = "BulkSignalR")
-LRinter(bsrinf.example)
+bsrinf <- new ("BSRInference")
+LRinter(bsrinf)
 }

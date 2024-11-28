@@ -32,7 +32,6 @@ In order to work with other organisms, gene names need to be first converted
 to human following an orthology mapping process.
 }
 \examples{
-print("findOrthoGenes")
 data(bodyMap.mouse)
 ortholog.dict <- findOrthoGenes(
     from_organism = "mmusculus",

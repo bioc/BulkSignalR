@@ -25,12 +25,8 @@ Count how many times and with which weights cell types were involved
 in the (L,R,pathway) triples that targeted genes in a gene set.
 }
 \examples{
-print("assignCellTypesToInteractions")
-data(sdc, package = "BulkSignalR")
-bsrdm <- prepareDataset(counts = sdc)
-data(bsrinf.example, package = "BulkSignalR")
-
-# microenvironment cell populations
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 data(immune.signatures, package = "BulkSignalR")
 immune.signatures <- immune.signatures[immune.signatures$signature \%in\%
     c(
@@ -44,12 +40,12 @@ signatures <- rbind(immune.signatures, tme.signatures[
 tme.scores <- scoreSignatures(bsrdm, signatures)
 
 # assignment
-lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 
 # relate to p-EMT (should be done in HNSCC normally, not in SDC)
 data(p.EMT, package = "BulkSignalR")
 p.EMT <- p.EMT$gene
-triggers <- relateToGeneSet(bsrinf.example, p.EMT)
+triggers <- relateToGeneSet(bsrinf, p.EMT)
 
 # counts
 cf <- cellTypeFrequency(triggers, lr2ct)

@@ -18,11 +18,8 @@ weight are normalized to a total of one.
 Generate a igraph object with one link between each cell type.
 }
 \examples{
-print("assignCellTypesToInteractions")
-data(sdc, package = "BulkSignalR")
-data(bsrinf.example, package = "BulkSignalR")
-bsrdm <- prepareDataset(counts = sdc)
-
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 # microenvironment cell populations
 data(immune.signatures, package = "BulkSignalR")
 immune.signatures <- immune.signatures[immune.signatures$signature \%in\%
@@ -37,7 +34,7 @@ signatures <- rbind(immune.signatures, tme.signatures[
 tme.scores <- scoreSignatures(bsrdm, signatures)
 
 # assignment
-lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 
 # cellular network
 g.table <- cellularNetworkTable(lr2ct)

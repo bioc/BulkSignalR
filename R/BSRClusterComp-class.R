@@ -12,26 +12,7 @@
 #'
 #' @export
 #' @examples
-#' if(FALSE){
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 4,
-#'         dimnames = list(c("A", "B"), c("E", "F", "G", "H"))
-#'     ),
-#'     log.transformed = TRUE, normalization = "TC"
-#' )
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:2)
-#' colB <- as.integer(3:4)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' edger.stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = c(1, 2)
-#' )
-#' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "my_comparison")
-#' }
+#' new("BSRClusterComp")
 setClass("BSRClusterComp",
     slots = c(
         col.clusterA = "integer",
@@ -114,23 +95,7 @@ setGeneric("colClusterA", signature="x",
 #' @param x object BSRClusterComp
 #' @return col.clusterA
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 4,
-#'         dimnames = list(c("A", "B"), c("E", "F","G","H"))
-#'     ),
-#'     log.transformed = TRUE, normalization = "TC"
-#' )
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:2)
-#' colB <- as.integer(3:4)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' edger.stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = c(1, 2)
-#' )
-#' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
+#' bsrcc <- new("BSRClusterComp")
 #' colClusterA(bsrcc)
 #' @export
 setMethod("colClusterA", "BSRClusterComp", function(x) x@col.clusterA)
@@ -160,23 +125,7 @@ setGeneric("colClusterB", signature="x",
 #' @param x object BSRClusterComp
 #' @return col.clusterB
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 4,
-#'         dimnames = list(c("A", "B"), c("E", "F","G","H"))
-#'     ),
-#'     log.transformed = TRUE, normalization = "TC"
-#' )
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:2)
-#' colB <- as.integer(3:4)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' edger.stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = c(1, 2)
-#' )
-#' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
+#' bsrcc <- new("BSRClusterComp")
 #' colClusterB(bsrcc)
 #' @export
 setMethod("colClusterB", "BSRClusterComp", function(x) x@col.clusterB)
@@ -207,27 +156,11 @@ setGeneric("differentialStats", signature="x",
 #' @param x BSRClusterComp object
 #' @return diffferential.stats
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 4,
-#'         dimnames = list(c("A", "B"), c("E", "F","G","H"))
-#'     ),
-#'     log.transformed = TRUE, normalization = "TC"
-#' )
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:2)
-#' colB <- as.integer(3:4)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' edger.stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = c(1, 2)
-#' )
-#' rownames(edger.stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, edger.stats)
+#' bsrcc <- new("BSRClusterComp")
 #' differentialStats(bsrcc)
 #' @export
 setMethod("differentialStats", "BSRClusterComp", 
-    function(x) x@differential.stats)
+function(x) x@differential.stats)
 
 setGeneric("differentialStats<-", signature=c("x", "value"),
     function(x, value) standardGeneric("differentialStats<-")

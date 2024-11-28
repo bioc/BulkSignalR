@@ -461,7 +461,7 @@ plot(gLR,
 
 
 # Community detection
-u.gLR <- as.undirected(gLR) # most algorithms work for undirected graphs only
+u.gLR <- as_undirected(gLR) # most algorithms work for undirected graphs only
 comm <- cluster_edge_betweenness(u.gLR)
 # plot(comm,u.gLR,
 #     vertex.label.color="black",

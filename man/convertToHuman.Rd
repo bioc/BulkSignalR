@@ -22,7 +22,6 @@ In order to work with other organisms, gene names need to be first converted
 to human by orthology.
 }
 \examples{
-print("convertToHuman")
 data(bodyMap.mouse)
 
 ortholog.dict <- findOrthoGenes(

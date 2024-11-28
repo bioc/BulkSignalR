@@ -83,13 +83,11 @@ Generate a heatmap representing ligand-receptor gene
 signature scores.
 }
 \examples{
-print("simpleHeatmap")
-data(sdc, package = "BulkSignalR")
-data(bsrdm.example, package = "BulkSignalR")
-data(bsrinf.example, package = "BulkSignalR")
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
-bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
-bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP,
+bsrinf.redBP <- reduceToBestPathway(bsrinf)
+bsrsig.redBP <- getLRGeneSignatures(bsrinf,
     qval.thres = 0.001
 )
 

@@ -44,24 +44,20 @@ receptor and target genes
 for a specific pathway
 }
 \examples{
-print("signatureHeatmaps")
-data(sdc, package = "BulkSignalR")
-data(bsrinf.example, package = "BulkSignalR")
-bsrdm <- prepareDataset(counts = sdc)
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
-bsrinf.redP <- reduceToPathway(bsrinf.example)
-bsrinf.redPBP <- reduceToBestPathway(bsrinf.redP)
-bsrsig.redPBP <- getLRGeneSignatures(bsrinf.redPBP, qval.thres = 0.001)
+bsrinf.redP <- reduceToPathway(bsrinf)
+bsrinf.redPBP <- reduceToBestPathway(bsrinf)
+bsrsig.redPBP <- getLRGeneSignatures(bsrinf, qval.thres = 1)
 pathway1 <- pathways(bsrsig.redPBP)[1]
 signatureHeatmaps(
-    pathway = pathway1,
-    bsrdm = bsrdm,
-    bsrsig = bsrsig.redPBP,
-    path = "./",
-    filename = "sdc_signatureheatmap",
-    h.width = 6,
-    h.height = 9,
-    fontsize = 6,
-    show_column_names = TRUE
+pathway = pathway1,
+bsrdm = bsrdm,
+bsrsig = bsrsig.redPBP,
+h.width = 6,
+h.height = 8,
+fontsize = 4,
+show_column_names = TRUE
 )
 }

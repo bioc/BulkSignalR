@@ -37,13 +37,11 @@ Circos Plot on the screen or a file
 Chord diagram.
 }
 \examples{
-print("chordDiagramLR")
-data(bsrinf.example, package = "BulkSignalR")
-
-chordDiagramLR(bsrinf.example,
-    pw.id.filter = "R-HSA-2173782",
-    ligand = "A2M",
-    receptor = "LRP1",
-    limit = 20,
+data(bsrinf, package = "BulkSignalR")
+chordDiagramLR(bsrinf,
+pw.id.filter = "R-HSA-3000178",
+limit = 20,
+ligand="ADAM15", 
+receptor="ITGAV"
 )
 }

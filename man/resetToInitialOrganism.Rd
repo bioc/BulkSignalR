@@ -21,7 +21,6 @@ the organism providen in first instance.
 Reset gene names to initial organism providen in first instance
 }
 \examples{
-if(FALSE){
 data(bodyMap.mouse)
 
 ortholog.dict <- findOrthoGenes(
@@ -41,13 +40,17 @@ bsrdm <- prepareDataset(
 )
 
 bsrdm <- learnParameters(bsrdm,
-    null.model = "normal", quick = FALSE,
-    plot.folder = "./", filename = "bodyMap.mouse",
-    verbose = TRUE
+    quick = TRUE,  
 )
+subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+"REACTOME_SYNDECAN_INTERACTIONS",
+"REACTOME_ECM_PROTEOGLYCANS",
+"REACTOME_CELL_JUNCTION_ORGANIZATION")
 
-bsrinf <- initialInference(bsrdm)
+BulkSignalR_Reactome <- BulkSignalR_Reactome[
+BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
+
+bsrinf <- initialInference(bsrdm,reference="REACTOME")
 
 bsrinf <- resetToInitialOrganism(bsrinf, conversion.dict = ortholog.dict)
-}
 }

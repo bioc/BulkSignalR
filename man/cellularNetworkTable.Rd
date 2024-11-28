@@ -24,11 +24,8 @@ Generate a data.frame including all the links between cell types
 mediated by L-R interactions with their respective weights.
 }
 \examples{
-print("assignCellTypesToInteractions")
-data(sdc, package = "BulkSignalR")
-data(bsrinf.example, package = "BulkSignalR")
-
-bsrdm <- prepareDataset(counts = sdc)
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
 # microenvironment cell populations
 data(immune.signatures, package = "BulkSignalR")
@@ -44,7 +41,7 @@ signatures <- rbind(immune.signatures, tme.signatures[
 tme.scores <- scoreSignatures(bsrdm, signatures)
 
 # assignment
-lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 
 # cellular network
 g.table <- cellularNetworkTable(lr2ct)

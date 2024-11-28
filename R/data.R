@@ -8,7 +8,20 @@
 #' @usage data(sdc)
 "sdc"
 
-#' A BSR-Inference object related to sdc.
+#' A skinny BSR-dataModel object related to sdc.
+#'
+#' Output from the `learnParameters` function to get
+#' BulkSignalR statistical model parameters.
+#' 
+#' @format An example of an object created by `prepareDataset`
+#' applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and
+#' 10 000 genes sampled (seed set to 123)
+#' `learnParameters` was also called to get statistical 
+#' model parameters.
+#' @usage data(bsrdm)
+"bsrdm"
+
+#' A skinny BSR-Inference object related to sdc.
 #'
 #' From the previous object `bsrdm`, 
 #' you can generate inferences by calling its
@@ -18,8 +31,62 @@
 #' with their associated pathways and corrected p-values.
 #' 
 #' @format An example of an object created by inference function 
-#' @usage data(bsrinf.example)
-"bsrinf.example"
+#' @usage data(bsrinf)
+"bsrinf"
+
+#' A skinny BSR-dataModelComp object related to sdc.
+#'
+#' See Vignette BulkSignalR-Differential.
+#' 
+#' @format An example of an BSR-dataModelComp object
+#' @usage data(bsrdm.comp)
+"bsrdm.comp"
+
+#' A skinny BSR-InferenceComp object related to sdc.
+#'
+#' See Vignette BulkSignalR-Differential.
+#' 
+#' @format An example of an BSR-InferenceComp object
+#' @usage data(bsrinf.comp)
+"bsrinf.comp"
+
+
+#' A skinny BSR-dataModel object related to sdc.
+#'
+#' Output from the `learnParameters` function to get
+#' BulkSignalR statistical model parameters.
+#' 
+#' @format An example of an object created by `prepareDataset`
+#' applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and
+#' 10 000 genes sampled (seed set to 123)
+#' `learnParameters` was also called to get statistical 
+#' model parameters.
+#' @source \url{http://spatial.libd.org/spatialLIBD/}
+#' @usage data(bsrinf.spa)
+"bsrinf.spa"
+
+#' A skinny BSR-dataModel object related to a dataset
+#' obtained from STexampleData::Visium_humanDLPFC. 
+#' A single sample (sample 151673)
+#' of human brain dorsolateral prefrontal cortex (DLPFC)
+#' in the human brain, measured using the 10x Genomics 
+#' Visium platform. This is a subset of the full dataset 
+#' published by Maynard and Collado-Torres et al. (2021).
+#' The subset is reproduced in the vignette.
+#' 
+#' Output from the `learnParameters` function to get
+#' BulkSignalR statistical model parameters for a subset
+#' of a spatial dataset.
+#' 
+#' @format An example of an object created by `prepareDataset`
+#' applied to a subset of a spatial dataset.
+#' `learnParameters` was also called to get statistical 
+#' model parameters.
+#' @source \url{http://spatial.libd.org/spatialLIBD/}
+#' @usage data(bsrdm.spa)
+"bsrdm.spa"
+
+
 
 #' Mouse transcriptomes across tissues
 #'

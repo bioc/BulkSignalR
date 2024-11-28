@@ -19,9 +19,7 @@
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' if (FALSE) {
-#'     createResources()
-#' }
+#' createResources(onRequest=FALSE)
 createResources <- function(onRequest = TRUE, verbose = FALSE) {
     cacheDir <- BulkSignalR_CACHEDIR
     resourcesCacheDir <- paste(cacheDir, "resources", sep = "/")
@@ -82,7 +80,7 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
 #' @importFrom cli cli_alert_danger
 #' @export
 #' @examples
-#' reactome <- getResource(resourceName = "Reactome")
+#' reactome <- getResource(resourceName = "Reactome",cache=TRUE)
 getResource <- function(resourceName = NULL, cache = FALSE) {
     if (!resourceName %in% c("GO-BP", "Reactome", "Network")) {
         cli::cli_alert_danger(
@@ -181,11 +179,7 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
 #' @importFrom cli cli_alert_info
 #' @export
 #' @examples
-#' print("resetNetwork")
-#' if (FALSE) {
-#'     resetNetwork(network)
-#' }
-#'
+#' resetNetwork(BulkSignalR_Network)
 resetNetwork <- function(network) {
     if (!all(c("a.gn", "type", "b.gn") %in% colnames(network))) {
         stop("Column names of network should be defined as a.gn, type & b.gn.")
@@ -226,58 +220,63 @@ resetNetwork <- function(network) {
 #' @importFrom cli cli_alert_info
 #' @export
 #' @examples
-#' print("resetPathwaysFromFile")
-#' if (FALSE) {
-#'     resetPathwaysFromFile(file, "GO-BP")
-#' }
-#'
-resetPathwaysFromFile <- function(file,
+#' resetPathwaysFromFile(file = NULL, 
+#' fileType = "json",
+#' resourceName = "Reactome")
+resetPathwaysFromFile <- function(file = NULL,
     fileType = c("json", "gmt", "txt"),
     resourceName = NULL) {
     
-    fileType <- match.arg(fileType)
+    if (!is.null(file)){
 
-    if (!resourceName %in% c("GO-BP", "Reactome")) {
-        stop("GO-BP and Reactome are the only keywords alllowed.")
+        fileType <- match.arg(fileType)
+
+        if (!resourceName %in% c("GO-BP", "Reactome")) {
+            stop("GO-BP and Reactome are the only keywords alllowed.")
+        }
+
+        if (!file.exists(file)) {
+            stop("This file doesn't exist.")
+        }
+
+        if (fileType == "json") {
+            db <- .formatPathwaysFromJson(
+                file = file,
+                resourceName = resourceName
+            )
+        } else if (fileType == "gmt") {
+            db <- .formatPathwaysFromGmt(
+                file = file,
+                resourceName = resourceName
+            )
+        } else if (fileType == "txt") {
+            db <- .formatPathwaysFromTxt(
+                file = file,
+                resourceName = resourceName
+            )
+        } else {
+            stop("File format accepted are `json` , `gmt` or `txt` only.")
+        }
+
+        message("")
+        cli::cli_alert_info("New resource defined for {.val {resourceName}}.\n")
+        message(utils::head(db))
+
+
+        if (resourceName == "Reactome") {
+            assign("BulkSignalR_Reactome", db,
+                envir = as.environment(nameEnv))
+        }
+        if (resourceName == "GO-BP") {
+            assign("BulkSignalR_Gobp", db,
+                envir = as.environment(nameEnv))
+        }
+
     }
-
-    if (!file.exists(file)) {
-        stop("This file doesn't exist.")
+    else {
+        message("User must submit  a file.")
     }
-
-    if (fileType == "json") {
-        db <- .formatPathwaysFromJson(
-            file = file,
-            resourceName = resourceName
-        )
-    } else if (fileType == "gmt") {
-        db <- .formatPathwaysFromGmt(
-            file = file,
-            resourceName = resourceName
-        )
-    } else if (fileType == "txt") {
-        db <- .formatPathwaysFromTxt(
-            file = file,
-            resourceName = resourceName
-        )
-    } else {
-        stop("File format accepted are `json` , `gmt` or `txt` only.")
-    }
-
-    message("")
-    cli::cli_alert_info("New resource defined for {.val {resourceName}}.\n")
-    message(utils::head(db))
-
-
-    if (resourceName == "Reactome") {
-        assign("BulkSignalR_Reactome", db,
-            envir = as.environment(nameEnv))
-    }
-    if (resourceName == "GO-BP") {
-        assign("BulkSignalR_Gobp", db,
-            envir = as.environment(nameEnv))
-    }
-
+    
     return(invisible(NULL))
 } # resetPathwaysFromFile
 

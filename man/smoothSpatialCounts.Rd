@@ -62,9 +62,26 @@ the central location is augmented according to
 1-(1-\code{weight.ratio})*(number of neighbors)/\code{nnn}.
 }
 \examples{
-print("smoothSpatialCounts")
-if (FALSE) {
-    sm.bsrdm <- smoothSpatialCounts(bsrdm, areas,
-radius = 1.2, nnn.radius = 4)
-}
+ 
+data(bsrdm.spa)
+data(bsrinf.spa)
+
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+set.seed(123)
+
+speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
+
+idx <- sample(ncol(speSubset), 10)
+speSubset <- speSubset[, idx]
+
+colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+                colData(speSubset)[[5]],sep = "x")
+
+
+annotation <- colData(speSubset)
+
+#sm.bsrdm <- smoothSpatialCounts(bsrdm.spa, annotation,
+#radius = 1.2, nnn.radius = 4)
+
 }

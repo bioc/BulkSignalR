@@ -22,5 +22,5 @@ from \url{https://www.pathwaycommons.org/})
 stored in the cache.
 }
 \examples{
-reactome <- getResource(resourceName = "Reactome")
+reactome <- getResource(resourceName = "Reactome",cache=TRUE)
 }

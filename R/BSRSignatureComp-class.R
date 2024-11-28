@@ -66,9 +66,6 @@ setMethod("show", "BSRSignatureComp", function(object) {
 #' @aliases tgExpr,BSRSignatureComp-method
 #' @param x BSRSignatureComp object
 #' @return tg.expr
-#' @examples
-#' if(FALSE){
-#' }
 #' @export
 setMethod("tgExpr", "BSRSignatureComp", function(x) x@tg.expr)
 

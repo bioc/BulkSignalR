@@ -16,8 +16,13 @@ A raster image object.
 Rasterize raw image from filepath
 }
 \examples{
-print("rasterizeFromFile")
-if (FALSE) {
-    my.image.as.raster <- rasterizeFromFile(path.to.file)
-}
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+my.image.as.raster <- SpatialExperiment::imgRaster(spe, 
+sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
+png("test.png")
+plot(my.image.as.raster)
+dev.off()
+my.image.as.raster <- rasterizeFromFile("test.png")
+
 }

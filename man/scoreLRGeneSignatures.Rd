@@ -63,28 +63,21 @@ Compute ligand-receptor gene signature scores over a BSRDataModelComp
 specific comparison.
 }
 \examples{
-print("scoreLRGeneSignatures")
-data(sdc, package = "BulkSignalR")
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
-data(bsrinf.example, package = "BulkSignalR")
-bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
-bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP,
-    qval.thres = 0.001
-)
-
-scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
+bsrinf.redBP <- reduceToBestPathway(bsrinf)
+bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP, qval.thres = 0.001)
+scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
     name.by.pathway = FALSE
 )
-if(FALSE){
 # prepare data
 data(sdc, package = "BulkSignalR")
 normal <- grep("^N", names(sdc))
 bsrdm <- prepareDataset(sdc[, -normal])
 
 # define the comparison
-bsrdm.comp <- as.BSRDataModelComp(bsrdm)
+bsrdm.comp <- as(bsrdm,"BSRDataModelComp")
 colA <- as.integer(1:5)
 colB <- as.integer(8:15)
 n <- nrow(ncounts(bsrdm.comp))
@@ -97,7 +90,8 @@ bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 
 # infer ligand-receptor interactions from the comparison
-bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
+reference="REACTOME","random.example")
 
 # reduction
 bsrinf.red <- reduceToBestPathway(bsrinf)
@@ -107,5 +101,4 @@ bsrsig.red <- getLRGeneSignatures(bsrinf.red, qval.thres = 1e-6)
 scores.red <- scoreLRGeneSignatures(bsrdm.comp, bsrsig.red,
     name.by.pathway = TRUE, rownames.LRP = TRUE
 )
-}
 }

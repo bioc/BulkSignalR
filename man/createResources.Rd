@@ -24,7 +24,5 @@ Otherwise datatabase, is handled by another process
 not relying on BiocFileCache instance.
 }
 \examples{
-if (FALSE) {
-    createResources()
-}
+createResources(onRequest=FALSE)
 }

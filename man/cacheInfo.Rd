@@ -17,5 +17,5 @@ Returns `NULL`, invisibly.
 Get cache content informations for specific cache dir.
 }
 \examples{
-print("cacheInfo")
+cacheInfo()
 }

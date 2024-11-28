@@ -24,7 +24,6 @@ Target genes accessor
 Target genes accessor
 }
 \examples{
-if(FALSE){
-tgGenes(new("BSRSignature"))
-}
+bsr.sig <- new("BSRSignature")
+tgGenes(bsr.sig)
 }

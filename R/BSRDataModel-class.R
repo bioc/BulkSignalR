@@ -337,22 +337,10 @@ setGeneric("learnParameters", signature="obj",
 #' @export
 #'
 #' @examples
-#' print("prepareDataset")
 #' data(sdc, package = "BulkSignalR")
-#' if(FALSE){
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' print("learnParameters")
-#' print("prepareDataset")
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' print("learnParameters")
-#' bsrdm <- learnParameters(bsrdm, plot.folder = "./")
-#' bsrdm
-#' }
+#' idx <- sample(nrow(sdc), 10000)
+#' bsrdm <- prepareDataset(sdc[idx, c("N22","N20","SDC17","SDC25")])
+#' bsrdm <- learnParameters(bsrdm, quick=TRUE)
 #' @importFrom methods new
 setMethod(
     "learnParameters", "BSRDataModel",
@@ -629,20 +617,20 @@ setGeneric("initialInference", signature="obj",
 #' @export
 #'
 #' @examples
-#' print("initialInference")
-#' if(FALSE){
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' print("learnParameters")
-#' bsrdm <- learnParameters(bsrdm)
-#' bsrdm
-#'
-#' print("perform inference")
-#' bsrinf <- initialInference(bsrdm)
-#' bsrinf
-#' }
+#' data(bsrdm, package = "BulkSignalR")
+#' # We use a subset of the reference to speed up
+#' # inference in the context of the example.
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
+#' 
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' 
+#' bsrinf <- initialInference(bsrdm,
+#'     min.cor = 0.3,
+#'     reference="REACTOME")
 #' @importFrom methods new
 setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
     min.cor = 0.25, restrict.genes = NULL,
@@ -755,18 +743,12 @@ setGeneric("scoreLRGeneSignatures", signature="obj",
 #'
 #' @export
 #' @examples
-#' print("scoreLRGeneSignatures")
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' data(bsrinf.example, package = "BulkSignalR")
-#' bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
-#' bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP,
-#'     qval.thres = 0.001
-#' )
-#'
-#' scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
+#' 
+#' bsrinf.redBP <- reduceToBestPathway(bsrinf)
+#' bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP, qval.thres = 0.001)
+#' scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
 #'     name.by.pathway = FALSE
 #' )
 #' @importFrom foreach %do% %dopar%

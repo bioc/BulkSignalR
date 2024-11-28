@@ -17,7 +17,6 @@ pathways
 pathways accessor
 }
 \examples{
-if(FALSE){
-pathways(new("BSRSignature"))
-}
+bsr.sig <- new("BSRSignature")
+pathways(bsr.sig)
 }

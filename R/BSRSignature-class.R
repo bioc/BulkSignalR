@@ -82,9 +82,8 @@ setGeneric("pathways", signature="x",
 #' @param x BSRSignature
 #' @return pathways
 #' @examples
-#' if(FALSE){
-#' pathways(new("BSRSignature"))
-#' }
+#' bsr.sig <- new("BSRSignature")
+#' pathways(bsr.sig)
 #' @export
 setMethod("pathways", "BSRSignature", function(x) x@pathways)
 
@@ -95,9 +94,8 @@ setMethod("pathways", "BSRSignature", function(x) x@pathways)
 #' @param x BSRSignature
 #' @return ligands
 #' @examples
-#' if(FALSE){
-#' ligands(new("BSRSignature"))
-#' }
+#' bsr.sig <- new("BSRSignature")
+#' ligands(bsr.sig)
 #' @export
 setMethod("ligands", "BSRSignature", function(x) x@ligands)
 
@@ -108,9 +106,8 @@ setMethod("ligands", "BSRSignature", function(x) x@ligands)
 #' @param x BSRSignature
 #' @return receptors
 #' @examples
-#' if(FALSE){
-#' receptors(new("BSRSignature"))
-#' }
+#' bsr.sig <- new("BSRSignature")
+#' ligands(bsr.sig)
 #' @export
 setMethod("receptors", "BSRSignature", function(x) x@receptors)
 
@@ -121,9 +118,8 @@ setMethod("receptors", "BSRSignature", function(x) x@receptors)
 #' @param x BSRSignature
 #' @return tgGenes
 #' @examples
-#' if(FALSE){
-#' tgGenes(new("BSRSignature"))
-#' }
+#' bsr.sig <- new("BSRSignature")
+#' tgGenes(bsr.sig)
 #' @export
 setMethod("tgGenes", "BSRSignature", function(x) x@tg.genes)
 
@@ -134,9 +130,8 @@ setMethod("tgGenes", "BSRSignature", function(x) x@tg.genes)
 #' @param x BSRSignature
 #' @return tgCorr
 #' @examples
-#' if(FALSE){
-#' tgCorr(new("BSRSignature"))
-#' }
+#' bsr.sig <- new("BSRSignature")
+#' tgCorr(bsr.sig)
 #' @export
 setMethod("tgCorr", "BSRSignature", function(x) x@tg.corr)
 

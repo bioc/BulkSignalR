@@ -108,16 +108,32 @@ reference tissue plot (image or areas represented), the gene signature
 scores, the ligand expression values, and the receptor expression values.
 }
 \examples{
-print("separatedLRPlot")
-if (FALSE) {
-    img <- png::readPNG(path.to.file)
+data(bsrdm.spa)
+data(bsrinf.spa)
 
-    separatedLRPlot(v,
-        L,
-        R,
-        ncounts,
-        areas,
-        image.raster = img
-    )
-}
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+set.seed(123)
+
+speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
+
+idx <- sample(ncol(speSubset), 10)
+speSubset <- speSubset[, idx]
+
+
+colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+                colData(speSubset)[[5]],sep = "x")
+
+annotation <- colData(speSubset)
+
+thres <- 0.01
+bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+
+separatedLRPlot(scores.red, "SLIT2", "GPC1", 
+ncounts(bsrdm.spa), 
+annotation,
+label.col = "ground_truth")
+
 }

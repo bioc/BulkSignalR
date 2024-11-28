@@ -17,23 +17,6 @@ mu
 Mu accessor
 }
 \examples{
-# prepare data
-data(sdc, package = "BulkSignalR")
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
-
-# define the comparison
-bsrdm.comp <- as.BSRDataModelcomparison(bsrdm)
-colA <- as.integer(1:5)
-colB <- as.integer(8:15)
-n <- nrow(ncounts(bsrdm.comp))
-stats <- data.frame(
-    pval = runif(n), logFC = rnorm(n, 0, 2),
-    expr = runif(n, 0, 10)
-)
-rownames(stats) <- rownames(ncounts(bsrdm.comp))
-bsrcc <- defineClustercomparison(bsrdm.comp, colA, colB, stats)
-bsrdm.comp <- addClustercomparison(bsrdm.comp, bsrcc, "random.example")
-
+bsrdm.comp <- new("BSRDataModelComp")
 mu(bsrdm.comp)
 }

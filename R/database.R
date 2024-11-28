@@ -13,10 +13,7 @@
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' print("createDatabase")
-#' if(FALSE){
-#'  createDatabase()
-#' }
+#' createDatabase(onRequest = FALSE)
 createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
     # Default directory
     cacheDir <- BulkSignalR_CACHEDIR

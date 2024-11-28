@@ -33,12 +33,9 @@ which can be changed afterwards if necessary.
 Generate a ligand-receptor network from a ligand-receptor table.
 }
 \examples{
-print("getLRNetwork")
-if(FALSE){
-data(bsrinf.example, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
-gLR <- getLRNetwork(bsrinf.example, qval.thres = 1e-4)
+gLR <- getLRNetwork(bsrinf, qval.thres = 1e-4)
 # plot(gLR)
 # write.graph(gLR, file="SDC-LR-network.graphml", format="graphml")
-}
 }

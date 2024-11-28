@@ -17,6 +17,6 @@ inf.param
 Inference parameters accessor
 }
 \examples{
-data(bsrinf.example, package = "BulkSignalR")
-inferenceParameters(bsrinf.example)
+bsrinf <- new ("BSRInference")
+inferenceParameters(bsrinf)
 }

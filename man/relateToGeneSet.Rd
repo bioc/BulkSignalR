@@ -27,10 +27,10 @@ Finds ligands related to a gene set by following receptor, and
 receptor downstream pathway targets.
 }
 \examples{
-print("relateToGeneSet")
-data(bsrinf.example, package = "BulkSignalR")
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
 data(p.EMT, package = "BulkSignalR")
 p.EMT <- p.EMT$gene
-triggers <- relateToGeneSet(bsrinf.example, p.EMT) 
+triggers <- relateToGeneSet(bsrinf, p.EMT) 
 }

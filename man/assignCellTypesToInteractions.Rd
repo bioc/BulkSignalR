@@ -63,11 +63,8 @@ cel type in the linear models as comparable as possible.
 Generate a data.frame linking interactions to cell types.
 }
 \examples{
-print("assignCellTypesToInteractions")
-data(sdc, package = "BulkSignalR")
-data(bsrinf.example, package = "BulkSignalR")
-
-bsrdm <- prepareDataset(counts = sdc)
+data(bsrdm, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
 # microenvironment cell populations
 data(immune.signatures, package = "BulkSignalR")
@@ -83,5 +80,5 @@ signatures <- rbind(immune.signatures, tme.signatures[
 tme.scores <- scoreSignatures(bsrdm, signatures)
 
 # assignment
-lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 }

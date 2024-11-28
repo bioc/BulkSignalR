@@ -39,12 +39,35 @@
 #'
 #' @importFrom RANN nn2
 #'
-#' @examples
-#' print("smoothSpatialCounts")
-#' if (FALSE) {
-#'     sm.bsrdm <- smoothSpatialCounts(bsrdm, areas,
-#' radius = 1.2, nnn.radius = 4)
-#' }
+#' @examples  
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' #sm.bsrdm <- smoothSpatialCounts(bsrdm.spa, annotation,
+#' #radius = 1.2, nnn.radius = 4)
+#' 
 smoothSpatialCounts <- function(bsrdm, areas, nnn = 4,
                                 radius = NULL, weight.ratio = 0.5,
                                 x.col = "array_col", y.col = "array_row") {
@@ -144,11 +167,36 @@ smoothSpatialCounts <- function(bsrdm, areas, nnn = 4,
 #' @importFrom RANN nn2
 #'
 #' @examples
-#' print("maxLigandSpatialCounts")
-#' if (FALSE) {
-#'     max.bsrdm <- maxLigandSpatialCounts(bsrdm, areas,
-#'     radius = 1.2, nnn.radius = 4)
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374)  
+#'    
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' # max.bsrdm <- maxLigandSpatialCounts(bsrdm.spa, annotation,
+#' # radius = 1.2, nnn = 4)
+#'
 maxLigandSpatialCounts <- function(bsrdm, areas, nnn = 4, radius = NULL,
     x.col = "array_col", y.col = "array_row") {
     if (!is.null(parameters(bsrdm)$spatial.smooth) && 
@@ -184,7 +232,6 @@ maxLigandSpatialCounts <- function(bsrdm, areas, nnn = 4, radius = NULL,
             maxi[ligands, i] <- orig[ligands, i]
         }
     }
-
     bsrdm@ncounts <- maxi
     bsrdm@param$spatial.smooth <- TRUE
     bsrdm
@@ -201,10 +248,16 @@ maxLigandSpatialCounts <- function(bsrdm, areas, nnn = 4, radius = NULL,
 #'
 #' @export
 #' @examples
-#' print("rasterizeFromFile")
-#' if (FALSE) {
-#'     my.image.as.raster <- rasterizeFromFile(path.to.file)
-#' }
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#  
+#' my.image.as.raster <- SpatialExperiment::imgRaster(spe, 
+#' sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
+#' png("test.png")
+#' plot(my.image.as.raster)
+#' dev.off()
+#' my.image.as.raster <- rasterizeFromFile("test.png")
+#' 
 rasterizeFromFile <- function(path.to.file) {
     img <- png::readPNG(path.to.file)
 
@@ -223,12 +276,12 @@ rasterizeFromFile <- function(path.to.file) {
 #'
 #' @export
 #' @examples
-#' print("coordsFlip")
-#' if (FALSE) {
-#'     img <- png::readPNG(path.to.file)
-#'     my.image.as.raster <- grDevices::as.raster(path.to.file)
-#'     my.image.rotated <- coordsFlip(my.image.as.raster, degrees = 90)
-#' }
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#  
+#' my.image.as.raster <- SpatialExperiment::imgRaster(spe, 
+#' sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
+#' my.image.rotated <- coordsFlip(my.image.as.raster, degrees = 90)
 coordsFlip <- function(rasterImage, degrees = 90) {
     if (!is.numeric(degrees)) {
         stop("Degrees must be numeric.", call. = FALSE)
@@ -260,12 +313,12 @@ coordsFlip <- function(rasterImage, degrees = 90) {
 #'
 #' @export
 #' @examples
-#' print("scalesReverse")
-#' if (FALSE) {
-#'     img <- png::readPNG(path.to.file)
-#'     my.image.as.raster <- grDevices::as.raster(path.to.file)
-#'     my.image.flipped <- scalesReverse(my.image.as.raster, axis = "x")
-#' }
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#  
+#' my.image.as.raster <- SpatialExperiment::imgRaster(spe, 
+#' sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
+#' my.image.flipped <- scalesReverse(my.image.as.raster, axis = "x")
 scalesReverse <- function(rasterImage, axis = "x") {
     rasterImage <- if (axis == "x") {
         apply(rasterImage, 2, rev)
@@ -318,16 +371,42 @@ scalesReverse <- function(rasterImage, axis = "x") {
 #' @return A spatial plot
 #' @export
 #' @examples
-#' print("spatialPlot")
-#' if (FALSE) {
-#'     img <- png::readPNG(path.to.file)
+#' library(STexampleData)
+#' data(bsrinf.spa)
+#' data(bsrdm.spa)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#'  #set.seed(123)
+#'  #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374)  
+#'          
+#' speSubset <- speSubset[, idx]
 #'
-#'     spatialPlot(v,
-#'         areas,
-#'         inter.name = "L->R",
-#'         image.raster = img
-#'     )
-#' }
+#' my.image.as.raster <- SpatialExperiment::imgRaster(speSubset, 
+#' sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#' colData(speSubset)[[5]],sep = "x")
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' inter <- "{SLIT2} / {GPC1}"
+#' 
+#' spatialPlot(scores.red[inter, ], annotation, inter,
+#'    ref.plot = TRUE, ref.plot.only = FALSE,
+#'    image.raster = my.image.as.raster, dot.size = 1,
+#'    label.col = "ground_truth")
+#' 
 #' @import ggplot2
 #' @import grid
 #' @importFrom gridExtra grid.arrange
@@ -520,10 +599,40 @@ spatialPlot <- function(v, areas, inter.name, rev.y = TRUE, ref.plot = FALSE,
 #' @return Create PDF file and returns `NULL`, invisibly. 
 #' @export
 #' @examples
-#' print("generateSpatialPlots")
-#' if (FALSE) {
-#'     generateSpatialPlots(scores, areas, plot.folder)
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' generateSpatialPlots(scores.red,
+#' annotation, ".", label.col = "ground_truth")
+#' 
 generateSpatialPlots <- function(scores, areas, plot.folder, 
     width = 5, height = 3,
     pointsize = 8, rev.y = TRUE, ref.plot = TRUE, image.raster = NULL, 
@@ -608,10 +717,46 @@ generateSpatialPlots <- function(scores, areas, plot.folder,
 #' 
 #' @export
 #' @examples
-#' print("spatialIndexPlot")
-#' if (FALSE) {
-#'     spatialIndexPlot(scores, areas, out.file)
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' separatedLRPlot(scores.red, "SLIT2", "GPC1", 
+#' ncounts(bsrdm.spa), 
+#' annotation,
+#' label.col = "ground_truth")
+#' 
+#' # generate visual index on disk in pdf file
+#' spatialIndexPlot(scores.red, annotation,  
+#' label.col = "ground_truth",
+#' out.file = "spatialIndexPlot")
+#' 
 #' @import grid
 #' @importFrom gridExtra grid.arrange
 spatialIndexPlot <- function(scores, areas, out.file, ref.plot = TRUE,
@@ -728,18 +873,41 @@ spatialIndexPlot <- function(scores, areas, out.file, ref.plot = TRUE,
 #' @return A set of spatial plots. 
 #' @export
 #' @examples
-#' print("separatedLRPlot")
-#' if (FALSE) {
-#'     img <- png::readPNG(path.to.file)
-#'
-#'     separatedLRPlot(v,
-#'         L,
-#'         R,
-#'         ncounts,
-#'         areas,
-#'         image.raster = img
-#'     )
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' separatedLRPlot(scores.red, "SLIT2", "GPC1", 
+#' ncounts(bsrdm.spa), 
+#' annotation,
+#' label.col = "ground_truth")
+#' 
 #' @import grid
 #' @importFrom gridExtra grid.arrange
 separatedLRPlot <- function(v, L, R, ncounts, areas, 
@@ -859,10 +1027,40 @@ separatedLRPlot <- function(v, L, R, ncounts, areas,
 #' what is used for the ANOVA).
 #' @export
 #' @examples
-#' print("spatialAssociation")
-#' if (FALSE) {
-#'     spatialAssociation(scores, areas)
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' spatialAssociation(scores.red, areas = annotation,
+#' label.col = "ground_truth")
+#' 
 #' @import multtest
 #' @importFrom foreach %do%
 spatialAssociation <- function(scores, areas, 
@@ -1009,10 +1207,44 @@ spatialAssociation <- function(scores, areas,
 #' @export
 #' @return   ComplexHeatmap::Heatmap object
 #' @examples
-#' print("spatialAssociationPlot")
-#' if (FALSE) {
-#'     spatialAssociationPlot(associations)
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' # statistical association with tissue areas based on correlations
+#' # For display purpose, we only use a subset here
+#' 
+#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:17), ],
+#' annotation, label.col = "ground_truth",test = "Spearman")
+#'
+#'spatialAssociationPlot(assoc.bsr.corr)
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
 spatialAssociationPlot <- function(associations, qval.thres = 0.01, 
@@ -1118,10 +1350,45 @@ spatialAssociationPlot <- function(associations, qval.thres = 0.01,
 #' 
 #' @export
 #' @examples
-#' print("spatialDiversityPlot")
-#' if (FALSE) {
-#'     spatialDiversityPlot(scores, associations)
-#' }
+#' data(bsrdm.spa)
+#' data(bsrinf.spa)
+#' 
+#' library(STexampleData)
+#' spe <- Visium_humanDLPFC()
+#' 
+#' #set.seed(123)
+#' #idx <- sample(ncol(speSubset), 10)
+#
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39")                                       
+#' idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
+#' 
+#' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
+#' 
+#' idx <- sample(ncol(speSubset), 10)
+#' speSubset <- speSubset[, idx]
+#' 
+#' 
+#' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+#'                 colData(speSubset)[[5]],sep = "x")
+#' 
+#' 
+#' annotation <- colData(speSubset)
+#' 
+#' thres <- 0.01
+#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' 
+#' # statistical association with tissue areas based on correlations
+#' # For display purpose, we only use a subset here
+#' 
+#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:17), ],
+#' annotation, label.col = "ground_truth",test = "Spearman")
+#'
+#' spatialDiversityPlot(scores.red[c(1:17), ],assoc.bsr.corr)
+#' 
 #' @importFrom foreach %do%
 #' @importFrom Rtsne Rtsne
 #' @importFrom ggrepel geom_text_repel

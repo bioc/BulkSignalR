@@ -20,8 +20,5 @@ Returns `NULL`, invisibly.
 Fetch LR database from remote location.
 }
 \examples{
-print("createDatabase")
-if(FALSE){
- createDatabase()
-}
+createDatabase(onRequest = FALSE)
 }

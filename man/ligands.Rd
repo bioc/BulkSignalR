@@ -24,7 +24,6 @@ ligands accessor
 ligands accessor
 }
 \examples{
-if(FALSE){
-ligands(new("BSRSignature"))
-}
+bsr.sig <- new("BSRSignature")
+ligands(bsr.sig)
 }

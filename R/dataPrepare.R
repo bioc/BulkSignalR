@@ -15,7 +15,6 @@
 #' @importFrom cli cli_alert_info
 #' @export
 #' @examples
-#' print("resetLRdb")
 #' data(sdc, package = "BulkSignalR")
 #' resetLRdb(db = data.frame(ligand = "A2M", receptor = "LRP1"), switch = FALSE)
 resetLRdb <- function(db, switch = FALSE) {
@@ -78,7 +77,7 @@ resetLRdb <- function(db, switch = FALSE) {
     
     countsChecked <- NULL 
 
-        if(is(counts,"SummarizedExperiment")){
+        if(class(counts) %in% c("SummarizedExperiment")){
 
             if(length(assays(counts))>1){
                 stop("Only one assay should be defined.")
@@ -89,7 +88,7 @@ resetLRdb <- function(db, switch = FALSE) {
             }
         }
 
-        else if(is(counts,"SpatialExperiment")){
+        else if(class(counts) %in% c("SpatialExperiment")){
 
             if(length(assays(counts))>1){
                 stop("Only one assay should be defined.")
@@ -202,7 +201,6 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @importFrom matrixStats rowMeans2 rowSums2 colSums2
 #' @export
 #' @examples
-#' print("prepareDataset")
 #' data(sdc, package = "BulkSignalR")
 #' normal <- grep("^N", names(sdc))
 #' bsrdm <- prepareDataset(sdc[, -normal])
@@ -373,7 +371,6 @@ prepareDataset <- function(
 #'
 #' @export
 #' @examples
-#' print("findOrthoGenes")
 #' data(bodyMap.mouse)
 #' ortholog.dict <- findOrthoGenes(
 #'     from_organism = "mmusculus",
@@ -438,7 +435,6 @@ findOrthoGenes <- function(from_organism, from_values,
 #'
 #' @export
 #' @examples
-#' print("convertToHuman")
 #' data(bodyMap.mouse)
 #'
 #' ortholog.dict <- findOrthoGenes(

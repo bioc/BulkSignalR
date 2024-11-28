@@ -39,14 +39,13 @@
 #'
 #' @export
 #' @examples
-#' print("bubblePlotPathwaysLR")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' pathways <- LRinter(bsrinf.example)[1,c("pw.name")]
-#' bubblePlotPathwaysLR(bsrinf.example,
-#'     pathways = pathways,
-#'     qval.thres = 1,
-#'     color = "red",
-#'     pointsize = 8
+#' data(bsrinf, package = "BulkSignalR")
+#' pathways <- LRinter(bsrinf)[1,c("pw.name")]
+#' bubblePlotPathwaysLR(bsrinf,
+#' pathways = pathways,
+#' qval.thres = 0.1,
+#' color = "red",
+#' pointsize = 8
 #' )
 #' @import ggplot2
 bubblePlotPathwaysLR <- function(
@@ -258,25 +257,21 @@ bubblePlotPathwaysLR <- function(
 #'
 #' @export
 #' @examples
-#' print("signatureHeatmaps")
-#' data(sdc, package = "BulkSignalR")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' bsrdm <- prepareDataset(counts = sdc)
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redP <- reduceToPathway(bsrinf.example)
-#' bsrinf.redPBP <- reduceToBestPathway(bsrinf.redP)
-#' bsrsig.redPBP <- getLRGeneSignatures(bsrinf.redPBP, qval.thres = 0.001)
+#' bsrinf.redP <- reduceToPathway(bsrinf)
+#' bsrinf.redPBP <- reduceToBestPathway(bsrinf)
+#' bsrsig.redPBP <- getLRGeneSignatures(bsrinf, qval.thres = 1)
 #' pathway1 <- pathways(bsrsig.redPBP)[1]
 #' signatureHeatmaps(
-#'     pathway = pathway1,
-#'     bsrdm = bsrdm,
-#'     bsrsig = bsrsig.redPBP,
-#'     path = "./",
-#'     filename = "sdc_signatureheatmap",
-#'     h.width = 6,
-#'     h.height = 9,
-#'     fontsize = 6,
-#'     show_column_names = TRUE
+#' pathway = pathway1,
+#' bsrdm = bsrdm,
+#' bsrsig = bsrsig.redPBP,
+#' h.width = 6,
+#' h.height = 8,
+#' fontsize = 4,
+#' show_column_names = TRUE
 #' )
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
@@ -288,6 +283,7 @@ signatureHeatmaps <- function(pathway,
                             h.height = 9,
                             fontsize = 6,
                             show_column_names = FALSE) {
+
     idx.path.sig <- which(pathways(bsrsig) == pathway)
 
     if (rlang::is_empty(idx.path.sig)) {
@@ -299,16 +295,17 @@ signatureHeatmaps <- function(pathway,
 
     counts <- as.data.frame(bsrdm@ncounts)
 
-    filter.L <- ligands(bsrsig)[[idx.path.sig]]
+    filter.L <- unlist(ligands(bsrsig)[idx.path.sig])
 
     counts.L <- counts[filter.L, ]
+
     palette.L <- "RdPu"
     cols.L <- circlize::colorRamp2(breaks = c(-1, 0, 1),
         hcl_palette = palette.L, reverse = TRUE)
 
-    filter.R <- receptors(bsrsig)[[idx.path.sig]]
-    filter.T <- tgGenes(bsrsig)[[idx.path.sig]]
-
+    filter.R <- unlist(receptors(bsrsig)[idx.path.sig])
+    filter.T <- unlist(tgGenes(bsrsig)[idx.path.sig])
+    
     # Remove in receptors, genes that are potential targets.
     filter.R <- filter.R[!filter.R %in% filter.T]
 
@@ -340,7 +337,7 @@ signatureHeatmaps <- function(pathway,
     p.T <- .customheatmap(
         counts = counts.T,
         h.width = h.width, h.height = h.height,
-        scoring = as.vector(scoresPathway[idx.path.sig, ]),
+        scoring = as.vector(scoresPathway[idx.path.sig[1],]),
         hcl.palette = palette.T, cols.scoring = cols.scoring,
         show_column_names = show_column_names
     )
@@ -348,7 +345,7 @@ signatureHeatmaps <- function(pathway,
     p.R <- .customheatmap(
         counts = counts.R,
         h.width = h.width, h.height = h.height,
-        scoring = as.vector(scoresPathway[idx.path.sig, ]),
+        scoring = as.vector(scoresPathway[idx.path.sig[1],]),
         hcl.palette = palette.R, cols.scoring = cols.scoring,
         show_column_names = show_column_names
     )
@@ -356,7 +353,7 @@ signatureHeatmaps <- function(pathway,
     p.L <- .customheatmap(
         counts = counts.L,
         h.width = h.width, h.height = h.height,
-        scoring = as.vector(scoresPathway[idx.path.sig, ]),
+        scoring = as.vector(scoresPathway[idx.path.sig[1], ]),
         hcl.palette = palette.L, cols.scoring = cols.scoring,
         show_column_names = show_column_names
     )
@@ -472,13 +469,11 @@ signatureHeatmaps <- function(pathway,
 #' should be controlled, users should implement their own function.
 #' @export
 #' @examples
-#' print("simpleHeatmap")
-#' data(sdc, package = "BulkSignalR")
-#' data(bsrdm.example, package = "BulkSignalR")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
-#' bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP,
+#' bsrinf.redBP <- reduceToBestPathway(bsrinf)
+#' bsrsig.redBP <- getLRGeneSignatures(bsrinf,
 #'     qval.thres = 0.001
 #' )
 #'
@@ -710,17 +705,11 @@ scoreSignatures <- function(ds, ref.signatures, robust = FALSE) {
 #' @import ggalluvial
 #' @export
 #' @examples
-#' print("alluvialPlot")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' alluvialPlot(bsrinf.example,
-#'     keywords = c("COL4A1"),
+#' data(bsrinf, package = "BulkSignalR")
+#' alluvialPlot(bsrinf,
+#'     keywords = c("LAMC1"),
 #'     type = "L",
-#'     qval.thres = 0.001,
-#'     path = "./",
-#'     filename = "sdc_alluvial",
-#'     width = 16,
-#'     height = 12
-#' )
+#'     qval.thres = 0.01)
 alluvialPlot <- function(bsrinf, keywords, type = c("L", "R", "pw.id"),
                         qval.thres = 0.01) {
     interactions <- data.frame(
@@ -818,14 +807,12 @@ alluvialPlot <- function(bsrinf, keywords, type = c("L", "R", "pw.id"),
 #'
 #' @export
 #' @examples
-#' print("chordDiagramLR")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' 
-#' chordDiagramLR(bsrinf.example,
-#'     pw.id.filter = "R-HSA-2173782",
-#'     ligand = "A2M",
-#'     receptor = "LRP1",
-#'     limit = 20,
+#' data(bsrinf, package = "BulkSignalR")
+#' chordDiagramLR(bsrinf,
+#' pw.id.filter = "R-HSA-3000178",
+#' limit = 20,
+#' ligand="ADAM15", 
+#' receptor="ITGAV"
 #' )
 chordDiagramLR <- function(
     bsrinf,

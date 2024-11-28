@@ -27,15 +27,9 @@ Representation of the links
 between Ligands,Receptors and Pathways.
 }
 \examples{
-print("alluvialPlot")
-data(bsrinf.example, package = "BulkSignalR")
-alluvialPlot(bsrinf.example,
-    keywords = c("COL4A1"),
+data(bsrinf, package = "BulkSignalR")
+alluvialPlot(bsrinf,
+    keywords = c("LAMC1"),
     type = "L",
-    qval.thres = 0.001,
-    path = "./",
-    filename = "sdc_alluvial",
-    width = 16,
-    height = 12
-)
+    qval.thres = 0.01)
 }

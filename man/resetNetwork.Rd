@@ -30,9 +30,5 @@ When the user provide his own network
 'type' should be set to 'controls-expression-of'.
 }
 \examples{
-print("resetNetwork")
-if (FALSE) {
-    resetNetwork(network)
-}
-
+resetNetwork(BulkSignalR_Network)
 }

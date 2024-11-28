@@ -40,23 +40,17 @@ downstream correlations. It is thus possible
 that several pathways are reported for a same LR pair.
 }
 \examples{
-print("reduceToBestPathway")
-data(bsrinf.example, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
+bsrinf.redBP <- reduceToBestPathway(bsrinf)
 
-bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
-
-if(FALSE){
-print("reduceToBestPathway")
-
-# prepare data
 data(sdc, package = "BulkSignalR")
 normal <- grep("^N", names(sdc))
 bsrdm <- prepareDataset(sdc[, -normal])
 
-# define the comparison
-bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-colA <- as.integer(1:5)
-colB <- as.integer(8:15)
+bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+
+colA <- as.integer(1:2)
+colB <- as.integer(3:4)
 n <- nrow(ncounts(bsrdm.comp))
 stats <- data.frame(
     pval = runif(n), logFC = rnorm(n, 0, 2),
@@ -67,9 +61,18 @@ bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 
 # infer ligand-receptor interactions from the comparison
-bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
 
-# reduction
-bsrinf.redBP <- reduceToBestPathway(bsrinf)
-}
+subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+"REACTOME_SYNDECAN_INTERACTIONS",
+"REACTOME_ECM_PROTEOGLYCANS",
+"REACTOME_CELL_JUNCTION_ORGANIZATION")
+
+BulkSignalR_Reactome <- BulkSignalR_Reactome[
+BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
+
+bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
+"random.example", reference="REACTOME")
+
+reduceToBestPathway(bsrinf)
+
 }

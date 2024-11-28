@@ -22,7 +22,6 @@ Target gene correlations accessor
 Target gene correlations accessor
 }
 \examples{
-if(FALSE){
-tgCorr(new("BSRSignature"))
-}
+bsr.sig <- new("BSRSignature")
+tgCorr(bsr.sig)
 }

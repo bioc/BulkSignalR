@@ -36,10 +36,9 @@ this (hypergeometric test) computation.
 Basic statistics about hit pathways
 }
 \examples{
-print("getPathwayStats")
-data(bsrinf.example, package = "BulkSignalR")
+data(bsrinf, package = "BulkSignalR")
 
-pw.stat <- getPathwayStats(bsrinf.example)
-head(pw.stat)
+pw.stat <- getPathwayStats(bsrinf)
+
 
 }

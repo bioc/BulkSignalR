@@ -14,14 +14,11 @@
 #' @import igraph
 #' @export
 #' @examples
-#' print("getLRNetwork")
-#' if(FALSE){
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' gLR <- getLRNetwork(bsrinf.example, qval.thres = 1e-4)
+#' gLR <- getLRNetwork(bsrinf, qval.thres = 1e-4)
 #' # plot(gLR)
 #' # write.graph(gLR, file="SDC-LR-network.graphml", format="graphml")
-#' }
 #' @importFrom methods is
 getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     node.size = 5, red.pairs = NULL) {
@@ -274,11 +271,9 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #' @importFrom methods is
 #' @export
 #' @examples
-#' print("getLRIntracellNetwork")
-#' if(FALSE){
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
+#' bsrinf.redBP <- reduceToBestPathway(bsrinf)
 #'
 #' pairs <- LRinter(bsrinf.redBP)
 #' top <- unique(pairs[pairs$pval < 1e-20, c("pw.id", "pw.name")])
@@ -290,7 +285,6 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #'
 #' # write.graph(gLRintra, file="SDC-LR-intracellular-network.reduced.graphml",
 #' # format="graphml")
-#' }
 getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     min.cor = 0.25, max.pval = NULL, min.logFC = NULL,
     pos.targets = FALSE, neg.targets = FALSE,

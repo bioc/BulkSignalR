@@ -113,20 +113,8 @@ use.full.network is set to TRUE, meaning no intersection and hence larger
 pathways.
 }
 \examples{
-print("prepareDataset")
 data(sdc, package = "BulkSignalR")
-if(FALSE){
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
-
-print("learnParameters")
-print("prepareDataset")
-data(sdc, package = "BulkSignalR")
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
-
-print("learnParameters")
-bsrdm <- learnParameters(bsrdm, plot.folder = "./")
-bsrdm
-}
+idx <- sample(nrow(sdc), 10000)
+bsrdm <- prepareDataset(sdc[idx, c("N22","N20","SDC17","SDC25")])
+bsrdm <- learnParameters(bsrdm, quick=TRUE)
 }

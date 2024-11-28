@@ -44,13 +44,12 @@ with their respective correlation
 and Q-values.
 }
 \examples{
-print("bubblePlotPathwaysLR")
-data(bsrinf.example, package = "BulkSignalR")
-pathways <- LRinter(bsrinf.example)[1,c("pw.name")]
-bubblePlotPathwaysLR(bsrinf.example,
-    pathways = pathways,
-    qval.thres = 1,
-    color = "red",
-    pointsize = 8
+data(bsrinf, package = "BulkSignalR")
+pathways <- LRinter(bsrinf)[1,c("pw.name")]
+bubblePlotPathwaysLR(bsrinf,
+pathways = pathways,
+qval.thres = 0.1,
+color = "red",
+pointsize = 8
 )
 }

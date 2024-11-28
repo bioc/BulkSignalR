@@ -25,29 +25,7 @@
 #' \code{"\link[=BSRInferenceComp-class]{reduceToPathway}"}.
 #' @export
 #' @examples
-#' print("BSRInferenceComp class")
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#' }
+#' new("BSRInferenceComp")
 setClass("BSRInferenceComp",
     contains = "BSRInference",
     slots = c(
@@ -115,29 +93,8 @@ setGeneric("comparisonName", signature="x",
 #' @param x BSRInferenceComp object
 #' @return cmp.name
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' bsrinf <- new("BSRInferenceComp")
 #' comparisonName(bsrinf)
-#' }
 #' @export
 setMethod("comparisonName", "BSRInferenceComp", function(x) x@cmp.name)
 
@@ -168,30 +125,8 @@ setGeneric("sourceComparisonName", signature="x",
 #' @param x BSRInferenceComp object
 #' @return src.comp.name
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#'
+#' bsrinf <- new("BSRInferenceComp")
 #' sourceComparisonName(bsrinf)
-#' }
 #' @export
 setMethod("sourceComparisonName", "BSRInferenceComp", 
     function(x) x@src.cmp.name)
@@ -221,30 +156,8 @@ setGeneric("tgPval", signature="x",
 #' @param x BSRInferenceComp object
 #' @return tgPval
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#'
+#' bsrinf <- new("BSRInferenceComp")
 #' tgPval(bsrinf)
-#' }
 #' @export
 setMethod("tgPval", "BSRInferenceComp", function(x) x@tg.pval)
 
@@ -274,30 +187,8 @@ setGeneric("tgLogFC", signature="x",
 #' @param x BSRInferenceComp object
 #' @return tgLogFC
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#'
+#' bsrinf <- new("BSRInferenceComp")
 #' tgLogFC(bsrinf)
-#' }
 #' @export
 setMethod("tgLogFC", "BSRInferenceComp", function(x) x@tg.logFC)
 
@@ -326,30 +217,8 @@ setGeneric("tgExpr", signature="x",
 #' @param x BSRInferenceComp object
 #' @return tgExpr
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#'
+#' bsrinf <- new("BSRInferenceComp")
 #' tgExpr(bsrinf)
-#' }
 #' @export
 setMethod("tgExpr", "BSRInferenceComp", function(x) x@tg.expr)
 
@@ -378,29 +247,34 @@ setMethod("tgExpr<-", "BSRInferenceComp", function(x, value) {
 #' @param x BSRInferenceComp object
 #' @return LRinterShort
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
+#' data(bsrdm, package = "BulkSignalR")
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
+#' 
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
+#' stats <- data.frame(pval = runif(n),
+#' logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10))
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' 
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#' LRinterShort(bsrinf)
-#' }
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
+#'
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#'
+#' bsrinf.comp <- initialInference(bsrdm.comp,
+#' reference="REACTOME",
+#' max.pval = 1, 
+#' "random.example")
+#' LRinterShort(bsrinf.comp)[5,]
 #' @export
 setMethod(
     "LRinterShort", "BSRInferenceComp",
@@ -422,29 +296,34 @@ setGeneric("LRinterScore", signature="x",
 #' @param x BSRInferenceComp object
 #' @return LRinterScore
 #' @examples
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
+#' data(bsrdm, package = "BulkSignalR")
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
+#' 
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
+#' stats <- data.frame(pval = runif(n),
+#' logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10))
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' 
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
-#' LRinterScore(bsrinf)
-#' }
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
+#'
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#'
+#' bsrinf.comp <- initialInference(bsrdm.comp,
+#' reference="REACTOME",
+#' max.pval = 1, 
+#' "random.example")
+#' LRinterScore(bsrinf.comp)[5,]
 #' @export
 setMethod(
     "LRinterScore", "BSRInferenceComp",
@@ -469,6 +348,7 @@ setMethod(
 #' @aliases rescoreInference,BSRInferenceComp-method
 #'
 #' @param obj BSRInferecenceComp object.
+#' @param param NULL by default
 #' @param rank.p        A number between 0 and 1 defining the rank of the last
 #'   considered target genes.
 #' @param fdr.proc      The procedure for adjusting P-values according to
@@ -481,35 +361,38 @@ setMethod(
 #'
 #' @export
 #' @examples
-#' if(FALSE){
-#' print("rescoreInference")
+#' data(bsrdm, package = "BulkSignalR")
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
+#' 
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 #'
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
+#' stats <- data.frame(pval = runif(n),
+#' logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10))
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' 
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
-#' # rescore
-#' bsrinf.less <- rescoreInference(bsrinf, 
-#' param = parameters(bsrdm.comp), rank.p = 0.75)
-#' }
-setMethod("rescoreInference", "BSRInferenceComp", function(obj, param, 
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#'
+#' bsrinf.comp <- initialInference(bsrdm.comp,
+#' reference="REACTOME",
+#' max.pval = 1, 
+#' "random.example")
+#'
+#' bsrinf.less <- rescoreInference(bsrinf.comp, 
+#' rank.p = 0.75)
+setMethod("rescoreInference", "BSRInferenceComp", function(obj,
+    param = NULL, 
     rank.p = 0.55,
     fdr.proc = c("BH", "Bonferroni", "Holm",
     "Hochberg", "SidakSS", "SidakSD", "BY", "ABH", "TSBH"
@@ -630,36 +513,39 @@ setGeneric("updateInference", signature="obj",
 #'
 #' @export
 #' @examples
-#' if(FALSE){
-#' print("updateInference")
+#' data(bsrdm, package = "BulkSignalR")
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
+#' 
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 #'
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
+#' stats <- data.frame(pval = runif(n),
+#' logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10))
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' 
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#'
+#' bsrinf.comp <- initialInference(bsrdm.comp,
+#' reference="REACTOME",
+#' max.pval = 1, 
+#' "random.example")
+#' 
 #' # update
 #' stats$pval <- stats$pval / 100
 #' stats$logFC <- stats$logFC + 0.5
 #' bsrcc.2 <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrinf.updated <- updateInference(bsrinf, bsrcc.2)
-#' }
+#' bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2)
 setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     ncounts, src.bsrcc = NULL, rank.p = 0.55,
     max.pval = 0.01, min.logFC = 1, min.LR.score = 0,
@@ -867,18 +753,14 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
 #'
 #' @export
 #' @examples
-#' if(FALSE){
-#' print("reduceToBestPathway")
-#'
-#' # prepare data
 #' data(sdc, package = "BulkSignalR")
 #' normal <- grep("^N", names(sdc))
 #' bsrdm <- prepareDataset(sdc[, -normal])
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#'
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
 #' n <- nrow(ncounts(bsrdm.comp))
 #' stats <- data.frame(
 #'     pval = runif(n), logFC = rnorm(n, 0, 2),
@@ -889,11 +771,20 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
 #' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' 
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
-#' # reduction
-#' bsrinf.redBP <- reduceToBestPathway(bsrinf)
-#' }
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' 
+#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
+#' "random.example", reference="REACTOME")
+#' 
+#' reduceToBestPathway(bsrinf)
+#'
 #' @importFrom rlang .data
 setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
@@ -962,17 +853,14 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
 #' @param obj BRSInferenceComp object
 #' @export
 #' @examples
-#' print("reduceToReceptor")
-#' if(FALSE){
-#' # prepare data
 #' data(sdc, package = "BulkSignalR")
 #' normal <- grep("^N", names(sdc))
 #' bsrdm <- prepareDataset(sdc[, -normal])
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#'
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
 #' n <- nrow(ncounts(bsrdm.comp))
 #' stats <- data.frame(
 #'     pval = runif(n), logFC = rnorm(n, 0, 2),
@@ -983,11 +871,20 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
 #' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' 
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' 
+#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
+#' "random.example", reference="REACTOME")
+#' 
 #' # reduction
 #' bsrinf.redR <- reduceToReceptor(bsrinf)
-#' }
 #' @importFrom rlang .data
 setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
@@ -1060,17 +957,14 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
 #' @param obj BSRInferenceComp object
 #' @export
 #' @examples
-#' print("reduceToLigand")
-#' if(FALSE){
-#' # prepare data
 #' data(sdc, package = "BulkSignalR")
 #' normal <- grep("^N", names(sdc))
 #' bsrdm <- prepareDataset(sdc[, -normal])
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#'
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
 #' n <- nrow(ncounts(bsrdm.comp))
 #' stats <- data.frame(
 #'     pval = runif(n), logFC = rnorm(n, 0, 2),
@@ -1081,11 +975,20 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
 #' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' 
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' 
+#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
+#' "random.example", reference="REACTOME")
+#' 
 #' # reduction
 #' bsrinf.redL <- reduceToLigand(bsrinf)
-#' }
 #' @importFrom rlang .data
 setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
@@ -1165,32 +1068,34 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
 #' @param obj BSRInferenceComp object
 #' @export
 #' @examples
-#' print("reduceToPathway")
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
+#' data(bsrdm, package = "BulkSignalR")
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
+#' 
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
+#' stats <- data.frame(pval = runif(n),
+#' logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10))
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' 
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
-#' # reduction
-#' bsrinf.redP <- reduceToPathway(bsrinf)
-#' }
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#'
+#' bsrinf.comp <- initialInference(bsrdm.comp,
+#' reference="REACTOME",
+#' max.pval = 1, 
+#' "random.example")
+#' bsrinf.redP <- reduceToPathway(bsrinf.comp)
 #' @importFrom rlang .data
 setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
     # Here we access the object slots directly as this procedure
@@ -1275,33 +1180,35 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
 #' and all the target genes with rank equal or superior to \code{pairs$rank}.
 #' @export
 #' @examples
-#' print("getLRGeneSignatures")
-#' if(FALSE){
-#' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
+#' data(bsrdm, package = "BulkSignalR")
+#' colA <- as.integer(1:2)
+#' colB <- as.integer(3:4)
+#' 
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 #'
-#' # define the comparison
-#' bsrdm.comp <- as.BSRDataModelComp(bsrdm)
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
 #' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
+#' stats <- data.frame(pval = runif(n),
+#' logFC = rnorm(n, 0, 2),
+#' expr = runif(n, 0, 10))
 #' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' 
 #' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 #'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, "random.example")
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #'
-#' # reductions
-#' bsrinf.redP <- reduceToPathway(bsrinf)
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#'
+#' bsrinf.comp <- initialInference(bsrdm.comp,
+#' reference="REACTOME",
+#' max.pval = 1, 
+#' "random.example")
+#' bsrinf.redP <- reduceToPathway(bsrinf.comp)
 #' bsrsig.redP <- getLRGeneSignatures(bsrinf.redP, qval.thres = 0.001)
-#' }
 #' @importFrom foreach %do% %dopar%
 #' @importFrom methods new
 setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,

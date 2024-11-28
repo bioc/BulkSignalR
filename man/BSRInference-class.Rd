@@ -35,13 +35,5 @@ entry per interaction}
 }}
 
 \examples{
-data(sdc,package='BulkSignalR')
-normal <- grep("^N", names(sdc))
-
-bsrdm <- prepareDataset(sdc[,-normal])
-if(FALSE){
-bsrdm <- learnParameters(bsrdm, quick=FALSE,
-plot.folder=".", verbose=TRUE)
-bsrinf <- initialInference(bsrdm)
-}
+new("BSRInference")
 }

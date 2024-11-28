@@ -18,10 +18,9 @@ A rotated raster image.
 (Counter-)clockwise 90 degree rotation
 }
 \examples{
-print("coordsFlip")
-if (FALSE) {
-    img <- png::readPNG(path.to.file)
-    my.image.as.raster <- grDevices::as.raster(path.to.file)
-    my.image.rotated <- coordsFlip(my.image.as.raster, degrees = 90)
-}
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+my.image.as.raster <- SpatialExperiment::imgRaster(spe, 
+sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
+my.image.rotated <- coordsFlip(my.image.as.raster, degrees = 90)
 }

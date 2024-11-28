@@ -36,11 +36,8 @@
 #' cel type in the linear models as comparable as possible.
 #' @export
 #' @examples
-#' print("assignCellTypesToInteractions")
-#' data(sdc, package = "BulkSignalR")
-#' data(bsrinf.example, package = "BulkSignalR")
-#'
-#' bsrdm <- prepareDataset(counts = sdc)
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #'
 #' # microenvironment cell populations
 #' data(immune.signatures, package = "BulkSignalR")
@@ -56,7 +53,7 @@
 #' tme.scores <- scoreSignatures(bsrdm, signatures)
 #'
 #' # assignment
-#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 #' @import glmnet
 #' @importFrom foreach %do%
 assignCellTypesToInteractions <- function(bsrdm, bsrinf, ct.scores,
@@ -212,12 +209,9 @@ assignCellTypesToInteractions <- function(bsrdm, bsrinf, ct.scores,
 #' equal to the geometric mean of each cell type assignment r2.
 #' @export
 #' @examples
-#' print("assignCellTypesToInteractions")
-#' data(sdc, package = "BulkSignalR")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrdm <- prepareDataset(counts = sdc)
-#'
 #' # microenvironment cell populations
 #' data(immune.signatures, package = "BulkSignalR")
 #' immune.signatures <- immune.signatures[immune.signatures$signature %in%
@@ -232,7 +226,7 @@ assignCellTypesToInteractions <- function(bsrdm, bsrinf, ct.scores,
 #' tme.scores <- scoreSignatures(bsrdm, signatures)
 #'
 #' # assignment
-#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 #'
 #' # cellular network
 #' g.table <- cellularNetworkTable(lr2ct)
@@ -308,11 +302,8 @@ cellularNetworkTable <- function(lr, autocrine = FALSE) {
 #' @return A igraph object containing all the links in the cellular network.
 #' @export
 #' @examples
-#' print("assignCellTypesToInteractions")
-#' data(sdc, package = "BulkSignalR")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' 
-#' bsrdm <- prepareDataset(counts = sdc)
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
 #' # microenvironment cell populations
 #' data(immune.signatures, package = "BulkSignalR")
@@ -328,7 +319,7 @@ cellularNetworkTable <- function(lr, autocrine = FALSE) {
 #' tme.scores <- scoreSignatures(bsrdm, signatures)
 #'
 #' # assignment
-#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 #'
 #' # cellular network
 #' g.table <- cellularNetworkTable(lr2ct)
@@ -352,11 +343,8 @@ cellularNetwork <- function(tab) {
 #' weight are normalized to a total of one.
 #' @export
 #' @examples
-#' print("assignCellTypesToInteractions")
-#' data(sdc, package = "BulkSignalR")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' bsrdm <- prepareDataset(counts = sdc)
-#'
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' # microenvironment cell populations
 #' data(immune.signatures, package = "BulkSignalR")
 #' immune.signatures <- immune.signatures[immune.signatures$signature %in%
@@ -371,7 +359,7 @@ cellularNetwork <- function(tab) {
 #' tme.scores <- scoreSignatures(bsrdm, signatures)
 #'
 #' # assignment
-#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 #'
 #' # cellular network
 #' g.table <- cellularNetworkTable(lr2ct)
@@ -413,13 +401,13 @@ summarizedCellularNetwork <- function(tab) {
 #'
 #' @export
 #' @examples
-#' print("relateToGeneSet")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
 #' data(p.EMT, package = "BulkSignalR")
 #' p.EMT <- p.EMT$gene
 #
-#' triggers <- relateToGeneSet(bsrinf.example, p.EMT) 
+#' triggers <- relateToGeneSet(bsrinf, p.EMT) 
 #' @importFrom foreach %do%
 relateToGeneSet <- function(bsrinf, gs, min.cor = 0.25, qval.thres = 0.001) {
     i <- NULL
@@ -469,12 +457,8 @@ relateToGeneSet <- function(bsrinf, gs, min.cor = 0.25, qval.thres = 0.001) {
 #' is involved; s for summing the weights of each involved cell type.
 #' @export
 #' @examples
-#' print("assignCellTypesToInteractions")
-#' data(sdc, package = "BulkSignalR")
-#' bsrdm <- prepareDataset(counts = sdc)
-#' data(bsrinf.example, package = "BulkSignalR")
-#'
-#' # microenvironment cell populations
+#' data(bsrdm, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' data(immune.signatures, package = "BulkSignalR")
 #' immune.signatures <- immune.signatures[immune.signatures$signature %in%
 #'     c(
@@ -488,12 +472,12 @@ relateToGeneSet <- function(bsrinf, gs, min.cor = 0.25, qval.thres = 0.001) {
 #' tme.scores <- scoreSignatures(bsrdm, signatures)
 #'
 #' # assignment
-#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf.example, tme.scores)
+#' lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 #'
 #' # relate to p-EMT (should be done in HNSCC normally, not in SDC)
 #' data(p.EMT, package = "BulkSignalR")
 #' p.EMT <- p.EMT$gene
-#' triggers <- relateToGeneSet(bsrinf.example, p.EMT)
+#' triggers <- relateToGeneSet(bsrinf, p.EMT)
 #'
 #' # counts
 #' cf <- cellTypeFrequency(triggers, lr2ct)

@@ -5,7 +5,7 @@
 \title{Import pathways from a file to dataframe}
 \usage{
 resetPathwaysFromFile(
-  file,
+  file = NULL,
   fileType = c("json", "gmt", "txt"),
   resourceName = NULL
 )
@@ -37,9 +37,7 @@ and GO-BP content included in BulkSignalR.
 Gmt file format also can be imported.
 }
 \examples{
-print("resetPathwaysFromFile")
-if (FALSE) {
-    resetPathwaysFromFile(file, "GO-BP")
-}
-
+resetPathwaysFromFile(file = NULL, 
+fileType = "json",
+resourceName = "Reactome")
 }

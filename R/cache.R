@@ -88,7 +88,9 @@
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' print("cacheClear")
+#' cacheClear()
+#' createDatabase(verbose=TRUE)
+#' createResources(verbose=TRUE)
 cacheClear <- function(dir = c("both", "resources", "database")) {
     dir <- match.arg(dir)
 
@@ -137,7 +139,7 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' print("cacheInfo")
+#' cacheInfo()
 cacheInfo <- function(dir = c("both", "resources", "database")) {
     dir <- match.arg(dir)
 
@@ -207,7 +209,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #'
 #' @export
 #' @examples
-#' print("cacheVersion")
+#' cacheVersion()
 cacheVersion <- function(dir = c("both", "resources", "database")) {
     dir <- match.arg(dir)
 

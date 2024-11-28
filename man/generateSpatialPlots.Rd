@@ -98,8 +98,31 @@ Not limited to BulkSignalR gene signature scores.
 A set of PDF files are created in the provided folder.
 }
 \examples{
-print("generateSpatialPlots")
-if (FALSE) {
-    generateSpatialPlots(scores, areas, plot.folder)
-}
+data(bsrdm.spa)
+data(bsrinf.spa)
+
+library(STexampleData)
+spe <- Visium_humanDLPFC()
+set.seed(123)
+
+speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
+
+idx <- sample(ncol(speSubset), 10)
+speSubset <- speSubset[, idx]
+
+
+colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
+                colData(speSubset)[[5]],sep = "x")
+
+
+annotation <- colData(speSubset)
+
+thres <- 0.01
+bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+
+generateSpatialPlots(scores.red,
+annotation, ".", label.col = "ground_truth")
+
 }

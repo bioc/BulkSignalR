@@ -20,15 +20,7 @@
 #' \code{"\link[=BSRInference-class]{reduceToPathway}"}.
 #' @export
 #' @examples
-#' data(sdc,package='BulkSignalR')
-#' normal <- grep("^N", names(sdc))
-#'
-#' bsrdm <- prepareDataset(sdc[,-normal])
-#' if(FALSE){
-#' bsrdm <- learnParameters(bsrdm, quick=FALSE,
-#' plot.folder=".", verbose=TRUE)
-#' bsrinf <- initialInference(bsrdm)
-#' }
+#' new("BSRInference")
 setClass("BSRInference",
     slots = c(
         LRinter = "data.frame",
@@ -105,8 +97,8 @@ setGeneric("LRinter", signature="x",
 #' @param x BSRInference object
 #' @return LRinter
 #' @examples
-#' data(bsrinf.example, package = "BulkSignalR")
-#' LRinter(bsrinf.example)
+#' bsrinf <- new ("BSRInference")
+#' LRinter(bsrinf)
 #' @export
 setMethod("LRinter", "BSRInference", function(x) x@LRinter)
 
@@ -242,8 +234,8 @@ setGeneric("inferenceParameters", signature="x",
 #' @param x BRSInference object.
 #' @return inf.param
 #' @examples
-#' data(bsrinf.example, package = "BulkSignalR")
-#' inferenceParameters(bsrinf.example)
+#' bsrinf <- new ("BSRInference")
+#' inferenceParameters(bsrinf)
 #' @export
 setMethod("inferenceParameters", "BSRInference", function(x) x@inf.param)
 
@@ -321,22 +313,11 @@ setGeneric("rescoreInference", signature="obj",
 #'
 #' @export
 #' @examples
-#' print("rescoreInference")
-#' if(FALSE){
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#' bsrdm <- learnParameters(bsrdm,
-#'     null.model = "normal",
-#'     quick = FALSE,
-#'     plot.folder = "./",
-#'     filename = "sdc",
-#'     verbose = TRUE
-#' )
-#' bsrinf <- initialInference(bsrdm)
-#' bsrinf.new <- rescoreInference(bsrinf, 
-#' param = parameters(bsrdm), rank.p = 0.75)
-#' }
+#' data(bsrinf, package = "BulkSignalR")
+#' data(bsrdm, package = "BulkSignalR")
+#' 
+#' bsrinf.new <- rescoreInference(bsrinf,
+#' param = parameters(bsrdm))
 setMethod("rescoreInference", "BSRInference", function(obj, param, 
     rank.p = 0.55, fdr.proc = c("BH", "Bonferroni", "Holm",
         "Hochberg", "SidakSS", "SidakSD", "BY", "ABH", "TSBH"
@@ -444,11 +425,10 @@ setGeneric("getPathwayStats", signature="obj",
 #' this (hypergeometric test) computation.
 #' @export
 #' @examples
-#' print("getPathwayStats")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #'
-#' pw.stat <- getPathwayStats(bsrinf.example)
-#' head(pw.stat)
+#' pw.stat <- getPathwayStats(bsrinf)
+#' 
 #'
 #' @importFrom foreach %do% %dopar%
 setMethod("getPathwayStats", "BSRInference", function(obj,
@@ -534,10 +514,8 @@ setGeneric("reduceToBestPathway", signature="obj",
 #'
 #' @export
 #' @examples
-#' print("reduceToBestPathway")
-#' data(bsrinf.example, package = "BulkSignalR")
-#' 
-#' bsrinf.redBP <- reduceToBestPathway(bsrinf.example)
+#' data(bsrinf, package = "BulkSignalR")
+#' bsrinf.redBP <- reduceToBestPathway(bsrinf)
 #'
 #' @importFrom rlang .data
 setMethod("reduceToBestPathway", "BSRInference", function(obj) {
@@ -599,10 +577,9 @@ setGeneric("reduceToReceptor", signature="obj",
 #' @param obj BRSInference object
 #' @export
 #' @examples
-#' print("reduceToReceptor")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redR <- reduceToReceptor(bsrinf.example)
+#' bsrinf.redR <- reduceToReceptor(bsrinf)
 #'
 #' @importFrom rlang .data
 setMethod("reduceToReceptor", "BSRInference", function(obj) {
@@ -667,10 +644,9 @@ setGeneric("reduceToLigand", signature="obj",
 #' @param obj BSRInference object
 #' @export
 #' @examples
-#' print("reduceToLigand")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redL <- reduceToLigand(bsrinf.example)
+#' bsrinf.redL <- reduceToLigand(bsrinf)
 #'
 #' @importFrom rlang .data
 setMethod("reduceToLigand", "BSRInference", function(obj) {
@@ -742,10 +718,9 @@ setGeneric("reduceToPathway", signature="obj",
 #' @param obj BSRInference object
 #' @export
 #' @examples
-#' print("reduceToPathway")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redP <- reduceToPathway(bsrinf.example)
+#' bsrinf.redP <- reduceToPathway(bsrinf)
 #' @importFrom rlang .data
 setMethod("reduceToPathway", "BSRInference", function(obj) {
     # Here we access the object slots directly as this procedure
@@ -822,11 +797,10 @@ setGeneric("getLRGeneSignatures", signature="obj",
 #' and all the target genes with rank equal or superior to \code{pairs$rank}.
 #' @export
 #' @examples
-#' print("getLRGeneSignatures")
-#' data(bsrinf.example, package = "BulkSignalR")
+#' data(bsrinf, package = "BulkSignalR")
 #' 
-#' bsrinf.redP <- reduceToPathway(bsrinf.example)
-#' bsrsig.redP <- getLRGeneSignatures(bsrinf.redP, qval.thres = 0.001)
+#' bsrinf.redP <- reduceToPathway(bsrinf)
+#' bsrsig.redP <- getLRGeneSignatures(bsrinf, qval.thres = 0.001)
 #'
 #' @importFrom foreach %do% %dopar%
 #' @importFrom methods new
@@ -896,7 +870,6 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #'
 #' @export
 #' @examples
-#' if(FALSE){
 #' data(bodyMap.mouse)
 #'
 #' ortholog.dict <- findOrthoGenes(
@@ -916,15 +889,19 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' )
 #' 
 #' bsrdm <- learnParameters(bsrdm,
-#'     null.model = "normal", quick = FALSE,
-#'     plot.folder = "./", filename = "bodyMap.mouse",
-#'     verbose = TRUE
+#'     quick = TRUE,  
 #' )
-#'
-#' bsrinf <- initialInference(bsrdm)
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
+#' 
+#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' 
+#' bsrinf <- initialInference(bsrdm,reference="REACTOME")
 #'
 #' bsrinf <- resetToInitialOrganism(bsrinf, conversion.dict = ortholog.dict)
-#' }
 setMethod("resetToInitialOrganism", "BSRInference", function(obj,
     conversion.dict) {
     # Need to check conversion.dict format
