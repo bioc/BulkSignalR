@@ -58,7 +58,14 @@ Suggests:
     markdown,
     rmarkdown,
     STexampleData,
-    testthat (>= 3.0.0)
+    testthat (>= 3.0.0),
+    codetools,
+    Matrix,
+    lattice,
+    cluster,
+    survival,
+    MASS,
+    nlme
 Config/testthat/edition: 3
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
