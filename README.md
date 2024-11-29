@@ -53,7 +53,7 @@ devtools::install_github("ZheFrench/BulkSignalR",build_vignettes = TRUE)
 For a version history/change logs, see the [NEWS file](https://github.com/ZheFrench/BulksignalR/blob/master/NEWS).
 
 
-**BulkSignalR** has been successfully installed on Mac OS X, Linux, and Windows using R version 4.4.
+**BulkSignalR** has been successfully installed on Mac OS X, Linux, and Windows using R version 4.5.
 
 
 The code in this repository is published with the [CeCILL](https://github.com/ZheFrench/BulksignalR/blob/master/LICENSE.md) License.
