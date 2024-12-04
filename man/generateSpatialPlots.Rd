@@ -126,7 +126,7 @@ thres <- 0.01
 bsrinf.red <- reduceToBestPathway(bsrinf.spa)
 s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
 scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
-print(scores.red)
+
 generateSpatialPlots(scores.red[1:2,],
 annotation, ".", label.col = "ground_truth")
 

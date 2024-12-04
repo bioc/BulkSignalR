@@ -68,7 +68,7 @@ data(bsrinf, package = "BulkSignalR")
 
 bsrinf.redBP <- reduceToBestPathway(bsrinf)
 bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP, qval.thres = 0.001)
-scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
+res <-scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
     name.by.pathway = FALSE
 )
 # prepare data

@@ -94,8 +94,9 @@ bsrsig.redBP <- getLRGeneSignatures(bsrinf,
 scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
     name.by.pathway = FALSE
 )
-simpleHeatmap(scoresLR[1:20, ],
+simpleHeatmap(scoresLR[1:3, ],
     column.names = TRUE,
-    hcl.palette = "Cividis"
-)
+    hcl.palette = "Cividis",
+    width=2, 
+    height=1.5)
 }

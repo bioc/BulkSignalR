@@ -871,7 +871,7 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' @export
 #' @examples
 #' data(bodyMap.mouse)
-#'
+#' set.seed(123)
 #' idx <- sample(nrow(bodyMap.mouse), 5000)
 #' 
 #' bodyMap.mouse <- bodyMap.mouse[idx,1:3]

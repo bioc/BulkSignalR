@@ -115,6 +115,6 @@ pathways.
 \examples{
 data(sdc, package = "BulkSignalR")
 idx <- sample(nrow(sdc), 4000)
-bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
+bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
 bsrdm <- learnParameters(bsrdm, quick=TRUE)
 }

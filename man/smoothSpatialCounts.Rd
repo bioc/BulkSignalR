@@ -64,7 +64,6 @@ the central location is augmented according to
 \examples{
  
 data(bsrdm.spa)
-data(bsrinf.spa)
 
 library(STexampleData)
 spe <- Visium_humanDLPFC()

@@ -268,9 +268,9 @@ bubblePlotPathwaysLR <- function(
 #' pathway = pathway1,
 #' bsrdm = bsrdm,
 #' bsrsig = bsrsig.redPBP,
-#' h.width = 6,
-#' h.height = 8,
-#' fontsize = 4,
+#' h.width = 3,
+#' h.height = 4,
+#' fontsize = 1,
 #' show_column_names = TRUE
 #' )
 #' @import ComplexHeatmap
@@ -480,10 +480,11 @@ signatureHeatmaps <- function(pathway,
 #' scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
 #'     name.by.pathway = FALSE
 #' )
-#' simpleHeatmap(scoresLR[1:20, ],
+#' simpleHeatmap(scoresLR[1:3, ],
 #'     column.names = TRUE,
-#'     hcl.palette = "Cividis"
-#' )
+#'     hcl.palette = "Cividis",
+#'     width=2, 
+#'     height=1.5)
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
 simpleHeatmap <- function(mat.c, 

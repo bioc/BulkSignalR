@@ -16,7 +16,7 @@ Returns `NULL`, invisibly.
 Delete the content of cache directory.
 }
 \examples{
-cacheClear()
+cacheClear(dir="database")
+# need to recreate database in order to run examples well
 createDatabase(verbose=TRUE)
-createResources(verbose=TRUE)
 }

@@ -55,9 +55,9 @@ signatureHeatmaps(
 pathway = pathway1,
 bsrdm = bsrdm,
 bsrsig = bsrsig.redPBP,
-h.width = 6,
-h.height = 8,
-fontsize = 4,
+h.width = 3,
+h.height = 4,
+fontsize = 1,
 show_column_names = TRUE
 )
 }

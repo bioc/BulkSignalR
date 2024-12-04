@@ -88,9 +88,9 @@
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' cacheClear()
+#' cacheClear(dir="database")
+#' # need to recreate database in order to run examples well
 #' createDatabase(verbose=TRUE)
-#' createResources(verbose=TRUE)
 cacheClear <- function(dir = c("both", "resources", "database")) {
     dir <- match.arg(dir)
 

@@ -339,7 +339,7 @@ setGeneric("learnParameters", signature="obj",
 #' @examples
 #' data(sdc, package = "BulkSignalR")
 #' idx <- sample(nrow(sdc), 4000)
-#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
+#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
 #' bsrdm <- learnParameters(bsrdm, quick=TRUE)
 #' @importFrom methods new
 setMethod(
@@ -748,7 +748,7 @@ setGeneric("scoreLRGeneSignatures", signature="obj",
 #' 
 #' bsrinf.redBP <- reduceToBestPathway(bsrinf)
 #' bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP, qval.thres = 0.001)
-#' scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
+#' res <-scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
 #'     name.by.pathway = FALSE
 #' )
 #' @importFrom foreach %do% %dopar%
