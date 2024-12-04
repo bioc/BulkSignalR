@@ -372,7 +372,7 @@ prepareDataset <- function(
 #' @examples
 #' data(bodyMap.mouse)
 #' 
-#' idx <- sample(nrow(bodyMap.mouse), 500)
+#' idx <- sample(nrow(bodyMap.mouse), 20)
 #' bodyMap.mouse <- bodyMap.mouse[idx,]
 #' 
 #' ortholog.dict <- findOrthoGenes(

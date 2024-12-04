@@ -264,6 +264,7 @@ bubblePlotPathwaysLR <- function(
 #' bsrinf.redPBP <- reduceToBestPathway(bsrinf)
 #' bsrsig.redPBP <- getLRGeneSignatures(bsrinf, qval.thres = 1)
 #' pathway1 <- pathways(bsrsig.redPBP)[1]
+#' if(FALSE){
 #' signatureHeatmaps(
 #' pathway = pathway1,
 #' bsrdm = bsrdm,
@@ -271,8 +272,8 @@ bubblePlotPathwaysLR <- function(
 #' h.width = 3,
 #' h.height = 4,
 #' fontsize = 1,
-#' show_column_names = TRUE
-#' )
+#' show_column_names = TRUE)
+#' }
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
 #' @import grid
