@@ -43,36 +43,7 @@ data(bsrinf, package = "BulkSignalR")
 
 bsrinf.redL <- reduceToLigand(bsrinf)
 
-data(sdc, package = "BulkSignalR")
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
+data(bsrinf.comp, package = "BulkSignalR")
 
-bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
-
-colA <- as.integer(1:2)
-colB <- as.integer(3:4)
-n <- nrow(ncounts(bsrdm.comp))
-stats <- data.frame(
-    pval = runif(n), logFC = rnorm(n, 0, 2),
-    expr = runif(n, 0, 10)
-)
-rownames(stats) <- rownames(ncounts(bsrdm.comp))
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-
-# infer ligand-receptor interactions from the comparison
-
-subset <- c("REACTOME_BASIGIN_INTERACTIONS",
-"REACTOME_SYNDECAN_INTERACTIONS",
-"REACTOME_ECM_PROTEOGLYCANS",
-"REACTOME_CELL_JUNCTION_ORGANIZATION")
-
-BulkSignalR_Reactome <- BulkSignalR_Reactome[
-BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
-
-bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
-"random.example", reference="REACTOME")
-
-# reduction
-bsrinf.redL <- reduceToLigand(bsrinf)
+bsrinf.redL <- reduceToLigand(bsrinf.comp)
 }

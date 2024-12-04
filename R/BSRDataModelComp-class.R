@@ -496,34 +496,8 @@ setMethod("removeClusterComp", "BSRDataModelComp", function(obj, cmp.name) {
 #' @export
 #'
 #' @examples
-#' data(bsrdm, package = "BulkSignalR")
-#' colA <- as.integer(1:2)
-#' colB <- as.integer(3:4)
-#' 
-#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#' data(bsrdm.comp, package = "BulkSignalR")
 #'
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(pval = runif(n),
-#' logFC = rnorm(n, 0, 2),
-#' expr = runif(n, 0, 10))
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' 
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
-#' "REACTOME_SYNDECAN_INTERACTIONS",
-#' "REACTOME_ECM_PROTEOGLYCANS",
-#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
-#'
-#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
-#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
-#'
-#' bsrinf.comp <- initialInference(bsrdm.comp,
-#' reference="REACTOME",
-#' max.pval = 1, 
-#' "random.example")
-#' 
 #' # infer ligand-receptor interactions from the comparison
 #' bsrinf.comp <- initialInference(bsrdm.comp, max.pval = 1, 
 #' reference="REACTOME","random.example")
@@ -716,30 +690,11 @@ setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name,
 #' @export
 #' @examples
 #' # prepare data
-#' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
-#'
-#' # define the comparison
-#' bsrdm.comp <- as(bsrdm,"BSRDataModelComp")
-#' colA <- as.integer(1:5)
-#' colB <- as.integer(8:15)
-#' n <- nrow(ncounts(bsrdm.comp))
-#' stats <- data.frame(
-#'     pval = runif(n), logFC = rnorm(n, 0, 2),
-#'     expr = runif(n, 0, 10)
-#' )
-#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
-#' bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-#'
-#' # infer ligand-receptor interactions from the comparison
-#' bsrinf <- initialInference(bsrdm.comp, max.pval = 1, 
-#' reference="REACTOME","random.example")
+#' data(bsrdm.comp, package = "BulkSignalR")
+#' data(bsrinf.comp, package = "BulkSignalR")
 #'
 #' # reduction
-#' bsrinf.red <- reduceToBestPathway(bsrinf)
-#'
+#' bsrinf.red <- reduceToBestPathway(bsrinf.comp)
 #' # signature extraction and scoring
 #' bsrsig.red <- getLRGeneSignatures(bsrinf.red, qval.thres = 1e-6)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.comp, bsrsig.red,

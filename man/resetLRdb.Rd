@@ -23,6 +23,5 @@ This can be used to extend or replace the existing
 LRdb.
 }
 \examples{
-data(sdc, package = "BulkSignalR")
 resetLRdb(db = data.frame(ligand = "A2M", receptor = "LRP1"), switch = FALSE)
 }

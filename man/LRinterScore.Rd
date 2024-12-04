@@ -17,32 +17,6 @@ LRinterScore
 Simplified LRinter accessor with focus on the LR-score
 }
 \examples{
-data(bsrdm, package = "BulkSignalR")
-colA <- as.integer(1:2)
-colB <- as.integer(3:4)
-
-bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
-
-n <- nrow(ncounts(bsrdm.comp))
-stats <- data.frame(pval = runif(n),
-logFC = rnorm(n, 0, 2),
-expr = runif(n, 0, 10))
-rownames(stats) <- rownames(ncounts(bsrdm.comp))
-
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-
-subset <- c("REACTOME_BASIGIN_INTERACTIONS",
-"REACTOME_SYNDECAN_INTERACTIONS",
-"REACTOME_ECM_PROTEOGLYCANS",
-"REACTOME_CELL_JUNCTION_ORGANIZATION")
-
-BulkSignalR_Reactome <- BulkSignalR_Reactome[
-BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
-
-bsrinf.comp <- initialInference(bsrdm.comp,
-reference="REACTOME",
-max.pval = 1, 
-"random.example")
+data(bsrinf.comp, package = "BulkSignalR")
 LRinterScore(bsrinf.comp)[5,]
 }

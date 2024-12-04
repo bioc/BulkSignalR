@@ -92,11 +92,12 @@ A BSRInferenceComp object should be created by calling
 \code{"\link[=BSRClusterComp-class]{initialInference}"}
 }
 \examples{
-data(bsrdm, package = "BulkSignalR")
+data(bsrdm.comp, package = "BulkSignalR")
+data(bsrinf.comp, package = "BulkSignalR")
 colA <- as.integer(1:2)
 colB <- as.integer(3:4)
 
-bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
 
 n <- nrow(ncounts(bsrdm.comp))
 stats <- data.frame(pval = runif(n),
@@ -104,25 +105,11 @@ logFC = rnorm(n, 0, 2),
 expr = runif(n, 0, 10))
 rownames(stats) <- rownames(ncounts(bsrdm.comp))
 
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-
-subset <- c("REACTOME_BASIGIN_INTERACTIONS",
-"REACTOME_SYNDECAN_INTERACTIONS",
-"REACTOME_ECM_PROTEOGLYCANS",
-"REACTOME_CELL_JUNCTION_ORGANIZATION")
-
-BulkSignalR_Reactome <- BulkSignalR_Reactome[
-BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
-
-bsrinf.comp <- initialInference(bsrdm.comp,
-reference="REACTOME",
-max.pval = 1, 
-"random.example")
 
 # update
 stats$pval <- stats$pval / 100
 stats$logFC <- stats$logFC + 0.5
+
 bsrcc.2 <- defineClusterComp(bsrdm.comp, colA, colB, stats)
 bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2)
 }

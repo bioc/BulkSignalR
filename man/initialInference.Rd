@@ -210,33 +210,7 @@ BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
 bsrinf <- initialInference(bsrdm,
     min.cor = 0.3,
     reference="REACTOME")
-data(bsrdm, package = "BulkSignalR")
-colA <- as.integer(1:2)
-colB <- as.integer(3:4)
-
-bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
-
-n <- nrow(ncounts(bsrdm.comp))
-stats <- data.frame(pval = runif(n),
-logFC = rnorm(n, 0, 2),
-expr = runif(n, 0, 10))
-rownames(stats) <- rownames(ncounts(bsrdm.comp))
-
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
-
-subset <- c("REACTOME_BASIGIN_INTERACTIONS",
-"REACTOME_SYNDECAN_INTERACTIONS",
-"REACTOME_ECM_PROTEOGLYCANS",
-"REACTOME_CELL_JUNCTION_ORGANIZATION")
-
-BulkSignalR_Reactome <- BulkSignalR_Reactome[
-BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
-
-bsrinf.comp <- initialInference(bsrdm.comp,
-reference="REACTOME",
-max.pval = 1, 
-"random.example")
+data(bsrdm.comp, package = "BulkSignalR")
 
 # infer ligand-receptor interactions from the comparison
 bsrinf.comp <- initialInference(bsrdm.comp, max.pval = 1, 

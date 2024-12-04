@@ -43,11 +43,16 @@ data(bsrinf.spa)
 
 library(STexampleData)
 spe <- Visium_humanDLPFC()
-set.seed(123)
+
+#set.seed(123)
+#idx <- sample(ncol(speSubset), 10)
+name.idx <- c("10x32","3x47","4x50",
+"17x111","5x59","0x20","8x100",
+"8x108","14x30","11x39")                                       
+idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
 
 speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
 
-idx <- sample(ncol(speSubset), 10)
 speSubset <- speSubset[, idx]
 
 
@@ -65,8 +70,8 @@ scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 # statistical association with tissue areas based on correlations
 # For display purpose, we only use a subset here
 
-assoc.bsr.corr <- spatialAssociation(scores.red[c(1:17), ],
-annotation, label.col = "ground_truth",test = "Spearman")
+assoc.bsr.corr <- spatialAssociation(scores.red[c(1:10), ],
+areas = annotation, label.col = "ground_truth",test = "Spearman")
 
 spatialAssociationPlot(assoc.bsr.corr)
 }

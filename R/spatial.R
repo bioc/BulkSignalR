@@ -56,7 +56,6 @@
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
 #' 
 #' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
@@ -615,7 +614,6 @@ spatialPlot <- function(v, areas, inter.name, rev.y = TRUE, ref.plot = FALSE,
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
 #' 
 #' 
@@ -723,9 +721,6 @@ generateSpatialPlots <- function(scores, areas, plot.folder,
 #' library(STexampleData)
 #' spe <- Visium_humanDLPFC()
 #' 
-#' #set.seed(123)
-#' #idx <- sample(ncol(speSubset), 10)
-#
 #' name.idx <- c("10x32","3x47","4x50",
 #' "17x111","5x59","0x20","8x100",
 #' "8x108","14x30","11x39")                                       
@@ -733,9 +728,7 @@ generateSpatialPlots <- function(scores, areas, plot.folder,
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
-#' 
 #' 
 #' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
 #'                 colData(speSubset)[[5]],sep = "x")
@@ -889,9 +882,7 @@ spatialIndexPlot <- function(scores, areas, out.file, ref.plot = TRUE,
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
-#' 
 #' 
 #' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
 #'                 colData(speSubset)[[5]],sep = "x")
@@ -1043,7 +1034,6 @@ separatedLRPlot <- function(v, L, R, ncounts, areas,
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
 #' 
 #' 
@@ -1223,7 +1213,6 @@ spatialAssociation <- function(scores, areas,
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
 #' 
 #' 
@@ -1241,10 +1230,10 @@ spatialAssociation <- function(scores, areas,
 #' # statistical association with tissue areas based on correlations
 #' # For display purpose, we only use a subset here
 #' 
-#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:17), ],
-#' annotation, label.col = "ground_truth",test = "Spearman")
+#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:10), ],
+#' areas = annotation, label.col = "ground_truth",test = "Spearman")
 #'
-#'spatialAssociationPlot(assoc.bsr.corr)
+#' spatialAssociationPlot(assoc.bsr.corr)
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
 spatialAssociationPlot <- function(associations, qval.thres = 0.01, 
@@ -1366,7 +1355,6 @@ spatialAssociationPlot <- function(associations, qval.thres = 0.01,
 #' 
 #' speSubset <- spe[, colData(spe)$ground_truth%in%c("Layer1","Layer2")]
 #' 
-#' idx <- sample(ncol(speSubset), 10)
 #' speSubset <- speSubset[, idx]
 #' 
 #' 
@@ -1383,11 +1371,12 @@ spatialAssociationPlot <- function(associations, qval.thres = 0.01,
 #' 
 #' # statistical association with tissue areas based on correlations
 #' # For display purpose, we only use a subset here
+#'
 #' 
-#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:17), ],
+#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:10), ],
 #' annotation, label.col = "ground_truth",test = "Spearman")
 #'
-#' spatialDiversityPlot(scores.red[c(1:17), ],assoc.bsr.corr)
+#' spatialDiversityPlot(scores.red[c(1:10),],assoc.bsr.corr)
 #' 
 #' @importFrom foreach %do%
 #' @importFrom Rtsne Rtsne

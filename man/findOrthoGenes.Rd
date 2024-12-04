@@ -33,6 +33,10 @@ to human following an orthology mapping process.
 }
 \examples{
 data(bodyMap.mouse)
+
+idx <- sample(nrow(bodyMap.mouse), 500)
+bodyMap.mouse <- bodyMap.mouse[idx,]
+
 ortholog.dict <- findOrthoGenes(
     from_organism = "mmusculus",
     from_values = rownames(bodyMap.mouse)

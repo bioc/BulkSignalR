@@ -15,7 +15,6 @@
 #' @importFrom cli cli_alert_info
 #' @export
 #' @examples
-#' data(sdc, package = "BulkSignalR")
 #' resetLRdb(db = data.frame(ligand = "A2M", receptor = "LRP1"), switch = FALSE)
 resetLRdb <- function(db, switch = FALSE) {
     if (colnames(db)[1] == "ligand" & colnames(db)[2] == "receptor") {
@@ -372,6 +371,10 @@ prepareDataset <- function(
 #' @export
 #' @examples
 #' data(bodyMap.mouse)
+#' 
+#' idx <- sample(nrow(bodyMap.mouse), 500)
+#' bodyMap.mouse <- bodyMap.mouse[idx,]
+#' 
 #' ortholog.dict <- findOrthoGenes(
 #'     from_organism = "mmusculus",
 #'     from_values = rownames(bodyMap.mouse)
@@ -437,6 +440,9 @@ findOrthoGenes <- function(from_organism, from_values,
 #' @examples
 #' data(bodyMap.mouse)
 #'
+#' idx <- sample(nrow(bodyMap.mouse), 500)
+#' bodyMap.mouse <- bodyMap.mouse[idx,]
+#' 
 #' ortholog.dict <- findOrthoGenes(
 #'     from_organism = "mmusculus",
 #'     from_values = rownames(bodyMap.mouse)
