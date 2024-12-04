@@ -627,8 +627,8 @@ spatialPlot <- function(v, areas, inter.name, rev.y = TRUE, ref.plot = FALSE,
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
 #' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
-#' 
-#' generateSpatialPlots(scores.red,
+#' print(scores.red)
+#' generateSpatialPlots(scores.red[1:2,],
 #' annotation, ".", label.col = "ground_truth")
 #' 
 generateSpatialPlots <- function(scores, areas, plot.folder, 
@@ -740,13 +740,9 @@ generateSpatialPlots <- function(scores, areas, plot.folder,
 #' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
-#' separatedLRPlot(scores.red, "SLIT2", "GPC1", 
-#' ncounts(bsrdm.spa), 
-#' annotation,
-#' label.col = "ground_truth")
 #' 
 #' # generate visual index on disk in pdf file
-#' spatialIndexPlot(scores.red, annotation,  
+#' spatialIndexPlot(scores.red[1:2,], annotation,  
 #' label.col = "ground_truth",
 #' out.file = "spatialIndexPlot")
 #' 
@@ -1357,7 +1353,6 @@ spatialAssociationPlot <- function(associations, qval.thres = 0.01,
 #' 
 #' speSubset <- speSubset[, idx]
 #' 
-#' 
 #' colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
 #'                 colData(speSubset)[[5]],sep = "x")
 #' 
@@ -1373,10 +1368,10 @@ spatialAssociationPlot <- function(associations, qval.thres = 0.01,
 #' # For display purpose, we only use a subset here
 #'
 #' 
-#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:10), ],
+#' assoc.bsr.corr <- spatialAssociation(scores.red[c(1:3), ],
 #' annotation, label.col = "ground_truth",test = "Spearman")
 #'
-#' spatialDiversityPlot(scores.red[c(1:10),],assoc.bsr.corr)
+#' spatialDiversityPlot(scores.red[c(1:3),],assoc.bsr.corr)
 #' 
 #' @importFrom foreach %do%
 #' @importFrom Rtsne Rtsne

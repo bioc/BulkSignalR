@@ -338,8 +338,8 @@ setGeneric("learnParameters", signature="obj",
 #'
 #' @examples
 #' data(sdc, package = "BulkSignalR")
-#' idx <- sample(nrow(sdc), 10000)
-#' bsrdm <- prepareDataset(sdc[idx, c("N22","N20","SDC17")])
+#' idx <- sample(nrow(sdc), 4000)
+#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
 #' bsrdm <- learnParameters(bsrdm, quick=TRUE)
 #' @importFrom methods new
 setMethod(

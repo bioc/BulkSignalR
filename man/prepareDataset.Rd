@@ -108,6 +108,6 @@ The \code{counts} matrix or table should be provided with expression
 }
 \examples{
 data(sdc, package = "BulkSignalR")
-normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
+idx <- sample(nrow(sdc), 4000)
+bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
 }

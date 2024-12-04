@@ -118,13 +118,9 @@ bsrinf.red <- reduceToBestPathway(bsrinf.spa)
 s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
 scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
-separatedLRPlot(scores.red, "SLIT2", "GPC1", 
-ncounts(bsrdm.spa), 
-annotation,
-label.col = "ground_truth")
 
 # generate visual index on disk in pdf file
-spatialIndexPlot(scores.red, annotation,  
+spatialIndexPlot(scores.red[1:2,], annotation,  
 label.col = "ground_truth",
 out.file = "spatialIndexPlot")
 

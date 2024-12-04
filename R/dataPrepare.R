@@ -201,8 +201,8 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @export
 #' @examples
 #' data(sdc, package = "BulkSignalR")
-#' normal <- grep("^N", names(sdc))
-#' bsrdm <- prepareDataset(sdc[, -normal])
+#' idx <- sample(nrow(sdc), 4000)
+#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
 prepareDataset <- function(
     counts, normalize = TRUE, symbol.col = NULL, min.count = 10,
     prop = 0.1, method = c("UQ", "TC"), 

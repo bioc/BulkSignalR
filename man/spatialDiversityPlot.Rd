@@ -89,7 +89,6 @@ speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
 
 speSubset <- speSubset[, idx]
 
-
 colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
                 colData(speSubset)[[5]],sep = "x")
 
@@ -105,9 +104,9 @@ scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 # For display purpose, we only use a subset here
 
 
-assoc.bsr.corr <- spatialAssociation(scores.red[c(1:10), ],
+assoc.bsr.corr <- spatialAssociation(scores.red[c(1:3), ],
 annotation, label.col = "ground_truth",test = "Spearman")
 
-spatialDiversityPlot(scores.red[c(1:10),],assoc.bsr.corr)
+spatialDiversityPlot(scores.red[c(1:3),],assoc.bsr.corr)
 
 }

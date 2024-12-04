@@ -872,6 +872,10 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' @examples
 #' data(bodyMap.mouse)
 #'
+#' idx <- sample(nrow(bodyMap.mouse), 5000)
+#' 
+#' bodyMap.mouse <- bodyMap.mouse[idx,1:3]
+#' 
 #' ortholog.dict <- findOrthoGenes(
 #'     from_organism = "mmusculus",
 #'     from_values = rownames(bodyMap.mouse)
@@ -885,11 +889,12 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' bsrdm <- prepareDataset(
 #'     counts = matrix.expression.human,
 #'     species = "mmusculus",
-#'     conversion.dict = ortholog.dict
+#'     conversion.dict = ortholog.dict,
+#'     min.LR.found =  30
 #' )
 #' 
 #' bsrdm <- learnParameters(bsrdm,
-#'     quick = TRUE,  
+#'     quick = TRUE  
 #' )
 #' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 #' "REACTOME_SYNDECAN_INTERACTIONS",

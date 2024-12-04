@@ -111,5 +111,6 @@ stats$pval <- stats$pval / 100
 stats$logFC <- stats$logFC + 0.5
 
 bsrcc.2 <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2)
+bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2,
+max.pval = 1, min.logFC = 0.1)
 }

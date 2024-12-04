@@ -454,7 +454,8 @@ setGeneric("updateInference", signature="obj",
 #' stats$logFC <- stats$logFC + 0.5
 #' 
 #' bsrcc.2 <- defineClusterComp(bsrdm.comp, colA, colB, stats)
-#' bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2)
+#' bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2,
+#' max.pval = 1, min.logFC = 0.1)
 setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     ncounts, src.bsrcc = NULL, rank.p = 0.55,
     max.pval = 0.01, min.logFC = 1, min.LR.score = 0,
