@@ -894,7 +894,6 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' #    conversion.dict = ortholog.dict
 #' #)
 #' 
-#' 
 #' #bsrdm <- learnParameters(bsrdm,
 #' #    quick = TRUE  
 #' #)
@@ -909,8 +908,8 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' 
 #' #bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
 #' 
-#' 
-#' bsrinf <- resetToInitialOrganism(bsrinf.mouse, conversion.dict = ortholog.dict)
+#' bsrinf <- resetToInitialOrganism(bsrinf.mouse, 
+#' conversion.dict = ortholog.dict)
 setMethod("resetToInitialOrganism", "BSRInference", function(obj,
     conversion.dict) {
     # Need to check conversion.dict format
