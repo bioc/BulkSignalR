@@ -871,42 +871,46 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' @export
 #' @examples
 #' data(bodyMap.mouse)
-#' set.seed(123)
-#' idx <- sample(nrow(bodyMap.mouse), 5000)
+#' data(bsrinf.mouse)
+#' data(ortholog.dict)
 #' 
-#' bodyMap.mouse <- bodyMap.mouse[idx,1:3]
+#' #idx <- sample(nrow(bodyMap.mouse), 7500)
 #' 
-#' ortholog.dict <- findOrthoGenes(
-#'     from_organism = "mmusculus",
-#'     from_values = rownames(bodyMap.mouse)
-#' )
+#' #bodyMap.mouse <- bodyMap.mouse[idx,1:3]
+#' 
+#' #ortholog.dict <- findOrthoGenes(
+#' #    from_organism = "mmusculus",
+#' #    from_values = rownames(bodyMap.mouse)
+#' #)
 #'
-#' matrix.expression.human <- convertToHuman(
-#'     counts = bodyMap.mouse,
-#'     dictionary = ortholog.dict
-#' )
+#' #matrix.expression.human <- convertToHuman(
+#' #    counts = bodyMap.mouse,
+#' #    dictionary = ortholog.dict
+#' #)
 #'
-#' bsrdm <- prepareDataset(
-#'     counts = matrix.expression.human,
-#'     species = "mmusculus",
-#'     conversion.dict = ortholog.dict,
-#'     min.LR.found =  30
-#' )
+#' #bsrdm <- prepareDataset(
+#' #    counts = matrix.expression.human,
+#' #    species = "mmusculus",
+#' #    conversion.dict = ortholog.dict
+#' #)
 #' 
-#' bsrdm <- learnParameters(bsrdm,
-#'     quick = TRUE  
-#' )
-#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
-#' "REACTOME_SYNDECAN_INTERACTIONS",
-#' "REACTOME_ECM_PROTEOGLYCANS",
-#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #' 
-#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
-#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' #bsrdm <- learnParameters(bsrdm,
+#' #    quick = TRUE  
+#' #)
 #' 
-#' bsrinf <- initialInference(bsrdm,reference="REACTOME")
-#'
-#' bsrinf <- resetToInitialOrganism(bsrinf, conversion.dict = ortholog.dict)
+#' #subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' #"REACTOME_SYNDECAN_INTERACTIONS",
+#' #"REACTOME_ECM_PROTEOGLYCANS",
+#' #"REACTOME_CELL_JUNCTION_ORGANIZATION")
+#' 
+#' #BulkSignalR_Reactome <- BulkSignalR_Reactome[
+#' #BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' 
+#' #bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
+#' 
+#' 
+#' bsrinf <- resetToInitialOrganism(bsrinf.mouse, conversion.dict = ortholog.dict)
 setMethod("resetToInitialOrganism", "BSRInference", function(obj,
     conversion.dict) {
     # Need to check conversion.dict format

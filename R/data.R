@@ -86,8 +86,6 @@
 #' @usage data(bsrdm.spa)
 "bsrdm.spa"
 
-
-
 #' Mouse transcriptomes across tissues
 #'
 #' A dataset containing rpkm values of  brain and liver.
@@ -98,6 +96,23 @@
 #' @usage data(bodyMap.mouse)
 "bodyMap.mouse"
 
+#' A skinny BSR-dataModel object related to bodyMap.mouse
+#' 
+#' see related workflow for non human organism
+#' in the vignette
+#'
+#' @format An example of an object created by inference function
+#' @usage data(bsrinf.mouse)
+"bsrinf.mouse"
+
+#' A skinny dataframe used in the mouse workflow
+#'
+#' Synthetic object used during the call to the
+#' function `resetToInitialOrganism``
+#'
+#' @format An example of a dataframe created by findOrthoGenes
+#' @usage data(ortholog.dict)
+"ortholog.dict"
 
 #' Tumor microenvironment gene signatures
 #'
