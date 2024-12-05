@@ -497,10 +497,12 @@ setMethod("removeClusterComp", "BSRDataModelComp", function(obj, cmp.name) {
 #'
 #' @examples
 #' data(bsrdm.comp, package = "BulkSignalR")
-#'
+#' data(immune.signatures, package = "BulkSignalR")
+#' 
 #' # infer ligand-receptor interactions from the comparison
 #' bsrinf.comp <- initialInference(bsrdm.comp, max.pval = 1, 
-#' reference="REACTOME","random.example")
+#' reference="REACTOME",restrict.genes=immune.signatures$gene,
+#' "random.example")
 #' 
 #' @importFrom methods new
 setMethod("initialInference", "BSRDataModelComp", function(obj, cmp.name, 

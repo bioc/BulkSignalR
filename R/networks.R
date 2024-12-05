@@ -280,7 +280,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #'
 #' gLRintra.res <- getLRIntracellNetwork(bsrinf.redBP,
 #' qval.thres = 0.01,
-#' restrict.pw = top$pw.id
+#' restrict.pw = top[1,]$pw.id
 #' )
 #'
 #' # write.graph(gLRintra, file="SDC-LR-intracellular-network.reduced.graphml",

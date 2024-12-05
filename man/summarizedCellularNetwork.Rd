@@ -20,24 +20,23 @@ Generate a igraph object with one link between each cell type.
 \examples{
 data(bsrdm, package = "BulkSignalR")
 data(bsrinf, package = "BulkSignalR")
-# microenvironment cell populations
-data(immune.signatures, package = "BulkSignalR")
-immune.signatures <- immune.signatures[immune.signatures$signature \%in\%
-    c(
-        "B cells", "Dentritic cells", "Macrophages",
-        "NK cells", "T cells", "T regulatory cells"
-    ), ]
 data("tme.signatures", package = "BulkSignalR")
+data(immune.signatures, package = "BulkSignalR")
+
+immune.signatures <- immune.signatures[immune.signatures$signature \%in\%
+    c("T cells"), ]
+
 signatures <- rbind(immune.signatures, tme.signatures[
-    tme.signatures$signature \%in\% c("Endothelial cells", "Fibroblasts"),
+    tme.signatures$signature \%in\% c("Fibroblasts"),
 ])
+
 tme.scores <- scoreSignatures(bsrdm, signatures)
 
 # assignment
 lr2ct <- assignCellTypesToInteractions(bsrdm, bsrinf, tme.scores)
 
 # cellular network
-g.table <- cellularNetworkTable(lr2ct)
+g.table <- cellularNetworkTable(lr2ct[c(1:25),])
 gSummary <- summarizedCellularNetwork(g.table)
 # plot(gSummary, edge.width=1+30*E(gSummary)$score)
 }
