@@ -217,7 +217,7 @@ data(immune.signatures, package = "BulkSignalR")
 
 # infer ligand-receptor interactions from the comparison
 bsrinf.comp <- initialInference(bsrdm.comp, max.pval = 1, 
-reference="REACTOME",restrict.genes=immune.signatures$gene,
+reference="REACTOME",
 "random.example")
 
 }
