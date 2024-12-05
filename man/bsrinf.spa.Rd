@@ -3,11 +3,14 @@
 \docType{data}
 \name{bsrinf.spa}
 \alias{bsrinf.spa}
-\title{A skinny BSR-dataModel object related to sdc.}
+\title{A skinny BSR-inference object related to spatial dataset}
 \format{
-An example of an object created by `prepareDataset`
-applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and
-10 000 genes sampled (seed set to 123)
+From the previous object `bsrdm.spa`, 
+you can generate inferences by calling its
+method `initialInference`. 
+The resulting BSR-Inference object is `bsrinf.spa`,
+It contains all the inferred L-R interactions 
+with their associated pathways and corrected p-values.
 `learnParameters` was also called to get statistical 
 model parameters.
 }

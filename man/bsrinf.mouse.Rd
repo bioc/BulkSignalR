@@ -3,7 +3,7 @@
 \docType{data}
 \name{bsrinf.mouse}
 \alias{bsrinf.mouse}
-\title{A skinny BSR-dataModel object related to bodyMap.mouse}
+\title{A skinny BSR-inference object related to bodyMap.mouse}
 \format{
 An example of an object created by inference function
 }

@@ -96,28 +96,9 @@ A single (scores) or side-by-side (reference tissue & scores) plot
 is generated.
 }
 \examples{
-library(STexampleData)
 data(bsrinf.spa)
 data(bsrdm.spa)
-spe <- Visium_humanDLPFC()
-
-speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
-
- #set.seed(123)
- #idx <- sample(ncol(speSubset), 10)
-name.idx <- c("10x32","3x47","4x50",
-"17x111","5x59","0x20","8x100",
-"8x108","14x30","11x39")                                       
-idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374)  
-         
-speSubset <- speSubset[, idx]
-
-my.image.as.raster <- SpatialExperiment::imgRaster(speSubset, 
-sample_id = imgData(spe)$sample_id[1], image_id = "lowres")
-
-colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
-colData(speSubset)[[5]],sep = "x")
-annotation <- colData(speSubset)
+data(annotation.spa)
 
 thres <- 0.01
 bsrinf.red <- reduceToBestPathway(bsrinf.spa)
@@ -126,9 +107,9 @@ scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
 inter <- "{SLIT2} / {GPC1}"
 
-spatialPlot(scores.red[inter, ], annotation, inter,
+spatialPlot(scores.red[inter, ], annotation.spa, inter,
    ref.plot = TRUE, ref.plot.only = FALSE,
-   image.raster = my.image.as.raster, dot.size = 1,
+   image.raster = NULL, dot.size = 1,
    label.col = "ground_truth")
 
 }

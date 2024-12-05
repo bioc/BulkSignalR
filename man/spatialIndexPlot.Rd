@@ -95,32 +95,15 @@ A PDF file is created that contains the index.
 \examples{
 data(bsrdm.spa)
 data(bsrinf.spa)
-
-library(STexampleData)
-spe <- Visium_humanDLPFC()
-
-name.idx <- c("10x32","3x47","4x50",
-"17x111","5x59","0x20","8x100",
-"8x108","14x30","11x39")                                       
-idx <- c(415,463, 179, 195, 118, 299, 229, 244, 14, 374) 
-
-speSubset <- spe[, colData(spe)$ground_truth\%in\%c("Layer1","Layer2")]
-
-speSubset <- speSubset[, idx]
-
-colData(speSubset)$idSpatial <- paste(colData(speSubset)[[4]],
-                colData(speSubset)[[5]],sep = "x")
-
-annotation <- colData(speSubset)
+data(annotation.spa)
 
 thres <- 0.01
 bsrinf.red <- reduceToBestPathway(bsrinf.spa)
 s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
 scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
-
 # generate visual index on disk in pdf file
-spatialIndexPlot(scores.red[1:2,], annotation,  
+spatialIndexPlot(scores.red[1:2,], annotation.spa,  
 label.col = "ground_truth",
 out.file = "spatialIndexPlot")
 

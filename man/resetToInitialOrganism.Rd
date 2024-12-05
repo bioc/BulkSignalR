@@ -45,7 +45,6 @@ data(ortholog.dict)
 #    conversion.dict = ortholog.dict
 #)
 
-
 #bsrdm <- learnParameters(bsrdm,
 #    quick = TRUE  
 #)
@@ -60,6 +59,6 @@ data(ortholog.dict)
 
 #bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
 
-
-bsrinf <- resetToInitialOrganism(bsrinf.mouse, conversion.dict = ortholog.dict)
+bsrinf <- resetToInitialOrganism(bsrinf.mouse, 
+conversion.dict = ortholog.dict)
 }

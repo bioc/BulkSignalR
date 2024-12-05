@@ -50,22 +50,8 @@
 #' @usage data(bsrinf.comp)
 "bsrinf.comp"
 
-
-#' A skinny BSR-dataModel object related to sdc.
-#'
-#' Output from the `learnParameters` function to get
-#' BulkSignalR statistical model parameters.
+#' A skinny BSR-dataModel object related to spatial dataset
 #' 
-#' @format An example of an object created by `prepareDataset`
-#' applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and
-#' 10 000 genes sampled (seed set to 123)
-#' `learnParameters` was also called to get statistical 
-#' model parameters.
-#' @source \url{http://spatial.libd.org/spatialLIBD/}
-#' @usage data(bsrinf.spa)
-"bsrinf.spa"
-
-#' A skinny BSR-dataModel object related to a dataset
 #' obtained from STexampleData::Visium_humanDLPFC. 
 #' A single sample (sample 151673)
 #' of human brain dorsolateral prefrontal cortex (DLPFC)
@@ -73,6 +59,9 @@
 #' Visium platform. This is a subset of the full dataset 
 #' published by Maynard and Collado-Torres et al. (2021).
 #' The subset is reproduced in the vignette.
+#' name.idx <- c("10x32","3x47","4x50",
+#' "17x111","5x59","0x20","8x100",
+#' "8x108","14x30","11x39") 
 #' 
 #' Output from the `learnParameters` function to get
 #' BulkSignalR statistical model parameters for a subset
@@ -86,6 +75,42 @@
 #' @usage data(bsrdm.spa)
 "bsrdm.spa"
 
+#' A skinny BSR-inference object related to spatial dataset
+#'
+#' Output from the `learnParameters` function to get
+#' BulkSignalR statistical model parameters.
+#' 
+#' @format From the previous object `bsrdm.spa`, 
+#' you can generate inferences by calling its
+#' method `initialInference`. 
+#' The resulting BSR-Inference object is `bsrinf.spa`,
+#' It contains all the inferred L-R interactions 
+#' with their associated pathways and corrected p-values.
+#' `learnParameters` was also called to get statistical 
+#' model parameters.
+#' @source \url{http://spatial.libd.org/spatialLIBD/}
+#' @usage data(bsrinf.spa)
+"bsrinf.spa"
+
+#' A skinny dataframe used in the spatial workflow
+#'
+#' Dataframe subset describing the spatial spots
+#' 
+#' @format Dataframe that contains the following columns :
+#' barcode_id,sample_id, in_tissue,array_row
+#' array_col,ground_truth,reference,cell_count,idSpatial
+#' 
+#' barcode_id is the id of the spot
+#' idSpatial is the spatial id of the spot(array_rowXarray_col)
+#' ground_truth is the label (Layer1/2 were only kept)
+#' 
+#' They are the mandatory informations in order to
+#' make plots for the spatial workflow.
+#' 
+#' @source \url{http://spatial.libd.org/spatialLIBD/}
+#' @usage data(annotation.spa)
+"annotation.spa"
+
 #' Mouse transcriptomes across tissues
 #'
 #' A dataset containing rpkm values of  brain and liver.
@@ -96,7 +121,7 @@
 #' @usage data(bodyMap.mouse)
 "bodyMap.mouse"
 
-#' A skinny BSR-dataModel object related to bodyMap.mouse
+#' A skinny BSR-inference object related to bodyMap.mouse
 #' 
 #' see related workflow for non human organism
 #' in the vignette
