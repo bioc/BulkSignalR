@@ -208,9 +208,9 @@ subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 
 BulkSignalR_Reactome <- BulkSignalR_Reactome[
 BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
-
+parameters(bsrdm)$max.pw.size
 bsrinf <- initialInference(bsrdm,
-    min.cor = 0.3,restrict.genes=immune.signatures$gene,
+    min.cor = 0.2,restrict.genes=immune.signatures$gene,
     reference="REACTOME")
 data(bsrdm.comp, package = "BulkSignalR")
 data(immune.signatures, package = "BulkSignalR")

@@ -341,7 +341,7 @@ setGeneric("learnParameters", signature="obj",
 #' idx <- sample(nrow(sdc), 4000)
 #' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
 #' bsrdm <- learnParameters(bsrdm, n.rand.LR = 1L,
-#' verbose=TRUE,quick=TRUE)
+#' verbose=FALSE,quick=TRUE)
 #' 
 #' @importFrom methods new
 setMethod(
@@ -631,9 +631,9 @@ setGeneric("initialInference", signature="obj",
 #' 
 #' BulkSignalR_Reactome <- BulkSignalR_Reactome[
 #' BulkSignalR_Reactome$`Reactome name` %in% subset,]
-#' 
+#' parameters(bsrdm)$max.pw.size
 #' bsrinf <- initialInference(bsrdm,
-#'     min.cor = 0.3,restrict.genes=immune.signatures$gene,
+#'     min.cor = 0.2,restrict.genes=immune.signatures$gene,
 #'     reference="REACTOME")
 #' @importFrom methods new
 setMethod("initialInference", "BSRDataModel", function(obj, rank.p = 0.55,
