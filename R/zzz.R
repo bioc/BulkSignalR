@@ -1,26 +1,22 @@
+#nameEnv <- ".SignalR-Env"
+.SignalR<- new.env(parent = emptyenv()) 
+
 .onLoad <- function(...) {
     
     # handle directory creation over different OS
     cacheDir <- tools::R_user_dir("BulkSignalR", which="cache")
-
-    nameEnv <- ".SignalR-Env"
-    myEnv <- new.env(parent = emptyenv()) 
-    attach(myEnv, name = nameEnv)
-    assign("nameEnv", nameEnv, envir = as.environment(nameEnv))
-
-    assign("BulkSignalR_CACHEDIR", cacheDir, envir = as.environment(nameEnv))
+    assign("BulkSignalR_CACHEDIR", cacheDir, envir = .SignalR)
 
     url <- "https://partage-dev.montp.inserm.fr:9192"
     urlDatabase <- paste0(url,
         "/CBSB/SignalR/database/SignalR.db")
-    assign("BulkSignalR_DB_URL", urlDatabase, envir = as.environment(nameEnv))
+    assign("BulkSignalR_DB_URL", urlDatabase, envir = .SignalR)
 
     createDatabase(onRequest = FALSE)
 
     BulkSignalR_LRdb <- getInteractions()
 
-    assign("BulkSignalR_LRdb", BulkSignalR_LRdb,
-    envir = as.environment(nameEnv))
+    assign("BulkSignalR_LRdb", BulkSignalR_LRdb, envir = .SignalR)
 
     ################################
     ##   Resource Cache Files   ###
@@ -33,11 +29,11 @@
         "/CBSB/SignalR/resources/Network.rds")
 
     assign("BulkSignalR_GO_URL", urlGo, 
-        envir = as.environment(nameEnv))
+    envir = .SignalR)
     assign("BulkSignalR_Reactome_URL", urlReactome, 
-        envir = as.environment(nameEnv))
+    envir = .SignalR)
     assign("BulkSignalR_Network_URL", urlNetwork, 
-        envir = as.environment(nameEnv))
+    envir = .SignalR)
 
     createResources(onRequest = FALSE)
 
@@ -49,11 +45,10 @@
         cache = TRUE)
 
     assign("BulkSignalR_Reactome", BulkSignalR_Reactome, 
-        envir = as.environment(nameEnv))
+    envir = .SignalR)
     assign("BulkSignalR_Gobp", BulkSignalR_Gobp, 
-        envir = as.environment(nameEnv))
+    envir = .SignalR)
     assign("BulkSignalR_Network", BulkSignalR_Network, 
-        envir = as.environment(nameEnv))
-    
+    envir = .SignalR)
 
 }

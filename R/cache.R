@@ -104,7 +104,7 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
         return(invisible(NULL))
     }
 
-    cacheDir <- BulkSignalR_CACHEDIR
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
 
     cacheDir <- paste(cacheDir, dir, sep = "/")
 
@@ -153,7 +153,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
         return(invisible(NULL))
     }
 
-    cacheDir <- BulkSignalR_CACHEDIR
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
 
     cacheDir <- paste(cacheDir, dir, sep = "/")
 
@@ -223,7 +223,7 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
         return(invisible(NULL))
     }
 
-    cacheDir <- BulkSignalR_CACHEDIR
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
     cacheDir <- paste(cacheDir, dir, sep = "/")
 
     if (!dir.exists(cacheDir)) {

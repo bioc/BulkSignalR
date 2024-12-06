@@ -14,8 +14,8 @@
 #' @examples
 #' getComplexes(idRelease=1)
 getComplexes <- function(idRelease = NULL) {
-    cacheDir <- BulkSignalR_CACHEDIR
-    url <- BulkSignalR_DB_URL
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
+    url <- .SignalR$BulkSignalR_DB_URL
 
     name <- stoichiometry <- pool.stoichiometry <- NULL
 
@@ -101,8 +101,8 @@ where Comp."id.release_fk" = ?;', release$id)
 #' @examples
 #' getInteractions(idRelease=1)
 getInteractions <- function(idRelease = NULL) {
-    cacheDir <- BulkSignalR_CACHEDIR
-    url <- BulkSignalR_DB_URL
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
+    url <- .SignalR$BulkSignalR_DB_URL
 
     # Retrieve database from cache
     cacheDir <- paste(cacheDir, "database", sep = "/")

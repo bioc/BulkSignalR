@@ -212,8 +212,11 @@ subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 "REACTOME_ECM_PROTEOGLYCANS",
 "REACTOME_CELL_JUNCTION_ORGANIZATION")
 
-BulkSignalR_Reactome <- BulkSignalR_Reactome[
-BulkSignalR_Reactome$`Reactome name` %in% subset,]
+reactSubset <- BulkSignalR:::.SignalR$BulkSignalR_Reactome[
+BulkSignalR:::.SignalR$BulkSignalR_Reactome$`Reactome name` %in% subset,]
+
+resetPathways(dataframe = reactSubset,
+resourceName = "Reactome")
 
 bsrinf <- initialInference(bsrdm,
     min.cor = 0.3,
@@ -620,10 +623,11 @@ SpatialExperiment object.
 
 # We re-initialise the environment variable of Reactome
 # whith the whole set. (because we previously made a subset before)
-BulkSignalR_Reactome <- getResource(resourceName = "Reactome",
-    cache = TRUE)
+reactSubset <- getResource(resourceName = "Reactome",
+cache = TRUE)
 
-dim(BulkSignalR_Reactome)
+resetPathways(dataframe = reactSubset,
+resourceName = "Reactome")
 
 # Few steps of pre-process to subset a spatialExperiment object
 # from STexampleData package ==================================

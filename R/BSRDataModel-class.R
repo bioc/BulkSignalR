@@ -624,14 +624,21 @@ setGeneric("initialInference", signature="obj",
 #' 
 #' # We use a subset of the reference to speed up
 #' # inference in the context of the example.
+#' 
+#' reactSubset <- getResource(resourceName = "Reactome",
+#' cache = TRUE)
+#' 
 #' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 #' "REACTOME_SYNDECAN_INTERACTIONS",
 #' "REACTOME_ECM_PROTEOGLYCANS",
 #' "REACTOME_CELL_JUNCTION_ORGANIZATION")
 #' 
-#' BulkSignalR_Reactome <- BulkSignalR_Reactome[
-#' BulkSignalR_Reactome$`Reactome name` %in% subset,]
-#' parameters(bsrdm)$max.pw.size
+#' reactSubset <- reactSubset[
+#' reactSubset$`Reactome name` %in% subset,]
+#' 
+#' resetPathways(dataframe = reactSubset,
+#' resourceName = "Reactome")
+#' 
 #' bsrinf <- initialInference(bsrdm,
 #'     min.cor = 0.2,restrict.genes=immune.signatures$gene,
 #'     reference="REACTOME")

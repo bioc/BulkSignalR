@@ -461,21 +461,22 @@ setMethod("getPathwayStats", "BSRInference", function(obj,
     pw.ids.R <- table(pairs.R$pw.id)
 
     # number of ligands for each receptor
-    R.n.comb <- table(BulkSignalR_LRdb$receptor)
+    R.n.comb <- table(.SignalR$BulkSignalR_LRdb$receptor)
 
     foreach::foreach(id = names(pw.ids), .combine = rbind) %do% {
         # number of receptors that are in the current pathway,
         # depending on whether it is a GOBP or Reactome pathway
         if (regexpr("^R-", id) != -1) {
             Rs <- intersect(
-                BulkSignalR_LRdb$receptor,
-                BulkSignalR_Reactome[
-                BulkSignalR_Reactome$`Reactome ID` == id, "Gene name"]
+                .SignalR$BulkSignalR_LRdb$receptor,
+                .SignalR$BulkSignalR_Reactome[
+                .SignalR$BulkSignalR_Reactome$`Reactome ID` == id, "Gene name"]
             )
         } else {
             Rs <- intersect(
-                BulkSignalR_LRdb$receptor,
-                BulkSignalR_Gobp[BulkSignalR_Gobp$`GO ID` == id, "Gene name"]
+                .SignalR$BulkSignalR_LRdb$receptor,
+                .SignalR$BulkSignalR_Gobp[
+                .SignalR$BulkSignalR_Gobp$`GO ID` == id, "Gene name"]
             )
         }
 
@@ -898,13 +899,16 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' #    quick = TRUE  
 #' #)
 #' 
+#' #reactSubset <- getResource(resourceName = "Reactome",
+#' #cache = TRUE)
+#' 
 #' #subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 #' #"REACTOME_SYNDECAN_INTERACTIONS",
 #' #"REACTOME_ECM_PROTEOGLYCANS",
 #' #"REACTOME_CELL_JUNCTION_ORGANIZATION")
 #' 
-#' #BulkSignalR_Reactome <- BulkSignalR_Reactome[
-#' #BulkSignalR_Reactome$`Reactome name` %in% subset,]
+#' #reactSubset <- reactSubset[
+#' #reactSubset$`Reactome name` %in% subset,]
 #' 
 #' #bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
 #' 

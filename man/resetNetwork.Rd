@@ -30,5 +30,7 @@ When the user provide his own network
 'type' should be set to 'controls-expression-of'.
 }
 \examples{
+ BulkSignalR_Network <- getResource(resourceName = "Network",
+ cache = FALSE)
 resetNetwork(BulkSignalR_Network)
 }

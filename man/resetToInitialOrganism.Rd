@@ -49,13 +49,16 @@ data(ortholog.dict)
 #    quick = TRUE  
 #)
 
+#reactSubset <- getResource(resourceName = "Reactome",
+#cache = TRUE)
+
 #subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 #"REACTOME_SYNDECAN_INTERACTIONS",
 #"REACTOME_ECM_PROTEOGLYCANS",
 #"REACTOME_CELL_JUNCTION_ORGANIZATION")
 
-#BulkSignalR_Reactome <- BulkSignalR_Reactome[
-#BulkSignalR_Reactome$`Reactome name` \%in\% subset,]
+#reactSubset <- reactSubset[
+#reactSubset$`Reactome name` \%in\% subset,]
 
 #bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
 

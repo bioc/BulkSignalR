@@ -21,7 +21,7 @@
 #' @examples
 #' createResources(onRequest=FALSE)
 createResources <- function(onRequest = TRUE, verbose = FALSE) {
-    cacheDir <- BulkSignalR_CACHEDIR
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
     resourcesCacheDir <- paste(cacheDir, "resources", sep = "/")
 
     hasInternet <- tryCatch(expr={curl::has_internet()}, 
@@ -45,15 +45,15 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
 
     # Do it once, onLoad
     if (!dir.exists(resourcesCacheDir) | onRequest) {
-        .cacheAdd(fpath = BulkSignalR_GO_URL,
+        .cacheAdd(fpath = .SignalR$BulkSignalR_GO_URL,
             cacheDir = resourcesCacheDir,
             resourceName = "GO-BP", 
             verbose = verbose, download = TRUE)
-        .cacheAdd(fpath = BulkSignalR_Reactome_URL,
+        .cacheAdd(fpath = .SignalR$BulkSignalR_Reactome_URL,
             cacheDir = resourcesCacheDir, 
             resourceName = "Reactome",
             verbose = verbose, download = TRUE)
-        .cacheAdd(fpath = BulkSignalR_Network_URL,
+        .cacheAdd(fpath = .SignalR$BulkSignalR_Network_URL,
             cacheDir = resourcesCacheDir, 
             resourceName = "Network",
             verbose = verbose, download = TRUE)
@@ -90,7 +90,7 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
     }
 
     if (cache == TRUE) {
-        cacheDir <- BulkSignalR_CACHEDIR
+        cacheDir <- .SignalR$BulkSignalR_CACHEDIR
         resourcesCacheDir <- paste(cacheDir, "resources", sep = "/")
 
         # safeguard
@@ -136,15 +136,15 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
         }
     } else if (cache == FALSE) {
         if (resourceName == "Reactome") {
-            dataframe <- BulkSignalR_Reactome
+            dataframe <- .SignalR$BulkSignalR_Reactome
         }
 
         if (resourceName == "GO-BP") {
-            dataframe <- BulkSignalR_Gobp
+            dataframe <- .SignalR$BulkSignalR_Gobp
         }
 
         if (resourceName == "Network") {
-            dataframe <- BulkSignalR_Network
+            dataframe <- .SignalR$BulkSignalR_Network
         }
     }
 
@@ -179,6 +179,8 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
 #' @importFrom cli cli_alert_info
 #' @export
 #' @examples
+#'  BulkSignalR_Network <- getResource(resourceName = "Network",
+#'  cache = FALSE)
 #' resetNetwork(BulkSignalR_Network)
 resetNetwork <- function(network) {
     if (!all(c("a.gn", "type", "b.gn") %in% colnames(network))) {
@@ -189,68 +191,87 @@ resetNetwork <- function(network) {
     cli::cli_alert_info("New resource defined for {.val Network}.\n")
 
     assign("BulkSignalR_Network", 
-        network, envir = as.environment(nameEnv))
+        network, envir = .SignalR)
 
     return(invisible(NULL))
 } # resetNetwork
 
 
-#' Import pathways from a file to dataframe
+#' Import pathways from a file or dataframe
 #'
+#' \code{resetPathways} is a function
+#' we provide to user to refresh REACTOME
+#' and GO-BP content included in BulkSignalR.
+#' 
 #' Pathways are defined in Reactome and
 #' GoBP databases.
 #' Those can be updated using
 #' json files from
 #' the Human Molecular Signatures Database (MSigDB)
 #' at \url{https://www.gsea-msigdb.org/}
-#'
-#' \code{resetDownstreamPathways} is a function
-#' we provide to user to refresh REACTOME
-#' and GO-BP content included in BulkSignalR.
-#'
 #' Gmt file format also can be imported.
+#' A dataframe can be used directly also.
 #'
+#' @param dataframe  Dataframe formated as 
+#' When \code{resourceName} is set to "Reactome",
+#' dataframe colnames must be defined as :
+#' "Reactome ID", "Gene name" & "Reactome name"
+#' When \code{resourceName} is set to "GO-BP",
+#' #' dataframe colnames must be defined as :
+#' "GO ID", "Gene name" & "GO name"
 #' @param file    Path to file.
 #' @param fileType    Default is Json.
 #' Other options are gmt or txt files.
-#' @param resourceName    Two options "GO-BP" or "REACTOME".
+#' @param resourceName    Two options "GO-BP" or "Reactome".
 #'
 #' @return Returns `NULL`, invisibly. 
 #'
 #' @importFrom cli cli_alert_info
 #' @export
 #' @examples
-#' resetPathwaysFromFile(file = NULL, 
-#' fileType = "json",
+#' reactSubset <- getResource(resourceName = "Reactome",
+#' cache = TRUE)
+#' 
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
+#' 
+#' reactSubset <- reactSubset[
+#' reactSubset$`Reactome name` %in% subset,]
+#' 
+#' resetPathways(dataframe = reactSubset,
 #' resourceName = "Reactome")
-resetPathwaysFromFile <- function(file = NULL,
+resetPathways <- function(
+    dataframe = NULL,
+    file = NULL,
     fileType = c("json", "gmt", "txt"),
     resourceName = NULL) {
-    
+
+    if (!resourceName %in% c("GO-BP", "Reactome")) {
+        stop("GO-BP and Reactome are the only keywords alllowed.")
+    }
+
     if (!is.null(file)){
 
         fileType <- match.arg(fileType)
-
-        if (!resourceName %in% c("GO-BP", "Reactome")) {
-            stop("GO-BP and Reactome are the only keywords alllowed.")
-        }
 
         if (!file.exists(file)) {
             stop("This file doesn't exist.")
         }
 
         if (fileType == "json") {
-            db <- .formatPathwaysFromJson(
+            dataframe <- .formatPathwaysFromJson(
                 file = file,
                 resourceName = resourceName
             )
         } else if (fileType == "gmt") {
-            db <- .formatPathwaysFromGmt(
+            dataframe <- .formatPathwaysFromGmt(
                 file = file,
                 resourceName = resourceName
             )
         } else if (fileType == "txt") {
-            db <- .formatPathwaysFromTxt(
+            dataframe <- .formatPathwaysFromTxt(
                 file = file,
                 resourceName = resourceName
             )
@@ -260,25 +281,54 @@ resetPathwaysFromFile <- function(file = NULL,
 
         message("")
         cli::cli_alert_info("New resource defined for {.val {resourceName}}.\n")
-        message(utils::head(db))
+        message(utils::head(dataframe))
 
 
         if (resourceName == "Reactome") {
-            assign("BulkSignalR_Reactome", db,
-                envir = as.environment(nameEnv))
+            assign("BulkSignalR_Reactome", dataframe,
+                envir = .SignalR)
         }
         if (resourceName == "GO-BP") {
-            assign("BulkSignalR_Gobp", db,
-                envir = as.environment(nameEnv))
+            assign("BulkSignalR_Gobp", dataframe,
+                envir = .SignalR)
         }
 
     }
     else {
-        message("User must submit  a file.")
+
+    if (resourceName == "Reactome") {
+        if (!all(
+            c("Reactome ID", "Gene name", "Reactome name") %in% 
+            names(dataframe))) {
+            mess <- "Colnames should be defined with specific names."
+            cli::cli_alert_danger(mess)
+            stop("Three columns must defined as",
+                " 'Reactome ID','Gene name','Reactome name'.")
+        }
+    } else if (resourceName == "GO-BP") {
+        if (!all(c("GO ID", "Gene name", "GO name") %in% names(dataframe))) {
+            mess <- "Colnames should be defined with specific names."
+            cli::cli_alert_danger(mess)
+            stop("Three columns must defined as",
+            " 'GO ID','Gene name','GO name'.")
+        }
+    } else {
+        cli::cli_alert_danger("Resource name is not well defined.\n")
+        stop("")
+    }
+
+    if (resourceName == "Reactome") {
+        assign("BulkSignalR_Reactome", dataframe,
+            envir = .SignalR)
+    }
+    if (resourceName == "GO-BP") {
+        assign("BulkSignalR_Gobp", dataframe,
+            envir = .SignalR)
+    }
     }
     
     return(invisible(NULL))
-} # resetPathwaysFromFile
+} # resetPathways
 
 #' Read dataframe from txt file
 #'

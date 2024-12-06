@@ -180,9 +180,9 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
             stringsAsFactors = FALSE
         )
         genes.in.pw <- pw[pw[[id.col]] == p, gene.col]
-        int <- BulkSignalR_Network[
-            BulkSignalR_Network$a.gn %in% genes.in.pw &
-                BulkSignalR_Network$b.gn %in% genes.in.pw,
+        int <- .SignalR$BulkSignalR_Network[
+            .SignalR$BulkSignalR_Network$a.gn %in% genes.in.pw &
+                .SignalR$BulkSignalR_Network$b.gn %in% genes.in.pw,
         ]
         directed <- int$type %in% directed.int
         ret <- int[!directed, c("b.gn", "a.gn")]
@@ -211,9 +211,9 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
                         for (k in 2:length(vertices)) {
                             from <- igraph::V(g)$name[vertices[k - 1]]
                             to <- igraph::V(g)$name[vertices[k]]
-                            edge.type <- BulkSignalR_Network[
-                                BulkSignalR_Network$a.gn == from &
-                                    BulkSignalR_Network$b.gn == to,
+                            edge.type <- .SignalR$BulkSignalR_Network[
+                                .SignalR$BulkSignalR_Network$a.gn == from &
+                                    .SignalR$BulkSignalR_Network$b.gn == to,
                                 "type"
                             ][1]
                             a.iter <- rbind(a.iter, data.frame(
@@ -353,13 +353,13 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         }
     }
     if (nrow(pairs.react) > 0) {
-        ids <- unique(BulkSignalR_Reactome[
-            BulkSignalR_Reactome$`Gene name` %in% pool, "Reactome ID"])
-        react <- BulkSignalR_Reactome[
-            BulkSignalR_Reactome$`Reactome ID` %in% ids, ]
+        ids <- unique(.SignalR$BulkSignalR_Reactome[
+            .SignalR$BulkSignalR_Reactome$`Gene name` %in% pool, "Reactome ID"])
+        react <- .SignalR$BulkSignalR_Reactome[
+            .SignalR$BulkSignalR_Reactome$`Reactome ID` %in% ids, ]
         if (!is.null(restrict.pw)) {
-            react <- BulkSignalR_Reactome[
-            BulkSignalR_Reactome$`Reactome ID` %in% restrict.pw, ]
+            react <- .SignalR$BulkSignalR_Reactome[
+            .SignalR$BulkSignalR_Reactome$`Reactome ID` %in% restrict.pw, ]
         }
         all.edges <- .edgesLRIntracell(
             pairs.react, react, tg.genes.react,
@@ -389,10 +389,10 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         }
     }
     if (nrow(pairs.go) > 0) {
-        ids <- unique(BulkSignalR_Gobp[
-            BulkSignalR_Gobp$`Gene name` %in% pool, "GO ID"])
-        go <- BulkSignalR_Gobp[
-        BulkSignalR_Gobp$`GO ID` %in% ids, ]
+        ids <- unique(.SignalR$BulkSignalR_Gobp[
+            .SignalR$BulkSignalR_Gobp$`Gene name` %in% pool, "GO ID"])
+        go <- .SignalR$BulkSignalR_Gobp[
+        .SignalR$BulkSignalR_Gobp$`GO ID` %in% ids, ]
         if (!is.null(restrict.pw)) {
             go <- go[go$`GO ID` %in% restrict.pw, ]
         }

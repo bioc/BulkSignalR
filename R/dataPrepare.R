@@ -20,15 +20,15 @@ resetLRdb <- function(db, switch = FALSE) {
     if (colnames(db)[1] == "ligand" & colnames(db)[2] == "receptor") {
         if (switch) {
             assign("BulkSignalR_LRdb", unique(db[, c("ligand", "receptor")]),
-                envir = as.environment(nameEnv)
+                envir = .SignalR
             )
         } else {
             db <- rbind(
-                BulkSignalR_LRdb[, c("ligand", "receptor")],
+                .SignalR$BulkSignalR_LRdb[, c("ligand", "receptor")],
                 db[, c("ligand", "receptor")]
             )
             assign("BulkSignalR_LRdb", unique(db), 
-                envir = as.environment(nameEnv))
+                envir = .SignalR)
         }
     } else {
         stop(
@@ -331,7 +331,8 @@ prepareDataset <- function(
     }
 
     nLR <- length(intersect(
-        c(BulkSignalR_LRdb$ligand, BulkSignalR_LRdb$receptor),
+        c(.SignalR$BulkSignalR_LRdb$ligand, 
+        .SignalR$BulkSignalR_LRdb$receptor),
         rownames(ncounts)
     ))
     if (nLR < min.LR.found) {
@@ -409,13 +410,13 @@ findOrthoGenes <- function(from_organism, from_values,
     )
 
     nL <- length(intersect(
-        BulkSignalR_LRdb$ligand,
+        .SignalR$BulkSignalR_LRdb$ligand,
         rownames(orthologs_dictionary)
     ))
     message("-> ", nL, " : Ligands ")
 
     nR <- length(intersect(
-        BulkSignalR_LRdb$receptor,
+        .SignalR$BulkSignalR_LRdb$receptor,
         rownames(orthologs_dictionary)
     ))
     message("-> ", nR, " : Receptors ")
