@@ -804,16 +804,14 @@ separatedLRPlot <- function(v, L, R, ncounts, areas,
 #' data(bsrdm.spa)
 #' data(bsrinf.spa)
 #' data(annotation.spa)
-#' 
-#' 
 #' thres <- 0.01
-#' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
-#' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
+#' #bsrinf.red <- reduceToBestPathway(bsrinf.spa)
+#' #s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' #scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
-#' spatialAssociation(scores.red[c(1:2),], areas = annotation.spa,
-#' label.col = "ground_truth")
-#' 
+#' # Run in other examples no need to be run again
+#' # spatialAssociation(scores.red[c(1:2),], areas = annotation.spa,
+#' # label.col = "ground_truth")
 #' @import multtest
 #' @importFrom foreach %do%
 spatialAssociation <- function(scores, areas, 
