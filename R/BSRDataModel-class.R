@@ -342,7 +342,6 @@ setGeneric("learnParameters", signature="obj",
 #' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
 #' bsrdm <- learnParameters(bsrdm, n.rand.LR = 1L,
 #' verbose=FALSE,quick=TRUE)
-#' 
 #' @importFrom methods new
 setMethod(
     "learnParameters", "BSRDataModel",
@@ -628,6 +627,7 @@ setGeneric("initialInference", signature="obj",
 #' reactSubset <- getResource(resourceName = "Reactome",
 #' cache = TRUE)
 #' 
+#' dim(reactSubset)
 #' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 #' "REACTOME_SYNDECAN_INTERACTIONS",
 #' "REACTOME_ECM_PROTEOGLYCANS",

@@ -46,12 +46,11 @@ for a specific pathway
 \examples{
 data(bsrdm, package = "BulkSignalR")
 data(bsrinf, package = "BulkSignalR")
-
+if(FALSE){
 bsrinf.redP <- reduceToPathway(bsrinf)
 bsrinf.redPBP <- reduceToBestPathway(bsrinf)
 bsrsig.redPBP <- getLRGeneSignatures(bsrinf, qval.thres = 1)
 pathway1 <- pathways(bsrsig.redPBP)[1]
-if(FALSE){
 signatureHeatmaps(
 pathway = pathway1,
 bsrdm = bsrdm,

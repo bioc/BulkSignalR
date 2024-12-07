@@ -205,6 +205,7 @@ data(immune.signatures, package = "BulkSignalR")
 reactSubset <- getResource(resourceName = "Reactome",
 cache = TRUE)
 
+dim(reactSubset)
 subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 "REACTOME_SYNDECAN_INTERACTIONS",
 "REACTOME_ECM_PROTEOGLYCANS",

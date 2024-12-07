@@ -202,7 +202,7 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @examples
 #' data(sdc, package = "BulkSignalR")
 #' idx <- sample(nrow(sdc), 4000)
-#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
+#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],normalize = FALSE)
 prepareDataset <- function(
     counts, normalize = TRUE, symbol.col = NULL, min.count = 10,
     prop = 0.1, method = c("UQ", "TC"), 

@@ -109,5 +109,5 @@ The \code{counts} matrix or table should be provided with expression
 \examples{
 data(sdc, package = "BulkSignalR")
 idx <- sample(nrow(sdc), 4000)
-bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")])
+bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],normalize = FALSE)
 }

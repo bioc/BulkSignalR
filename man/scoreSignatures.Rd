@@ -36,7 +36,7 @@ It is provided for convenience.
 }
 \examples{
 data(sdc, package = "BulkSignalR")
-bsrdm <- prepareDataset(counts = sdc)
+data(bsrdm, package = "BulkSignalR")
 
 data(immune.signatures, package = "BulkSignalR")
 imm.scores <- scoreSignatures(bsrdm, immune.signatures)

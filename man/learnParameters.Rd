@@ -118,5 +118,4 @@ idx <- sample(nrow(sdc), 4000)
 bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
 bsrdm <- learnParameters(bsrdm, n.rand.LR = 1L,
 verbose=FALSE,quick=TRUE)
-
 }
