@@ -20,5 +20,6 @@ Returns `NULL`, invisibly.
 Fetch LR database from remote location.
 }
 \examples{
-createDatabase(onRequest = FALSE)
+# Function call already done elsewhere by cacheClear()
+# createDatabase(onRequest = FALSE)
 }

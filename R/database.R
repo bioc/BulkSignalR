@@ -13,7 +13,8 @@
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' createDatabase(onRequest = FALSE)
+#' # Function call already done elsewhere by cacheClear()
+#' # createDatabase(onRequest = FALSE)
 createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
     # Default directory
     cacheDir <- .SignalR$BulkSignalR_CACHEDIR

@@ -203,9 +203,8 @@ data(immune.signatures, package = "BulkSignalR")
 # inference in the context of the example.
 
 reactSubset <- getResource(resourceName = "Reactome",
-cache = TRUE)
+cache = FALSE)
 
-dim(reactSubset)
 subset <- c("REACTOME_BASIGIN_INTERACTIONS",
 "REACTOME_SYNDECAN_INTERACTIONS",
 "REACTOME_ECM_PROTEOGLYCANS",
