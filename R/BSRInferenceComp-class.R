@@ -79,6 +79,277 @@ setMethod(
     }
 )
 
+# Constructor ========================================================
+
+#' Inference of ligand-receptor interactions based on regulation
+#'
+#' This method supports two configurations that we refer to
+#' as paracrine and autocrine.
+#'
+#' In the autocrine case, a single cluster comparison name is provided.
+#' In the corresponding cluster comparison, a group of samples A was
+#' compared to a group of samples B to determine fold-changes and associated
+#' P-values. The inferred ligand-receptor interactions take place in the
+#' samples of group A. They are paracrine interactions in the case of
+#' single-cell data or they take place in the same tissue represented by
+#' cluster A. A typical single-cell example would be a population of
+#' macrophages (group A) compared to all the other populations (group B) to
+#' represent specific increased or decreased expression in macrophages. The
+#' resulting ligand-receptor interactions will be autocrine interactions
+#' that are exacerbated (or reduced depending on the chosen parameters) in
+#' macrophages.
+#'
+#' In the paracrine case, two cluster comparison names must be provided.
+#' For instance, a first comparison coul involved macrophages versus all
+#' the other cell populations as above. The second comparison could be
+#' B-cells against all the other populations. Now, calling BSRInferenceComp()
+#' with comparison macrophages vs. the rest and, as source comparison, B-cells
+#' vs. the rest, will result in inferring interactions between B-cells
+#' (ligands) and macrophages (receptors and downstream pathways). To obtain
+#' macrophages to B-cells paracrine interactions, it is necessary to call the
+#' method a second time with permuted cluster comparison names. Another example
+#' in spatial transcriptomics could be two thin bands at the boundary of two
+#' tissue regions, one emitting the ligand and the other one expressing the
+#' receptor.
+#'
+#' In this initial inference, all the receptor-containing pathways are reported,
+#' see reduction functions to reduce this list.
+#'
+#' @name BSRInferenceComp
+#'
+#' @param obj       A BSRDataModelComp object.
+#' @param cmp.name        The name of the cluster comparison that should be used
+#' for the inference. Autocrine interactions if only this comparison name is
+#' provided, paracrine if a source comparison name is provided as well.
+#' @param src.cmp.name    The name of the source cluster comparison that should
+#' be used for paracrine interaction inferences.
+#' @param rank.p        A number between 0 and 1 defining the rank of the last
+#'   considered target genes.
+#' @param max.pval        The maximum P-value imposed to both the ligand
+#'   and the receptor.
+#' @param min.logFC       The minimum log2 fold-change allowed for
+#'   both the receptor and the ligand.
+#' @param neg.receptors     A logical indicating whether receptors are only
+#'   allowed to be upregulated (FALSE), or up- and downregulated (TRUE).
+#' @param fdr.proc      The procedure for adjusting P-values according to
+#' \code{\link[multtest]{mt.rawp2adjp}}.
+#' @param reference       Which pathway reference should be used ("REACTOME"
+#'   for Reactome, "GOBP" for GO Biological Process,
+#'   or "REACTOME-GOBP" for both).
+#' @param max.pw.size     Maximum pathway size to consider from the pathway
+#'   reference.
+#' @param min.pw.size     Minimum pathway size to consider from the pathway
+#'   reference.
+#' @param min.positive    Minimum number of target genes to be found in a given
+#'   pathway.
+#' @param with.complex    A logical indicating whether receptor co-complex
+#'   members should be included in the target genes.
+#' @param min.t.logFC     The minimum log2 fold-change allowed for
+#'   targets in case pos.targets or neg.targets are used.
+#' @param pos.targets   A logical imposing that all the network targets must
+#'   display positive logFC, i.e. logFC >= min.t.logFC.
+#' @param neg.targets   A logical imposing that all the network targets must
+#'   display negative logFC, i.e. logFC <= - min.t.logFC.
+#' @param restrict.pw     A list of pathway IDs to restrict the application of
+#'   the function.
+#' @param restrict.genes  A list of gene symbols that restricts ligands and
+#'   receptors.
+#' @param use.full.network  A logical to avoid limiting the reference network
+#' to the detected genes and use the whole reference network.
+#'
+#' @details Perform the initial ligand-receptor inference. Initial means that
+#' no reduction is applied. All the (ligand, receptor, downstream pathway)
+#' triples are reported, i.e., a given LR pair may appear multiple times
+#' with different pathways downstream the receptor. Specific reduction
+#' functions are available from the package to operate subsequent
+#' simplifications based on the BSRInferenceComp object created by this method.
+#'
+#' Here, ligand-receptor interactions are inferred based on gene or protein
+#' regulation-associated P-values when comparing two clusters of samples. Since
+#' a BSRDataModelComp object can contain several such comparisons, the name
+#' of the comparison to use must be specified (parameter \code{cmp.name}).
+#'
+#' Note that since the introduction of the use.full.network parameter
+#' (April 29, 2024), the pathway sizes are always computed before potential
+#' intersection with the observed data (use.full.network set to FALSE) for
+#' consistency. Accordingly, the minimum and maximum pathway default values
+#' have been raised from 5 & 200 to 5 & 400 respectively. By default,
+#' use.full.network is set to FALSE.
+#'
+#' In addition to statistical significance estimated according to BulkSignalR
+#' statistical model, we compute SingleCellSignalR original LR-score,
+#' based on L and R cluster average expression. 
+#' In the paracrine case, L average expression
+#' is taken from the source cluster.
+#'
+#' @return A BSRInferenceComp object with initial inferences set.
+#'
+#' @export
+#'
+#' @examples
+#' data(bsrdm.comp, package = "BulkSignalR")
+#' data(immune.signatures, package = "BulkSignalR")
+#' 
+#' # infer ligand-receptor interactions from the comparison
+#' bsrinf.comp <- BSRInferenceComp(bsrdm.comp, max.pval = 1, 
+#' reference="REACTOME",
+#' "random.example")
+#' 
+#' @importFrom methods new
+BSRInferenceComp <- function(obj, cmp.name, 
+    src.cmp.name = NULL, rank.p = 0.55,
+    max.pval = 0.01, min.logFC = 1, neg.receptors = FALSE,
+    pos.targets = FALSE, neg.targets = FALSE,
+    min.t.logFC = 0.5, restrict.genes = NULL,
+    use.full.network = FALSE,
+    reference = c("REACTOME-GOBP", "REACTOME", "GOBP"),
+    max.pw.size = 400, min.pw.size = 5, min.positive = 2,
+    restrict.pw = NULL, with.complex = TRUE,
+    fdr.proc = c(
+        "BH", "Bonferroni", "Holm", "Hochberg",
+        "SidakSS", "SidakSD", "BY", "ABH", "TSBH"
+        )) {
+
+
+    if (!(cmp.name %in% names(comparison(obj)))) {
+        stop("cmp.name must exist in the names ",
+            "of comparisons contained in obj")
+    }
+    if (!is.null(src.cmp.name) && !(src.cmp.name %in% names(comparison(obj)))) {
+        stop("src.cmp.name must exist in the names",
+        " of comparisons contained in obj")
+    }
+    reference <- match.arg(reference)
+    fdr.proc <- match.arg(fdr.proc)
+    if (min.logFC <= 0) {
+        stop("min.logFC must be >0")
+    }
+    if (min.t.logFC <= 0) {
+        stop("min.t.logFC must be >0")
+    }
+    if (rank.p < 0 || rank.p > 1) {
+        stop("rank.p must lie in [0;1]")
+    }
+    if (neg.targets && pos.targets) {
+        stop("neg.targets and pos.targets cannot be TRUE simultaneously")
+    }
+
+    # retrieve the BSRClusterComp object(s)
+    cc <- comparison(obj)[[cmp.name]]
+    if (!is.null(src.cmp.name)) {
+        scc <- comparison(obj)[[src.cmp.name]]
+    } else {
+        scc <- NULL
+    }
+
+    # store inference parameters and retrieve relevant L & R
+    inf.param <- list()
+    inf.param$log.transformed.data <- logTransformed(obj)
+    inf.param$mu <- mu(obj)
+    inf.param$col.clusterA <- colClusterA(cc)
+    inf.param$col.clusterB <- colClusterB(cc)
+    if (is.null(src.cmp.name)) {
+        inf.param$inference.type <- "autocrine"
+    } else {
+        inf.param$inference.type <- "paracrine"
+        inf.param$src.colA <- colClusterA(scc)
+        inf.param$src.colB <- colClusterB(scc)
+    }
+    inf.param$max.pval <- max.pval
+    inf.param$min.logFC <- min.logFC
+    inf.param$neg.receptors <- neg.receptors
+    inf.param$pos.targets <- pos.targets
+    inf.param$neg.targets <- neg.targets
+    inf.param$min.t.logFC <- min.t.logFC
+    inf.param$restrict.genes <- restrict.genes
+    inf.param$use.full.network <- use.full.network
+    lr <- .getRegulatedLR(obj, cc, scc,
+        max.pval = max.pval, min.logFC = min.logFC,
+        neg.receptors = neg.receptors, restrict.genes = restrict.genes
+    )
+
+    # apply BSR model on the targets
+    inf.param$reference <- reference
+    inf.param$min.pw.size <- min.pw.size
+    inf.param$max.pw.size <- max.pw.size
+    inf.param$with.complex <- with.complex
+    inf.param$min.positive <- min.positive
+    inf.param$restrict.pw <- restrict.pw
+    pairs <- .checkRegulatedReceptorSignaling(obj, cc, lr,
+        reference = reference,
+        pos.targets = pos.targets, neg.targets = neg.targets,
+        min.t.logFC = min.logFC, use.full.network = use.full.network,
+        min.pw.size = min.pw.size, max.pw.size = max.pw.size,
+        min.positive = min.positive, with.complex = with.complex,
+        restrict.pw = restrict.pw
+    )
+    inf.param$fdr.proc <- fdr.proc
+    inf.param$rank.p <- rank.p
+
+    # compute P-values
+    inter <- .pValuesRegulatedLR(pairs, 
+        parameters(obj), rank.p = rank.p, fdr.proc = fdr.proc)
+
+    # compute LR-score for compatibility with SingleCellSignalR version 1
+    if (is.null(scc)) {
+        inter$L.expr <- differentialStats(cc)[inter$L, "expr"]
+    } else {
+        inter$L.expr <- differentialStats(scc)[inter$L, "expr"]
+    }
+    inter$R.expr <- differentialStats(cc)[inter$R, "expr"]
+    if (inf.param$log.transformed.data) {
+        sq <- sqrt(inter$L.expr * inter$R.expr)
+    } else {
+        sq <- sqrt(log1p(inter$L.expr) / log(2) * log1p(inter$R.expr) / log(2))
+    }
+    inter$LR.score <- sq / (inf.param$mu + sq)
+
+    # prepare the accompanying lists
+    ligands <- strsplit(inter$L, ";")
+    receptors <- strsplit(inter$R, ";")
+    tg <- strsplit(inter$target.genes, ";")
+    tgpval <- lapply(
+        strsplit(inter$target.pval, ";"),
+        function(x) as.numeric(x)
+    )
+    tglogFC <- lapply(
+        strsplit(inter$target.logFC, ";"),
+        function(x) as.numeric(x)
+    )
+    tgcorr <- lapply(
+        strsplit(inter$target.corr, ";"),
+        function(x) as.numeric(x)
+    )
+    tgexpr <- lapply(
+        strsplit(inter$target.expr, ";"),
+        function(x) as.numeric(x)
+    )
+    inf.param$ligand.reduced <- FALSE
+    inf.param$receptor.reduced <- FALSE
+    inf.param$pathway.reduced <- FALSE
+
+    # instantiate the object
+    if (is.null(src.cmp.name)) {
+        src.cmp.name.char <- ""
+    } else {
+        src.cmp.name.char <- src.cmp.name
+    }
+
+    new("BSRInferenceComp",
+        LRinter = inter[, c(
+            "L", "R", "pw.id", "pw.name", "pval", "qval",
+            "L.logFC", "R.logFC", "LR.pval", "LR.corr",
+            "rank", "len", "rank.pval", "rank.corr",
+            "LR.score", "L.expr", "R.expr"
+        )],
+        ligands = ligands, 
+        receptors = receptors, 
+        tg.genes = tg, 
+        tg.corr = tgcorr, inf.param = inf.param,
+        tg.pval = tgpval, tg.logFC = tglogFC, tg.expr = tgexpr, 
+        cmp.name = cmp.name, src.cmp.name = src.cmp.name.char
+    )
+} # BSRInferenceComp
 
 # Accessors & setters ========================================================
 
@@ -303,7 +574,7 @@ setMethod(
 #'   \code{\link[multtest]{mt.rawp2adjp}}.
 #'
 #' @details A BSRInferenceComp object should be created by calling
-#' \code{"\link[=BSRClusterComp-class]{initialInference}"}
+#' \code{"\link[=BSRInferenceComp-class]{BSRInferenceComp}"}
 #'
 #' @return A BSRInferenceComp object.
 #'
@@ -411,7 +682,7 @@ setGeneric("updateInference", signature="obj",
 #'   display negative logFC, i.e. logFC <= - min.t.logFC.
 #'
 #' @details A BSRInferenceComp object should be created by calling
-#' \code{"\link[=BSRClusterComp-class]{initialInference}"}
+#' \code{"\link[=BSRInferenceComp-class]{BSRInferenceComp}"}
 #'
 #' @return A BSRInferenceComp object. The main application of this
 #' method is to take a "universal" inference obtained by assigning
@@ -453,7 +724,7 @@ setGeneric("updateInference", signature="obj",
 #' stats$pval <- stats$pval / 100
 #' stats$logFC <- stats$logFC + 0.5
 #' 
-#' bsrcc.2 <- defineClusterComp(bsrdm.comp, colA, colB, stats)
+#' bsrcc.2 <- BSRClusterComp(bsrdm.comp, colA, colB, stats)
 #' bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2,
 #' max.pval = 1, min.logFC = 0.1)
 setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
@@ -956,89 +1227,3 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
 }) # reduceToPathway
 
 
-# Obtain gene signatures from a BSRInference object ============================
-
-#' Extract gene signatures of LR pair activity
-#'
-#' Obtains gene signatures reflecting ligand-receptor as well as
-#' receptor downstream activity to
-#' score ligand-receptor pairs across samples subsequently with
-#' \code{"\link[=BSRInferenceComp-class]{scoreLRGeneSignatures}"}
-#'
-#' @name getLRGeneSignatures
-#' @aliases getLRGeneSignatures,BSRInferenceComp-method
-#'
-#' @param obj    BSRInferenceComp object.
-#' @param pval.thres    P-value threshold.
-#' @param qval.thres    Q-value threshold.
-#' @param with.pw.id    A logical indicating whether the ID of a pathway
-#' should be concatenated to its name.
-#' @return A BSRSignatureComp object containing a gene signature for each triple
-#' ligand-receptor pair. A reduction to the best pathway
-#' for each pair is automatically performed and the gene signature is
-#' comprised of the ligand, the receptor,
-#' and all the target genes with rank equal or superior to \code{pairs$rank}.
-#' @export
-#' @examples
-#' data(bsrinf.comp, package = "BulkSignalR")
-#' 
-#' bsrinf.redP <- reduceToPathway(bsrinf.comp)
-#' bsrsig.redP <- getLRGeneSignatures(bsrinf.redP, qval.thres = 0.001)
-#' @importFrom foreach %do% %dopar%
-#' @importFrom methods new
-setMethod("getLRGeneSignatures", "BSRInferenceComp", function(obj,
-    pval.thres = NULL, qval.thres = NULL, with.pw.id = FALSE) {
-    if (is.null(pval.thres) && is.null(qval.thres)) {
-        stop("Either a P- or a Q-value threshold must be provided")
-    }
-
-    # reduce and select
-    obj <- reduceToBestPathway(obj)
-    pairs <- LRinter(obj)
-    if (!is.null(pval.thres)) {
-        selected <- pairs$pval <= pval.thres
-    } else {
-        selected <- pairs$qval <= qval.thres
-    }
-
-    # obtain the signature object
-    pairs <- pairs[selected, ]
-    ligands <- ligands(obj)[selected]
-    receptors <- receptors(obj)[selected]
-    if (with.pw.id) {
-        pathways <- paste0(pairs$pw.id, ": ", pairs$pw.name)
-    } else {
-        pathways <- pairs$pw.name
-    }
-    tg.genes <- tgGenes(obj)[selected]
-    t.corrs <- tgCorr(obj)[selected]
-    t.pvals <- tgPval(obj)[selected]
-    t.logFCs <- tgLogFC(obj)[selected]
-    t.exprs <- tgExpr(obj)[selected]
-
-    for (i in seq_len(nrow(pairs))) {
-        tg <- tg.genes[[i]]
-        tg.genes[[i]] <- tg[pairs$rank[i]:length(tg)]
-        tc <- t.corrs[[i]]
-        t.corrs[[i]] <- tc[pairs$rank[i]:length(tc)]
-        tp <- t.pvals[[i]]
-        t.pvals[[i]] <- tp[pairs$rank[i]:length(tp)]
-        tl <- t.logFCs[[i]]
-        t.logFCs[[i]] <- tl[pairs$rank[i]:length(tl)]
-        te <- t.exprs[[i]]
-        t.exprs[[i]] <- te[pairs$rank[i]:length(te)]
-
-    }
-
-    new("BSRSignatureComp",
-        ligands = ligands,
-        receptors = receptors, 
-        tg.genes = tg.genes, 
-        tg.corr = t.corrs,
-        pathways = pathways, 
-        cmp.name = comparisonName(obj),
-        tg.pval = t.pvals, 
-        tg.logFC = t.logFCs,        
-        tg.expr = t.exprs
-    )
-}) # getLRGeneSignatures

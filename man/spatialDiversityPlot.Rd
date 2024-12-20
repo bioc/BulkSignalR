@@ -72,13 +72,13 @@ Not limited to BulkSignalR gene signature scores.
 Display a 2D-projection of the score spatial distributions.
 }
 \examples{
-data(bsrdm.spa)
-data(bsrinf.spa)
-data(annotation.spa)
+data(bsrdm.spa, package = "BulkSignalR")
+data(bsrinf.spa, package = "BulkSignalR")
+data(annotation.spa, package = "BulkSignalR")
 
 thres <- 0.01
 bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
 # statistical association with tissue areas based on correlations

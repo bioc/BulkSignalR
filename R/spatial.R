@@ -40,8 +40,8 @@
 #' @importFrom RANN nn2
 #'
 #' @examples  
-#' data(bsrdm.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' sm.bsrdm <- smoothSpatialCounts(bsrdm.spa, annotation.spa,
 #' radius = 1.2, nnn = 4)
 #' 
@@ -144,8 +144,8 @@ smoothSpatialCounts <- function(bsrdm, areas, nnn = 4,
 #' @importFrom RANN nn2
 #'
 #' @examples
-#' data(bsrdm.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' max.bsrdm <- maxLigandSpatialCounts(bsrdm.spa, annotation.spa,
 #' radius = 1.2, nnn = 4)
@@ -234,13 +234,13 @@ maxLigandSpatialCounts <- function(bsrdm, areas, nnn = 4, radius = NULL,
 #' @return A spatial plot
 #' @export
 #' @examples
-#' data(bsrinf.spa)
-#' data(bsrdm.spa)
-#' data(annotation.spa)
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' thres <- 0.01
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' inter <- "{SLIT2} / {GPC1}"
@@ -442,13 +442,13 @@ spatialPlot <- function(v, areas, inter.name, rev.y = TRUE, ref.plot = FALSE,
 #' @return Create PDF file and returns `NULL`, invisibly. 
 #' @export
 #' @examples
-#' data(bsrdm.spa)
-#' data(bsrinf.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' thres <- 0.01
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' generateSpatialPlots(scores.red[1:2,],
@@ -538,13 +538,13 @@ generateSpatialPlots <- function(scores, areas, plot.folder,
 #' 
 #' @export
 #' @examples
-#' data(bsrdm.spa)
-#' data(bsrinf.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' thres <- 0.01
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' # generate visual index on disk in pdf file
@@ -668,13 +668,13 @@ spatialIndexPlot <- function(scores, areas, out.file, ref.plot = TRUE,
 #' @return A set of spatial plots. 
 #' @export
 #' @examples
-#' data(bsrdm.spa)
-#' data(bsrinf.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' thres <- 0.01
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' separatedLRPlot(scores.red, "SLIT2", "GPC1", 
@@ -801,12 +801,12 @@ separatedLRPlot <- function(v, L, R, ncounts, areas,
 #' what is used for the ANOVA).
 #' @export
 #' @examples
-#' data(bsrdm.spa)
-#' data(bsrinf.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' thres <- 0.01
 #' #bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' #s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' #s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' #scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' # Run in other examples no need to be run again
@@ -958,13 +958,13 @@ spatialAssociation <- function(scores, areas,
 #' @export
 #' @return   ComplexHeatmap::Heatmap object
 #' @examples
-#' data(bsrdm.spa)
-#' data(bsrinf.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' thres <- 0.01
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' # statistical association with tissue areas based on correlations
@@ -1078,13 +1078,13 @@ spatialAssociationPlot <- function(associations, qval.thres = 0.01,
 #' 
 #' @export
 #' @examples
-#' data(bsrdm.spa)
-#' data(bsrinf.spa)
-#' data(annotation.spa)
+#' data(bsrdm.spa, package = "BulkSignalR")
+#' data(bsrinf.spa, package = "BulkSignalR")
+#' data(annotation.spa, package = "BulkSignalR")
 #' 
 #' thres <- 0.01
 #' bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#' s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#' s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #' scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 #' 
 #' # statistical association with tissue areas based on correlations

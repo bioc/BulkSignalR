@@ -21,9 +21,9 @@ the organism providen in first instance.
 Reset gene names to initial organism providen in first instance
 }
 \examples{
-data(bodyMap.mouse)
-data(bsrinf.mouse)
-data(ortholog.dict)
+data(bodyMap.mouse, package = "BulkSignalR")
+data(bsrinf.mouse, package = "BulkSignalR")
+data(ortholog.dict, package = "BulkSignalR")
 
 #idx <- sample(nrow(bodyMap.mouse), 7500)
 
@@ -39,7 +39,7 @@ data(ortholog.dict)
 #    dictionary = ortholog.dict
 #)
 
-#bsrdm <- prepareDataset(
+#bsrdm <- BSRDataModel(
 #    counts = matrix.expression.human,
 #    species = "mmusculus",
 #    conversion.dict = ortholog.dict
@@ -60,7 +60,7 @@ data(ortholog.dict)
 #reactSubset <- reactSubset[
 #reactSubset$`Reactome name` \%in\% subset,]
 
-#bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
+#bsrinf.mouse <- BSRInference(bsrdm,reference="REACTOME")
 
 bsrinf <- resetToInitialOrganism(bsrinf.mouse, 
 conversion.dict = ortholog.dict)

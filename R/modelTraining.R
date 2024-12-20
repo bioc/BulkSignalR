@@ -621,7 +621,7 @@
 .getEmpiricalNull <- function(obj){
 
     pindices <- .buildPermutationIndices(obj@ncounts)
-    r.ds <- prepareDataset(obj@ncounts,
+    r.ds <- BSRDataModel(obj@ncounts,
         normalize = FALSE, method = "ALREADY",
         min.LR.found = 0
     )
@@ -678,7 +678,7 @@
 .getEmpiricalNullCorrLR <- function(obj) {
 
     pindices <- .buildPermutationIndices(obj@ncounts)
-    r.ds <- prepareDataset(obj@ncounts,
+    r.ds <- BSRDataModel(obj@ncounts,
         normalize = FALSE, method = "ALREADY",
         min.LR.found = 0
     )

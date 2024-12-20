@@ -7,7 +7,7 @@
 \format{
 From the previous object `bsrdm.spa`, 
 you can generate inferences by calling its
-method `initialInference`. 
+method `BSRInference`. 
 The resulting BSR-Inference object is `bsrinf.spa`,
 It contains all the inferred L-R interactions 
 with their associated pathways and corrected p-values.

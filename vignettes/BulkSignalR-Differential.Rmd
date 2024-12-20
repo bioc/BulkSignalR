@@ -60,7 +60,7 @@ We first create a **BSR-DataModel** object as follows :
 ```{r diffmode1,eval=TRUE}
 data(sdc, package = "BulkSignalR")
 normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
+bsrdm <- BSRDataModel(sdc[, -normal])
 ```
 
 As an example here, we generate random values
@@ -89,7 +89,7 @@ We define the cluster comparison and add it.
 
 ```{r diffmode3,eval=TRUE}
 
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
+bsrcc <- BSRClusterComp(bsrdm.comp, colA, colB, stats)
 bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 
 ```
@@ -111,7 +111,7 @@ BulkSignalR:::.SignalR$BulkSignalR_Reactome$`Reactome name` %in% subset,]
 resetPathways(dataframe = reactSubset,
 resourceName = "Reactome")
 
-bsrinf.comp <- initialInference(bsrdm.comp,
+bsrinf.comp <- BSRInferenceComp(bsrdm.comp,
 reference="REACTOME",
 max.pval = 1, 
 "random.example")
@@ -151,7 +151,7 @@ contains the count matrix into a **BSR-DataModelComp** object able to contain
 a list of such cluster pairs comparisons. This function performs this
 promotion, adding an empty list of comparisons.  
 
-`defineClusterComp` is used to define the comparison
+`BSRClusterComp` is used to define the comparison
 between two clusters of samples
 by using defined column indexes of the expression matrix
 that belong to each cluster,

@@ -96,13 +96,13 @@ A single (scores) or side-by-side (reference tissue & scores) plot
 is generated.
 }
 \examples{
-data(bsrinf.spa)
-data(bsrdm.spa)
-data(annotation.spa)
+data(bsrinf.spa, package = "BulkSignalR")
+data(bsrdm.spa, package = "BulkSignalR")
+data(annotation.spa, package = "BulkSignalR")
 
 thres <- 0.01
 bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
 inter <- "{SLIT2} / {GPC1}"

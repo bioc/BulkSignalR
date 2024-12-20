@@ -87,7 +87,7 @@ data(bsrdm, package = "BulkSignalR")
 data(bsrinf, package = "BulkSignalR")
 
 bsrinf.redBP <- reduceToBestPathway(bsrinf)
-bsrsig.redBP <- getLRGeneSignatures(bsrinf,
+bsrsig.redBP <- BSRSignature(bsrinf,
     qval.thres = 0.001
 )
 

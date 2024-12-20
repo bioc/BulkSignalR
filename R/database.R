@@ -13,7 +13,7 @@
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' # Function call already done elsewhere by cacheClear()
+#' print("Function already called elsewhere by cacheClear()")
 #' # createDatabase(onRequest = FALSE)
 createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
     # Default directory

@@ -262,7 +262,7 @@ bubblePlotPathwaysLR <- function(
 #' if(FALSE){
 #' bsrinf.redP <- reduceToPathway(bsrinf)
 #' bsrinf.redPBP <- reduceToBestPathway(bsrinf)
-#' bsrsig.redPBP <- getLRGeneSignatures(bsrinf, qval.thres = 1)
+#' bsrsig.redPBP <- BSRSignature(bsrinf, qval.thres = 1)
 #' pathway1 <- pathways(bsrsig.redPBP)[1]
 #' signatureHeatmaps(
 #' pathway = pathway1,
@@ -473,7 +473,7 @@ signatureHeatmaps <- function(pathway,
 #' data(bsrinf, package = "BulkSignalR")
 #' 
 #' bsrinf.redBP <- reduceToBestPathway(bsrinf)
-#' bsrsig.redBP <- getLRGeneSignatures(bsrinf,
+#' bsrsig.redBP <- BSRSignature(bsrinf,
 #'     qval.thres = 0.001
 #' )
 #'

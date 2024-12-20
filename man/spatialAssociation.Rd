@@ -65,12 +65,12 @@ a global value (R2) is also computed from a multi-linear model (the same as
 what is used for the ANOVA).
 }
 \examples{
-data(bsrdm.spa)
-data(bsrinf.spa)
-data(annotation.spa)
+data(bsrdm.spa, package = "BulkSignalR")
+data(bsrinf.spa, package = "BulkSignalR")
+data(annotation.spa, package = "BulkSignalR")
 thres <- 0.01
 #bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-#s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+#s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 #scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
 # Run in other examples no need to be run again

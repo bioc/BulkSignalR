@@ -5,7 +5,7 @@
 \alias{bsrdm.spa}
 \title{A skinny BSR-dataModel object related to spatial dataset}
 \format{
-An example of an object created by `prepareDataset`
+An example of an object created by `BSRDataModel`
 applied to a subset of a spatial dataset.
 `learnParameters` was also called to get statistical 
 model parameters.

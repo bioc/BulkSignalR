@@ -52,7 +52,7 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @param counts A table or matrix of read counts.
 #' It can also be a SummarizedExperiment or SpatialExperiment
 #' object from which counts matrix are extracted.
-#' See \code{\link{prepareDataset}}.
+#' See \code{\link{BSRDataModel}}.
 #' @param symbol.col The index of the column containing the gene symbols in case
 #' those are not the row names of \code{counts} already. In a
 #' SpatialExperiment object, the index in the dafaframe returned by rowData().
@@ -175,9 +175,9 @@ resetLRdb <- function(db, switch = FALSE) {
 #'   For commodity, it is also possible 
 #'   to provide \code{counts} with the
 #'   gene symbols stored in one of its columns. This column must be specified
-#'   with \code{symbol.col}. In such a case, \code{prepareDataset} will extract
+#'   with \code{symbol.col}. In such a case, \code{BSRDataModel} will extract
 #'   this column and use it to set the row names. Because row names must be
-#'   unique, \code{prepareDataset} will eliminate rows with duplicated gene
+#'   unique, \code{BSRDataModel} will eliminate rows with duplicated gene
 #'   symbols by keeping the rows with maximum average expression. Gene symbol
 #'   duplication may occur in protein coding genes after genome alignment
 #'   due to errors in genome feature annotation files (GTF/GFF), where a handful
@@ -202,9 +202,9 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @examples
 #' data(sdc, package = "BulkSignalR")
 #' idx <- sample(nrow(sdc), 4000)
-#' bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],
+#' bsrdm <- BSRDataModel(sdc[idx, c("N22","SDC17")],
 #' normalize = FALSE,method="UQ")
-prepareDataset <- function(
+BSRDataModel <- function(
     counts, normalize = TRUE, symbol.col = NULL, min.count = 10,
     prop = 0.1, method = c("UQ", "TC"), 
     log.transformed = FALSE, min.LR.found = 80,
@@ -350,7 +350,7 @@ prepareDataset <- function(
         initial.organism = species,
         initial.orthologs = homolog.genes
     )
-} # prepareDataset
+} # BSRDataModel
 
 
 #' @title Orthologs Gene Names

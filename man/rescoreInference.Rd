@@ -48,7 +48,7 @@ A method to re-score an existing BSRInferenceComp object
 }
 \details{
 A BSRInference object should be created by calling
-\code{"\link[=BSRDataModel-class]{initialInference}"}
+\code{"\link[=BSRDataModel-class]{BSRInference}"}
 
 Parameters controlling the estimation
 of the statistical significance of the ligand/receptor/pathway triples
@@ -59,7 +59,7 @@ might be useful to change the initially-provided parameters, in
 which case this method should not be called.
 
 A BSRInferenceComp object should be created by calling
-\code{"\link[=BSRClusterComp-class]{initialInference}"}
+\code{"\link[=BSRInferenceComp-class]{BSRInferenceComp}"}
 }
 \examples{
 data(bsrinf, package = "BulkSignalR")

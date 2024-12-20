@@ -82,6 +82,106 @@ setMethod(
     }
 )
 
+# Constructor ====================================
+
+#' Definition of the comparison between two clusters of samples
+#'
+#' Define the columns of the expression matrix that belong to each cluster,
+#' and store the result of the cluster differences statistical analysis
+#' obtained by an external tool such as edgeR, DESeq2, etc.
+#'
+#' @name BSRClusterComp
+#'
+#' @param obj    A BSRDataModelComp object output by
+#'   \code{\link{setAs}}.
+#' @param col.clusterA   Cluster A column indices.
+#' @param col.clusterB   Cluster B column indices.
+#' @param differential.stats  A data.frame containing statistics about
+#' the differential
+#' analysis cluster A versus B. \code{differentialStats} must contain 
+#' at least the
+#' columns 'pval' (for P-values), 'logFC' for log-fold-changes A/B, and
+#' 'expr' for the expression of the genes in cluster A.
+#'
+#' @details Create a BSRClusterComp object describing a comparison
+#' of two clusters of columns taken from the expression matrix
+#' in the BSRDataModelComp object \code{obj}. Such a cluster comparison
+#' description is the basis for inferring LRIs from differential
+#' expression P-values instead of correlation analysis.
+#'
+#' The rows of \code{differentialStats} must be in the same order 
+#' as those of the count
+#' matrix in \code{obj}. Alternatively, \code{differentialStats}
+#' rows can be named and a 1-1 correspondence must exist between these names
+#' and those of the count matrix.
+#'
+#' @return A BSRClusterComp object.
+#'
+#' @export
+#'
+#' @examples
+#' # prepare data
+#' data(sdc, package = "BulkSignalR")
+#' normal <- grep("^N", names(sdc))
+#' bsrdm <- BSRDataModel(sdc[, -normal])
+#'
+#' # define the comparison
+#' bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
+#' colA <- as.integer(1:3)
+#' colB <- as.integer(12:15)
+#' n <- nrow(ncounts(bsrdm.comp))
+#' stats <- data.frame(
+#'     pval = runif(n), logFC = rnorm(n, 0, 2),
+#'     expr = runif(n, 0, 10)
+#' )
+#' rownames(stats) <- rownames(ncounts(bsrdm.comp))
+#' bsrcc <- BSRClusterComp(bsrdm.comp, colA, colB, stats)
+#'
+#' @importFrom methods new
+BSRClusterComp <- function(obj,
+    col.clusterA, 
+    col.clusterB, 
+    differential.stats) {
+    if (!is.integer(col.clusterA)) {
+        stop("col.clusterA must contain integer indices")
+    }
+    if (!is.integer(col.clusterB)) {
+        stop("col.clusterB must contain integer indices")
+    }
+    if (length(intersect(col.clusterA, col.clusterB)) > 0) {
+        stop("col.clusterA and col.clusterB must be disjoint")
+    }
+    if (any(col.clusterA < 1 | col.clusterA > ncol(ncounts(obj)))) {
+        stop("col.clusterA indices must fall in [1; ncol(ncounts)]")
+    }
+    if (any(col.clusterB < 1 | col.clusterB > ncol(ncounts(obj)))) {
+        stop("col.clusterB indices must fall in [1; ncol(ncounts)]")
+    }
+    if (!is.data.frame(differential.stats)) {
+        stop("differential.stats must be a data.frame")
+    }
+    if (!all(c("pval", "logFC", "expr") %in% names(differential.stats))) {
+        stop("differential.stats data.frame must contain",
+            " columns named 'pval', 'logFC', and 'expr'")
+    }
+    if (nrow(differential.stats) != nrow(ncounts(obj))) {
+        stop("differential.stats and ncounts(obj) number of rows differ")
+    }
+    if (!is.null(rownames(differential.stats)) &&
+        (sum(rownames(differential.stats) %in% 
+        rownames(ncounts(obj))) != nrow(differential.stats))) {
+        stop("differential.stats rownames defined",
+            " but do not all match ncounts(obj)")
+    }
+    if (is.null(rownames(differential.stats))) {
+        rownames(differential.stats) <- rownames(ncounts(obj))
+    }
+
+    new("BSRClusterComp", col.clusterA = col.clusterA, 
+    col.clusterB = col.clusterB, 
+    differential.stats = differential.stats)
+} # BSRClusterComp
+
 
 # Accessors & setters ====================================
 

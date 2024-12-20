@@ -84,6 +84,170 @@ setMethod(
     }
 )
 
+# Constructor ========================================================
+
+#' Inference of ligand-receptor interactions
+#'
+#' Computes putative LR interactions along with their statistical confidence.
+#' In this initial inference, all the relevant pathways are reported,
+#' see reduction functions to reduce this list.
+#'
+#' @name BSRInference
+#'
+#' @param obj         A BSRDataModel output by \code{\link{BSRDataModel}} with
+#' statistical model parameters trained by
+#' \code{"\link[=BSRDataModel-class]{learnParameters}"}
+#'
+#' method.
+#' @param rank.p        A number between 0 and 1 defining the rank of the last
+#' considered target genes.
+#' @param min.cor         The minimum Spearman correlation required between
+#' the ligand and the receptor.
+#' @param fdr.proc      The procedure for adjusting P-values according to
+#' \code{\link[multtest]{mt.rawp2adjp}}.
+#' @param reference       Which pathway reference should be used ("REACTOME"
+#'   for Reactome, "GOBP" for GO Biological Process,
+#'   or "REACTOME-GOBP" for both).
+#' @param max.pw.size     Maximum pathway size to consider from the pathway
+#'   reference.
+#' @param min.pw.size     Minimum pathway size to consider from the pathway
+#'   reference.
+#' @param min.positive    Minimum number of target genes to be found in a given
+#'   pathway.
+#' @param with.complex    A logical indicating whether receptor co-complex
+#'   members should be included in the target genes.
+#' @param restrict.pw     A list of pathway IDs to restrict the application of
+#'   the function.
+#' @param restrict.genes  A list of gene symbols that restricts ligands and
+#'   receptors.
+#' @param use.full.network  A logical to avoid limiting the reference network
+#'   to the detected genes and use the whole reference network.
+#'
+#' @details Perform the initial ligand-receptor inference. Initial means that
+#' no reduction is applied. All the (ligand, receptor, downstream pathway)
+#' triples are reported, i.e., a given LR pair may appear multiple times
+#' with different pathways downstream the receptor. Specific reduction
+#' functions are available from the package to operate subsequent
+#' simplifications based on the BSRInference object created by the initial
+#' inference.
+#'
+#' Parameters defining minimum/maximum pathway sizes, etc. are set to NULL
+#' by default, meaning that their values will be taken from what was set
+#' during the training of the statistical model with
+#' \code{"\link[=BSRDataModel-class]{learnParameters}"}
+#'
+#' To use different
+#' values at the time of inference sounds like a bad idea, although this
+#' could be used to explore without retraining the underlying model.
+#' Retraining of the model with adjusted parameters is advised following
+#' such an exploration.
+#'
+#' @return A BSRInference object with initial inferences set.
+#'
+#' @export
+#'
+#' @examples
+#' data(bsrdm, package = "BulkSignalR")
+#' data(immune.signatures, package = "BulkSignalR")
+#' 
+#' # We use a subset of the reference to speed up
+#' # inference in the context of the example.
+#' 
+#' reactSubset <- getResource(resourceName = "Reactome",
+#' cache = FALSE)
+#' 
+#' subset <- c("REACTOME_BASIGIN_INTERACTIONS",
+#' "REACTOME_SYNDECAN_INTERACTIONS",
+#' "REACTOME_ECM_PROTEOGLYCANS",
+#' "REACTOME_CELL_JUNCTION_ORGANIZATION")
+#' 
+#' reactSubset <- reactSubset[
+#' reactSubset$`Reactome name` %in% subset,]
+#' 
+#' resetPathways(dataframe = reactSubset,
+#' resourceName = "Reactome")
+#' 
+#' bsrinf <- BSRInference(bsrdm,
+#'     min.cor = 0.2,restrict.genes=immune.signatures$gene,
+#'     reference="REACTOME")
+#' @importFrom methods new
+BSRInference <- function(obj, rank.p = 0.55,
+    min.cor = 0.25, restrict.genes = NULL,
+    reference = c("REACTOME-GOBP", "REACTOME", "GOBP"),
+    max.pw.size = NULL, min.pw.size = NULL, min.positive = NULL,
+    use.full.network = FALSE, restrict.pw = NULL,
+    with.complex = NULL, fdr.proc = c(
+        "BH", "Bonferroni", "Holm", "Hochberg",
+        "SidakSS", "SidakSD", "BY", "ABH", "TSBH")) {
+
+    if (is.null(max.pw.size)) {
+        max.pw.size <- parameters(obj)$max.pw.size
+    }
+    if (is.null(min.pw.size)) {
+        min.pw.size <- parameters(obj)$min.pw.size
+    }
+    if (is.null(min.positive)) {
+        min.positive <- parameters(obj)$min.positive
+    }
+    if (is.null(with.complex)) {
+        with.complex <- parameters(obj)$with.complex
+    }
+    if (is.null(use.full.network)) {
+        use.full.network <- parameters(obj)$use.full.network
+    }
+    reference <- match.arg(reference)
+    fdr.proc <- match.arg(fdr.proc)
+    if (rank.p < 0 || rank.p > 1) {
+        stop("rank.p must lie in [0;1]")
+    }
+
+    inf.param <- list()
+    inf.param$min.corr <- min.cor
+    inf.param$restrict.genes <- restrict.genes
+    lr <- .getCorrelatedLR(obj, min.cor = min.cor, 
+        restrict.genes = restrict.genes)
+
+    inf.param$reference <- reference
+    inf.param$min.pw.size <- min.pw.size
+    inf.param$max.pw.size <- max.pw.size
+    inf.param$with.complex <- with.complex
+    inf.param$min.positive <- min.positive
+    inf.param$use.full.network <- use.full.network
+    inf.param$restrict.pw <- restrict.pw
+    pairs <- .checkReceptorSignaling(obj, lr,
+        reference = reference,
+        min.pw.size = min.pw.size, max.pw.size = max.pw.size,
+        min.positive = min.positive, with.complex = with.complex,
+        use.full.network = use.full.network, restrict.pw = restrict.pw
+    )
+
+    inf.param$fdr.proc <- fdr.proc
+    inf.param$rank.p <- rank.p
+    inter <- .pValuesLR(pairs, 
+        parameters(obj), 
+        rank.p = rank.p, 
+        fdr.proc = fdr.proc)
+
+    ligands <- strsplit(inter$L, ";")
+    receptors <- strsplit(inter$R, ";")
+    tg <- strsplit(inter$target.genes, ";")
+    tgcorr <- lapply(
+        strsplit(inter$target.corr, ";"),
+        function(x) as.numeric(x)
+    )
+    inf.param$ligand.reduced <- FALSE
+    inf.param$receptor.reduced <- FALSE
+    inf.param$pathway.reduced <- FALSE
+
+    new("BSRInference",
+        LRinter = inter[, c(
+            "L", "R", "pw.id", "pw.name", "pval", "qval",
+            "LR.corr", "rank", "len", "rank.corr"
+        )], ligands = ligands,
+        receptors = receptors, tg.genes = tg, tg.corr = tgcorr,
+        inf.param = inf.param
+    )
+} # BSRInference
 
 # Accessors & setters ========================================================
 
@@ -299,7 +463,7 @@ setGeneric("rescoreInference", signature="obj",
 #'   \code{\link[multtest]{mt.rawp2adjp}}.
 #'
 #' @details A BSRInference object should be created by calling
-#' \code{"\link[=BSRDataModel-class]{initialInference}"}
+#' \code{"\link[=BSRDataModel-class]{BSRInference}"}
 #'
 #' Parameters controlling the estimation
 #' of the statistical significance of the ligand/receptor/pathway triples
@@ -770,86 +934,6 @@ setMethod("reduceToPathway", "BSRInference", function(obj) {
 }) # reduceToPathway
 
 
-# Obtain gene signatures from a BSRInference object ============================
-
-
-setGeneric("getLRGeneSignatures", signature="obj",
-    function(obj,...) standardGeneric("getLRGeneSignatures")
-)
-#' Extract gene signatures of LR pair activity
-#'
-#' Obtains gene signatures reflecting ligand-receptor as well as
-#' receptor downstream activity to
-#' score ligand-receptor pairs across samples subsequently with
-#' \code{"\link[=BSRInference-class]{scoreLRGeneSignatures}"}
-#'
-#' @name getLRGeneSignatures
-#' @aliases getLRGeneSignatures,BSRInference-method
-#'
-#' @param obj    BSRinference object.
-#' @param pval.thres    P-value threshold.
-#' @param qval.thres    Q-value threshold.
-#' @param with.pw.id    A logical indicating whether the ID of a pathway
-#' should be concatenated to its name.
-#' @return A BSRSignature object containing a gene signature for each triple
-#' ligand-receptor pair. A reduction to the best pathway
-#' for each pair is automatically performed and the gene signature is
-#' comprised of the ligand, the receptor,
-#' and all the target genes with rank equal or superior to \code{pairs$rank}.
-#' @export
-#' @examples
-#' data(bsrinf, package = "BulkSignalR")
-#' 
-#' bsrinf.redP <- reduceToPathway(bsrinf)
-#' bsrsig.redP <- getLRGeneSignatures(bsrinf, qval.thres = 0.001)
-#'
-#' @importFrom foreach %do% %dopar%
-#' @importFrom methods new
-setMethod("getLRGeneSignatures", "BSRInference", function(obj,
-    pval.thres = NULL, qval.thres = NULL, with.pw.id = FALSE) {
-    if (is.null(pval.thres) && is.null(qval.thres)) {
-        stop("Either a P- or a Q-value threshold must be provided")
-    }
-
-    # reduce and select
-    obj <- reduceToBestPathway(obj)
-    pairs <- LRinter(obj)
-    if (!is.null(pval.thres)) {
-        selected <- pairs$pval <= pval.thres
-    } else {
-        selected <- pairs$qval <= qval.thres
-    }
-
-    # obtain the signature object
-    pairs <- pairs[selected, ]
-    ligands <- ligands(obj)[selected]
-    receptors <- receptors(obj)[selected]
-    if (with.pw.id) {
-        pathways <- paste0(pairs$pw.id, ": ", pairs$pw.name)
-    } else {
-        pathways <- pairs$pw.name
-    }
-    tg.genes <- tgGenes(obj)[selected]
-    tg.corrs <- tgCorr(obj)[selected]
-
-    for (i in seq_len(nrow(pairs))) {
-        tg <- tg.genes[[i]]
-        tg.genes[[i]] <- tg[pairs$rank[i]:length(tg)]
-
-        tc <- tg.corrs[[i]]
-        tg.corrs[[i]] <- tc[pairs$rank[i]:length(tc)]
-    }
-
-    new("BSRSignature",
-        ligands = ligands,
-        receptors = receptors, 
-        tg.genes = tg.genes, 
-        tg.corr = tg.corrs,
-        pathways =  pathways
-    )
-}) # getLRGeneSignatures
-
-
 # Reset gene names to initial organism
 # ====================================
 
@@ -871,9 +955,9 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #'
 #' @export
 #' @examples
-#' data(bodyMap.mouse)
-#' data(bsrinf.mouse)
-#' data(ortholog.dict)
+#' data(bodyMap.mouse, package = "BulkSignalR")
+#' data(bsrinf.mouse, package = "BulkSignalR")
+#' data(ortholog.dict, package = "BulkSignalR")
 #' 
 #' #idx <- sample(nrow(bodyMap.mouse), 7500)
 #' 
@@ -889,7 +973,7 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' #    dictionary = ortholog.dict
 #' #)
 #'
-#' #bsrdm <- prepareDataset(
+#' #bsrdm <- BSRDataModel(
 #' #    counts = matrix.expression.human,
 #' #    species = "mmusculus",
 #' #    conversion.dict = ortholog.dict
@@ -910,7 +994,7 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #' #reactSubset <- reactSubset[
 #' #reactSubset$`Reactome name` %in% subset,]
 #' 
-#' #bsrinf.mouse <- initialInference(bsrdm,reference="REACTOME")
+#' #bsrinf.mouse <- BSRInference(bsrdm,reference="REACTOME")
 #' 
 #' bsrinf <- resetToInitialOrganism(bsrinf.mouse, 
 #' conversion.dict = ortholog.dict)

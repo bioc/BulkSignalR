@@ -49,7 +49,7 @@ data(bsrinf, package = "BulkSignalR")
 if(FALSE){
 bsrinf.redP <- reduceToPathway(bsrinf)
 bsrinf.redPBP <- reduceToBestPathway(bsrinf)
-bsrsig.redPBP <- getLRGeneSignatures(bsrinf, qval.thres = 1)
+bsrsig.redPBP <- BSRSignature(bsrinf, qval.thres = 1)
 pathway1 <- pathways(bsrsig.redPBP)[1]
 signatureHeatmaps(
 pathway = pathway1,

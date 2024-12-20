@@ -93,13 +93,13 @@ in a PDF. Not limited to BulkSignalR gene signature scores.
 A PDF file is created that contains the index.
 }
 \examples{
-data(bsrdm.spa)
-data(bsrinf.spa)
-data(annotation.spa)
+data(bsrdm.spa, package = "BulkSignalR")
+data(bsrinf.spa, package = "BulkSignalR")
+data(annotation.spa, package = "BulkSignalR")
 
 thres <- 0.01
 bsrinf.red <- reduceToBestPathway(bsrinf.spa)
-s.red  <- getLRGeneSignatures(bsrinf.red, qval.thres=thres)
+s.red  <- BSRSignature(bsrinf.red, qval.thres=thres)
 scores.red <- scoreLRGeneSignatures(bsrdm.spa,s.red)
 
 # generate visual index on disk in pdf file

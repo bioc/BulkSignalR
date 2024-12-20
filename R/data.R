@@ -13,7 +13,7 @@
 #' Output from the `learnParameters` function to get
 #' BulkSignalR statistical model parameters.
 #' 
-#' @format An example of an object created by `prepareDataset`
+#' @format An example of an object created by `BSRDataModel`
 #' applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and
 #' 10 000 genes sampled (seed set to 123)
 #' `learnParameters` was also called to get statistical 
@@ -25,7 +25,7 @@
 #'
 #' From the previous object `bsrdm`, 
 #' you can generate inferences by calling its
-#' method `initialInference`. 
+#' method `BSRInference`. 
 #' The resulting BSR-Inference object is `bsrinf`,
 #' It contains all the inferred L-R interactions 
 #' with their associated pathways and corrected p-values.
@@ -67,7 +67,7 @@
 #' BulkSignalR statistical model parameters for a subset
 #' of a spatial dataset.
 #' 
-#' @format An example of an object created by `prepareDataset`
+#' @format An example of an object created by `BSRDataModel`
 #' applied to a subset of a spatial dataset.
 #' `learnParameters` was also called to get statistical 
 #' model parameters.
@@ -82,7 +82,7 @@
 #' 
 #' @format From the previous object `bsrdm.spa`, 
 #' you can generate inferences by calling its
-#' method `initialInference`. 
+#' method `BSRInference`. 
 #' The resulting BSR-Inference object is `bsrinf.spa`,
 #' It contains all the inferred L-R interactions 
 #' with their associated pathways and corrected p-values.

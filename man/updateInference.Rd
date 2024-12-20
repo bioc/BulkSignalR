@@ -89,7 +89,7 @@ prior to rescoring for an existing BSRInferenceComp object
 }
 \details{
 A BSRInferenceComp object should be created by calling
-\code{"\link[=BSRClusterComp-class]{initialInference}"}
+\code{"\link[=BSRInferenceComp-class]{BSRInferenceComp}"}
 }
 \examples{
 data(bsrdm.comp, package = "BulkSignalR")
@@ -110,7 +110,7 @@ rownames(stats) <- rownames(ncounts(bsrdm.comp))
 stats$pval <- stats$pval / 100
 stats$logFC <- stats$logFC + 0.5
 
-bsrcc.2 <- defineClusterComp(bsrdm.comp, colA, colB, stats)
+bsrcc.2 <- BSRClusterComp(bsrdm.comp, colA, colB, stats)
 bsrinf.updated <- updateInference(bsrinf.comp, bsrcc.2,
 max.pval = 1, min.logFC = 0.1)
 }

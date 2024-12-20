@@ -65,7 +65,7 @@ assignCellTypesToInteractions <- function(bsrdm, bsrinf, ct.scores,
     bsrinf.red <- reduceToBestPathway(bsrinf)
     inter <- LRinter(bsrinf.red)
     inter <- inter[inter$qval <= qval.thres, ]
-    bsrsig <- getLRGeneSignatures(bsrinf.red, qval.thres = qval.thres)
+    bsrsig <- BSRSignature(bsrinf.red, qval.thres = qval.thres)
     lr.scores <- scoreLRGeneSignatures(bsrdm, bsrsig)
 
     # check order

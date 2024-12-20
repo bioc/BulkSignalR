@@ -5,7 +5,7 @@
 \alias{bsrdm}
 \title{A skinny BSR-dataModel object related to sdc.}
 \format{
-An example of an object created by `prepareDataset`
+An example of an object created by `BSRDataModel`
 applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and
 10 000 genes sampled (seed set to 123)
 `learnParameters` was also called to get statistical 

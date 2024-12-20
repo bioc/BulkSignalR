@@ -27,7 +27,7 @@ comparisons contained in \code{obj}.
 # prepare data
 data(sdc, package = "BulkSignalR")
 normal <- grep("^N", names(sdc))
-bsrdm <- prepareDataset(sdc[, -normal])
+bsrdm <- BSRDataModel(sdc[, -normal])
 
 # define the comparison
 bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
@@ -39,7 +39,7 @@ stats <- data.frame(
     expr = runif(n, 0, 10)
 )
 rownames(stats) <- rownames(ncounts(bsrdm.comp))
-bsrcc <- defineClusterComp(bsrdm.comp, colA, colB, stats)
+bsrcc <- BSRClusterComp(bsrdm.comp, colA, colB, stats)
 
 bsrdm.comp <- addClusterComp(bsrdm.comp, bsrcc, "random.example")
 bsrdm.comp <- removeClusterComp(bsrdm.comp, "random.example")

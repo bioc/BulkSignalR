@@ -13,7 +13,7 @@ data(bsrinf)
 \description{
 From the previous object `bsrdm`, 
 you can generate inferences by calling its
-method `initialInference`. 
+method `BSRInference`. 
 The resulting BSR-Inference object is `bsrinf`,
 It contains all the inferred L-R interactions 
 with their associated pathways and corrected p-values.

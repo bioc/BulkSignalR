@@ -104,7 +104,7 @@ Estimates the model parameters that are stored in the
   different parameters though, unless \code{quick} was set to \code{TRUE}).
 
 Note that since the introduction of the use.full.network parameter
-(April 29, 2024) in the initialInference method parameters,
+(April 29, 2024) in the BSRInference method parameters,
 the pathway sizes are always computed before potential
 intersection with the observed data (use.full.network set to FALSE) for
 consistency. Accordingly, the minimum and maximum pathway default values
@@ -115,7 +115,7 @@ pathways.
 \examples{
 data(sdc, package = "BulkSignalR")
 idx <- sample(nrow(sdc), 4000)
-bsrdm <- prepareDataset(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
+bsrdm <- BSRDataModel(sdc[idx, c("N22","SDC17")],min.LR.found = 20)
 bsrdm <- learnParameters(bsrdm, n.rand.LR = 1L,
 verbose=FALSE,quick=TRUE)
 }

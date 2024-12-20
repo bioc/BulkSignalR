@@ -69,6 +69,79 @@ setMethod("show", "BSRSignature", function(object) {
     )[seq_len(min(5, length(object@ligands))), ])
 })
 
+# Constructor ========================================================
+
+#' Extract gene signatures of LR pair activity
+#'
+#' Obtains gene signatures reflecting ligand-receptor as well as
+#' receptor downstream activity to
+#' score ligand-receptor pairs across samples subsequently with
+#' \code{"\link[=BSRInference-class]{scoreLRGeneSignatures}"}
+#'
+#' @name BSRSignature
+#'
+#' @param obj    BSRinference object.
+#' @param pval.thres    P-value threshold.
+#' @param qval.thres    Q-value threshold.
+#' @param with.pw.id    A logical indicating whether the ID of a pathway
+#' should be concatenated to its name.
+#' @return A BSRSignature object containing a gene signature for each triple
+#' ligand-receptor pair. A reduction to the best pathway
+#' for each pair is automatically performed and the gene signature is
+#' comprised of the ligand, the receptor,
+#' and all the target genes with rank equal or superior to \code{pairs$rank}.
+#' @export
+#' @examples
+#' data(bsrinf, package = "BulkSignalR")
+#' 
+#' bsrinf.redP <- reduceToPathway(bsrinf)
+#' bsrsig.redP <- BSRSignature(bsrinf, qval.thres = 0.001)
+#'
+#' @importFrom foreach %do% %dopar%
+#' @importFrom methods new
+BSRSignature <- function(obj,
+    pval.thres = NULL, qval.thres = NULL, with.pw.id = FALSE) {
+    if (is.null(pval.thres) && is.null(qval.thres)) {
+        stop("Either a P- or a Q-value threshold must be provided")
+    }
+
+    # reduce and select
+    obj <- reduceToBestPathway(obj)
+    pairs <- LRinter(obj)
+    if (!is.null(pval.thres)) {
+        selected <- pairs$pval <= pval.thres
+    } else {
+        selected <- pairs$qval <= qval.thres
+    }
+
+    # obtain the signature object
+    pairs <- pairs[selected, ]
+    ligands <- ligands(obj)[selected]
+    receptors <- receptors(obj)[selected]
+    if (with.pw.id) {
+        pathways <- paste0(pairs$pw.id, ": ", pairs$pw.name)
+    } else {
+        pathways <- pairs$pw.name
+    }
+    tg.genes <- tgGenes(obj)[selected]
+    tg.corrs <- tgCorr(obj)[selected]
+
+    for (i in seq_len(nrow(pairs))) {
+        tg <- tg.genes[[i]]
+        tg.genes[[i]] <- tg[pairs$rank[i]:length(tg)]
+
+        tc <- tg.corrs[[i]]
+        tg.corrs[[i]] <- tc[pairs$rank[i]:length(tc)]
+    }
+
+    new("BSRSignature",
+        ligands = ligands,
+        receptors = receptors, 
+        tg.genes = tg.genes, 
+        tg.corr = tg.corrs,
+        pathways =  pathways
+    )
+} # BSRSignature
 
 # Accessors & setters ========================================================
 

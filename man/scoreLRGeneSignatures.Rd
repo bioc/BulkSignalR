@@ -67,7 +67,7 @@ data(bsrdm, package = "BulkSignalR")
 data(bsrinf, package = "BulkSignalR")
 
 bsrinf.redBP <- reduceToBestPathway(bsrinf)
-bsrsig.redBP <- getLRGeneSignatures(bsrinf.redBP, qval.thres = 0.001)
+bsrsig.redBP <- BSRSignature(bsrinf.redBP, qval.thres = 0.001)
 res <-scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
     name.by.pathway = FALSE
 )
@@ -78,7 +78,7 @@ data(bsrinf.comp, package = "BulkSignalR")
 # reduction
 bsrinf.red <- reduceToBestPathway(bsrinf.comp)
 # signature extraction and scoring
-bsrsig.red <- getLRGeneSignatures(bsrinf.red, qval.thres = 1e-6)
+bsrsig.red <- BSRSignatureComp(bsrinf.red, qval.thres = 1e-6)
 scores.red <- scoreLRGeneSignatures(bsrdm.comp, bsrsig.red,
     name.by.pathway = TRUE, rownames.LRP = TRUE
 )

@@ -18,7 +18,7 @@ is given as parameter.}
 \item{counts}{A table or matrix of read counts.
 It can also be a SummarizedExperiment or SpatialExperiment
 object from which counts matrix are extracted.
-See \code{\link{prepareDataset}}.}
+See \code{\link{BSRDataModel}}.}
 
 \item{symbol.col}{The index of the column containing the gene symbols in case
 those are not the row names of \code{counts} already. In a
