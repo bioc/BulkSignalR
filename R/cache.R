@@ -37,10 +37,10 @@
     }
 
     config <- httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
-
+    
     # if fname="exact" remove the unique identifier
     BiocFileCache::bfcadd(bfc, rname = resourceName,
-        config = config, fpath = fpath, download = download)
+        config = config$options, fpath = fpath, download = download)
     
     cli::cli_alert_info("{.val {resourceName}} added to cache with success.")
 
