@@ -23,6 +23,7 @@ Imports:
     BiocFileCache,
     httr,
     DBI,
+    RCurl,
     RSQLite,
     cli,
     curl,

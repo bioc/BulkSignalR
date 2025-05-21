@@ -1,3 +1,72 @@
+#' Check server is up
+#'
+#' @return Returns `NULL`, invisibly. 
+#'
+#' @importFrom RCurl url.exists
+#' @importFrom curl has_internet
+#' @importFrom cli cli_alert_danger cli_alert_info
+.testRemoteServer <- function() {
+
+    conf <- list("ssl.verifypeer" = 0L,
+    "ssl.verifyhost" = 0L)
+
+    hasInternet <- tryCatch(expr={curl::has_internet()}, 
+        error = FALSE)
+
+    if(hasInternet){
+
+        if(!url.exists(.SignalR$BulkSignalR_DB_URL,
+            .opts = conf))
+        {
+        cli::cli_alert_danger(
+            "Remote server is down. 
+            {.val {(.SignalR$BulkSignalR_CORE_URL)}}"    
+        )
+        stop()
+        }
+    } 
+
+    return(invisible(NULL))
+
+}
+
+#' Check there is a well formated cache
+#'
+#' @return Returns `NULL`, invisibly.
+#'
+#' @importFrom RCurl url.exists
+#' @importFrom curl has_internet
+#' @importFrom cli cli_alert_danger cli_alert_info
+.testCacheFiles <- function() {
+
+    hasInternet <- tryCatch(expr={curl::has_internet()}, 
+        error = FALSE)
+
+    files<-list.files(.SignalR$BulkSignalR_CACHEDIR,
+        full.names = TRUE, recursive = TRUE)
+    
+    vecSizes <- vapply(files, file.size, numeric(1))
+    totSize <- sum(vecSizes)
+
+    if(!hasInternet & totSize ==0){
+        mess_info <- paste0("You need an internet connection",
+    " to download cache files.")
+        cli::cli_alert_danger(mess_info)
+        stop()
+    }
+
+    if(totSize !=0 & totSize < 5000000){
+        mess_info <- paste0("{(.SignalR$BulkSignalR_CACHEDIR)}",
+        " is corrupted. It will be deleted and downloaded again.")
+
+        cli::cli_alert_info(mess_info)
+    
+        unlink(.SignalR$BulkSignalR_CACHEDIR, recursive=TRUE)
+    }
+
+    return(invisible(NULL))
+}
+
 #' Modify LRdb database
 #'
 #' User can provide a data frame with 2 columns named

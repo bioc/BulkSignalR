@@ -7,11 +7,16 @@
     cacheDir <- tools::R_user_dir("BulkSignalR", which="cache")
     assign("BulkSignalR_CACHEDIR", cacheDir, envir = .SignalR)
 
-    url <- "https://partage-dev.montp.inserm.fr:9192"
+    url <- "https://partage-dev.montp.inserm.fr:9192/CBSB/"
     urlDatabase <- paste0(url,
-        "/CBSB/SignalR/database/SignalR.db")
+        "SignalR/database/SignalR.db")
+    assign("BulkSignalR_CORE_URL", url, envir = .SignalR)
+
     assign("BulkSignalR_DB_URL", urlDatabase, envir = .SignalR)
 
+    .testRemoteServer()
+    .testCacheFiles()
+    
     createDatabase(onRequest = FALSE)
 
     BulkSignalR_LRdb <- getInteractions()
@@ -22,11 +27,11 @@
     ##   Resource Cache Files   ###
     ################################
     urlGo <- paste0(url,
-        "/CBSB/SignalR/resources/gobp.rds")
+        "SignalR/resources/gobp.rds")
     urlReactome <- paste0(url,
-        "/CBSB/SignalR/resources/reactome.rds")
+        "SignalR/resources/reactome.rds")
     urlNetwork <- paste0(url,
-        "/CBSB/SignalR/resources/Network.rds")
+        "SignalR/resources/Network.rds")
 
     assign("BulkSignalR_GO_URL", urlGo, 
     envir = .SignalR)
