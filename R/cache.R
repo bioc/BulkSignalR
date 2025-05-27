@@ -16,7 +16,7 @@
 #' @return Returns `NULL`, invisibly. 
 #' 
 #' @import BiocFileCache
-#' @import httr
+#' @import httr2 
 #' @keywords internal
 .cacheAdd <- function(fpath, cacheDir, resourceName,
     verbose = FALSE, download = TRUE) {
@@ -36,7 +36,9 @@
         stop("Please clear your cache with `cacheClear()`!", "\n")
     }
 
-    config <- httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
+    req <- httr2::request(fpath)
+    ssl_opts <- list(ssl_verifypeer = 0L, ssl_verifyhost = 0L) 
+    config <- httr2::req_options(req,!!!ssl_opts)
     
     # if fname="exact" remove the unique identifier
     BiocFileCache::bfcadd(bfc, rname = resourceName,
@@ -203,7 +205,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #'
 #' @importFrom cli cli_alert_danger cli_alert cli_alert_info
 #' @importFrom cli cli_inform
-#' @import BiocFileCache httr
+#' @import BiocFileCache httr2
 #' @importFrom curl has_internet
 #' @return Returns `NULL`, invisibly. 
 #'
@@ -212,6 +214,8 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #' cacheVersion()
 cacheVersion <- function(dir = c("both", "resources", "database")) {
     dir <- match.arg(dir)
+    # bypass ssl
+    config <- list(ssl_verifypeer = 0L, ssl_verifyhost = 0L)
 
     if (!dir %in% c("resources", "database", "both")) {
         stop("Only `resources`, `database` or `both` are valid keywords.")
@@ -231,8 +235,6 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
         stop("- Location: ", cacheDir, "\n")    
     }
 
-    config <- httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
-
     word <- ifelse(dir == "resources", "have", "has")
     word2 <- ifelse(dir == "resources", "are", "is")
 
@@ -243,7 +245,7 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
 
         bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
 
-        if (any(BiocFileCache::bfcneedsupdate(bfc))) {
+        if (any(BiocFileCache::bfcneedsupdate(bfc,config=config))) {
             cli::cli_alert("Remote {.val {dir}} {word} been updated.\n")
             mess_info <- paste0("To update locally,",
                 " clear your cache with cacheClear({.var {dir}})\n")
@@ -260,7 +262,9 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
         " remote update of {.val {dir}} won't be checked.")
         cli::cli_alert_info(mess_info)
     }
+
     return(invisible(NULL))
+
 }
 
 ####################################################
