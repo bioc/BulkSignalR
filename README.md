@@ -32,11 +32,9 @@ class definitions and functions to adhere to Bioconductor standards. An overview
 of changes in BulkSignalR usage compared to early versions is provided in the
 companion project: BulkSignalR_companion.
 
-\
 
 <img   src="man/figures/workflow.png" align="center" width="85%" height="85%" />
 
-\ 
 
 ## Installation
 
