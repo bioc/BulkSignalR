@@ -34,7 +34,7 @@ companion project: BulkSignalR_companion.
 
 
 <img   src="man/figures/workflow.png" align="center" width="85%" height="85%" />
-
+# 
 
 ## Installation
 
