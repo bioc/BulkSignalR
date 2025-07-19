@@ -38,24 +38,32 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 library(BulkSignalR)
 ```
 
-## Differential mode 
+## Cluster-based differential analysis
 
-`BulkSignalR` now allows the user to request different pairwise
-comparisons from a large cohort of samples.  
+By default, `BulkSignalR` inference of L-R interactions relies on correlation
+analysis across all the samples. That is, a putative L-R interaction is assessed
+for coherent expression of the ligand, the receptor, and target genes in a
+pathway below receptor across all the samples.
 
-In this mode, ligand-receptor interactions are inferred based on gene or protein
-regulation-associated P-values when comparing two clusters of samples. 
+Alternatively, it is possible to define sample clusters based on an independent
+analysis (outside of `BulkSignalR`) to group similar samples. Based on cluster
+definitions, it is for instance possible to assess whether L-R interactions are
+significantly stronger in a cluster compared to all the samples, to all the
+samples but the chosen cluster, or in comparison with another cluster.
+In practice, the user must simply provide a table of differential gene or
+protein expression analysis that is relevant for the selected comparison.
 
-The user must first perform a differential expression analysis 
-(using the tool of his choice as DESeq2, EdgeR...) between a 
-pair of sample clusters.
+In this mode, L-R interactions are inferred based on gene or protein
+regulation-associated P-values instead of P-values resulting from the
+correlation analysis in the default mode. As already stated, differential
+P-value estimations are left to the user to compute. With bulk data, commonly
+used libraries such as `DESeq2`, `EdgeR`, or `limma` constitute obvious options.
 
-
-In the next chunk of code, we describe an application to 
+In the next chunk of code, we illustrate the differential mode using 
 Salivary Duct Carcinoma (SDC) samples where we compare two clusters 
 of patients.  
 
-We first create a **BSR-DataModel** object as follows : 
+We first create a **BSRDataModel** object as follows : 
 
 ```{r diffmode1,eval=TRUE}
 data(sdc, package = "BulkSignalR")
@@ -120,52 +128,40 @@ head(LRinter(bsrinf.comp))
 
 ```  
 
+\
+
 ##  Technical notes
 
-Three previously described S4 objects 
-(BSR-DataModel, BSR-Inference, BSR-Signature) 
-have been extented :  
+The three basic `BulkSignalR` S4 classes 
+BSRDataModel, BSRInference, and BSRSignature 
+were derived into new classes to add the functionalities required by the
+differential mode:  
 
-\
-    
+* **BSRDataModelComp**, denoted here as `bsrdm.comp` is a daughter class of 
+**BSRDataModel**, previously denoted `bsrdm`  
+* **BSRInferenceComp**, denoted here as `bsrinf.comp` is a daughter class of
+**BSRInference**, previously denoted `bsrinf` 
+* **BSRSignatureComp**, denoted here as `bsrsig.comp` is a daughter class of 
+**BSRSignature**, previously denoted `bsrsig` 
 
-* **BSR-DataModelComp**, denoted `bsrdm.comp` is an extension from 
-**BSR-DataModel**, previously denoted `bsrdm`  
-* **BSR-InferenceComp**, denoted `bsrinf.comp` is an extension from 
-**BSR-Inference**, previously denoted `bsrinf` 
-* **BSR-SignatureComp**, denoted `bsrsig.comp` is an extension from 
-**BSR-Signature**, previously denoted `bsrsig` 
+The new S4 class **BSRClusterComp** is meant to represent the comparison
+between two clusters of samples. It primarily contains the results of the
+user-provided differential analysis in a table containing gene/protein names,
+P-values, and log-fold-changes (logFC).
 
-A new S4 object **BSR-ClusterComp** representing the comparison of two clusters
-of samples to infer LR interactions based on the resulting P-values and
-log-fold-changes (logFC) has been added.
-
-This new desgin let us handle sample cluster comparisons.
-
-
-`as.BSRDataModelComp` converts of **BSR-DataModel** into **BSR-DataModelComp** 
-In case ligand-receptor inferences should be obtained
-based on gene/protein regulation P-values comparing two clusters of
-samples, it is necessary to first promote the **BSR-DataModel** object that
-contains the count matrix into a **BSR-DataModelComp** object able to contain
-a list of such cluster pairs comparisons. This function performs this
-promotion, adding an empty list of comparisons.  
-
-`BSRClusterComp` is used to define the comparison
-between two clusters of samples
-by using defined column indexes of the expression matrix
-that belong to each cluster,
-and storing the result of the cluster difference statistical analysis
-obtained by an external tool such as edgeR, DESeq2, etc.
-
-`addClusterComp` add a comparison between two clusters of samples 
-to a **BSR-DataModelComp** object.
-
-Several comparison can be defined and added sequentially.  
+Usually, we recommend instantiating a `BSRDataModel` object to contain the
+expression matrix underlying the differential analysis. Then, it is
+promoted into a `BSRDataModelComp` object such that cluster definitions
+and comparisons can be added to it. This can be for instance done with
+``as(bsrdm, "BSRDataModelComp")``. The `addClusterComp` method
+of a `BSRDataModelComp` object allows adding one or several comparisons between
+clusters, each added comparison being defined in a `BSRClusterComp` object.
 
 \
     
 Thank you for reading this guide and for using `BulkSignalR`.  
+
+\
 
 ## Session Information
 

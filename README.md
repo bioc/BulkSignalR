@@ -10,18 +10,18 @@
 
 ## Overview
 
-**BulkSignalR** is used to infer ligand-receptor interactions (LRIs) from bulk
+**BulkSignalR** is used to infer ligand-receptor (L-R) interactions from bulk
 expression (transcriptomics/proteomics) data, or medium resolution spatial
 transcriptomics such as the 10x Genomics Visium platform.  
 
-Known LRIs are taken from the
+Known L-RI interactions are taken from the
 LR*db* database, which was previously included in our other package 
 **SingleCellSignalR**, also available from Bioconductor 
 [here](https://www.bioconductor.org/packages/release/bioc/html/SingleCellSignalR.html).
 Now, LR*db* is distributed and updated separately. 
 
-Inferences rely on a statistical model linking potential
-LRIs with biological pathways downstream the receptor as defined in Reactome or
+Inferences rely on a statistical model linking potential L-R interactions
+with biological pathways downstream the receptor as defined in Reactome or
 GO Biological Processes.  
 
 A number of visualization and data summary functions are proposed to
