@@ -106,7 +106,7 @@ resetLRdb <- function(db, switch = FALSE) {
         )
     }
 
-    message("")
+    cat("", file=stderr())
     cli::cli_alert_info(
         "New database defined for {.val LRdb}."
     )
@@ -477,25 +477,26 @@ findOrthoGenes <- function(from_organism, from_values,
     orthologs_dictionary$index <- NULL
     names(orthologs_dictionary)[1] <- paste("Gene.name")
 
-    message(
-        "Dictionary Size: ",
+    cat(
+        "Dictionary Size:",
         dim(orthologs_dictionary)[1],
-        " genes "
+        "genes\n", file=stderr()
     )
 
     nL <- length(intersect(
         .SignalR$BulkSignalR_LRdb$ligand,
         rownames(orthologs_dictionary)
     ))
-    message("-> ", nL, " : Ligands ")
+    cat("->", nL, ": Ligands\n", file=stderr())
 
     nR <- length(intersect(
         .SignalR$BulkSignalR_LRdb$receptor,
         rownames(orthologs_dictionary)
     ))
-    message("-> ", nR, " : Receptors ")
+    cat("->", nR, ": Receptors\n", file=stderr())
 
     orthologs_dictionary
+    
 } # findOrthoGenes
 
 

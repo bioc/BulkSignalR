@@ -188,7 +188,7 @@ resetNetwork <- function(network) {
         stop("Column names of network should be defined as a.gn, type & b.gn.")
     }
 
-    message("")
+    cat("", file=stderr())
     cli::cli_alert_info("New resource defined for {.val Network}.\n")
 
     assign("BulkSignalR_Network", 
@@ -280,9 +280,9 @@ resetPathways <- function(
             stop("File format accepted are `json` , `gmt` or `txt` only.")
         }
 
-        message("")
+        cat("", file=stderr())
         cli::cli_alert_info("New resource defined for {.val {resourceName}}.\n")
-        message(utils::head(dataframe))
+        print(utils::head(dataframe))
 
 
         if (resourceName == "Reactome") {

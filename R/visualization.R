@@ -89,7 +89,8 @@ bubblePlotPathwaysLR <- function(
         message("Try to reduce (Qval-Threshold, number of pathways...).")
     }
 
-    message(length(unique(filtered.brinf$LR)), " LR interactions detected.")
+    cat(length(unique(filtered.brinf$LR)), "LR interactions detected.\n",
+        file=stderr())
 
     plot(ggplot2::ggplot(
         filtered.brinf,
@@ -702,8 +703,8 @@ alluvialPlot <- function(bsrinf, keywords, type = c("L", "R", "pw.id"),
     }
 
     if (dim(subset.interactions)[1] == 0) {
-        message(paste(keywords, collapse = " "),
-            " for ", type, " not found.", "\n")
+        cat(paste(keywords, collapse = " "),
+            "for", type, "not found.\n", file=stderr())
         stop("Try another value for filtering.")
     }
     subset.interactions <- subset.interactions[

@@ -57,8 +57,8 @@ setMethod(
     "show", "BSRDataModelComp",
     function(object) {
         callNextMethod()
-        message("mu: ", object@mu, "\n", sep = "")
-        message("Defined comparisons:\n")
+        cat("mu: ", object@mu, "\n", sep = "")
+        cat("Defined comparisons:\n")
         utils::str(object@comp)
     }
 )

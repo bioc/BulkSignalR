@@ -75,7 +75,7 @@ setMethod(
     "show", "BSRInference",
     function(object) {
         cat("Reference database: ", object@inf.param$reference, "\n", sep = "")
-        message(utils::head(object@LRinter[
+        print(utils::head(object@LRinter[
             order(object@LRinter$qval),
             c("L", "R", "pval", "qval", "pw.id", "pw.name"),
         ]))[5, ]

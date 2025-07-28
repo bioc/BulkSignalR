@@ -47,7 +47,7 @@
     if (verbose) {
         cli::cli_alert("{.path {BiocFileCache::bfccache(bfc)}}")
         BiocFileCache::bfcinfo(bfc)
-        message("")
+        cat("", file=stderr())
     }
 
     return(invisible(NULL))
@@ -119,9 +119,9 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
 
     # dir.create(resourcesCacheDir)
     cli::cli_alert("BulkSignalR cache {.val {dir}} has been deleted.\n")
-    message(
-        "- Location: ", cacheDir, "\n",
-        "- No. of files: 0", "\n"
+    cat(
+        "- Location:", cacheDir, "\n",
+        "- No. of files: 0", "\n", file=stderr()
     )
 
     return(invisible(NULL))
@@ -160,7 +160,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
     # safeguard
     if (!dir.exists(cacheDir)) {
         cli::cli_alert("BulkSignalR {.val {dir}} cache uninitialized.")
-        message("- Location: ", cacheDir, "\n")
+        cat("- Location:", cacheDir, "\n", file=stderr())
         return(invisible(NULL))
     }
 
@@ -169,8 +169,8 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 
     if (length(files) == 0) {
         cli::cli_alert("BulkSignalR {.val {dir}} cache uninitialized.")
-        message("- Location: ", cacheDir, "\n",
-            "- No. of files: ", length(files), "\n"
+        cat("- Location:", cacheDir, "\n",
+            "- No. of files: ", length(files), "\n", file=stderr()
         )
         return(invisible(NULL))
     } else {
@@ -180,13 +180,14 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
         # print(size_obj)
 
         cli::cli_alert("BulkSignalR {.val {dir}} cache :")
-        message(
-            "- Location:  ", cacheDir, " \n",
-            "- No. of files:  ", length(files), "\n",
-            "- Total size:  ", format(size_obj, units = "auto"), "\n"
+        cat(
+            "- Location:", cacheDir, "\n",
+            "- No. of files:", length(files), "\n",
+            "- Total size:", format(size_obj, units = "auto"), "\n",
+            file=stderr()
         )
         listing <- paste0(files, "\n")
-        message(listing)
+        cat(listing, "\n", file=stderr())
     }
 
     return(invisible(NULL))
