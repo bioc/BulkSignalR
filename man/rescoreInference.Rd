@@ -66,7 +66,8 @@ data(bsrinf, package = "BulkSignalR")
 data(bsrdm, package = "BulkSignalR")
 
 bsrinf.new <- rescoreInference(bsrinf,
-param = parameters(bsrdm))
+                  param = parameters(bsrdm)
+              )
 data(bsrinf.comp, package = "BulkSignalR")
 
 bsrinf.less <- rescoreInference(bsrinf.comp, 

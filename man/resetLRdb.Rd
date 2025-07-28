@@ -7,7 +7,7 @@
 resetLRdb(db, switch = FALSE)
 }
 \arguments{
-\item{db}{A dataframe with 2 columns named
+\item{db}{A data frame with 2 columns named
 ligand and receptor.}
 
 \item{switch}{A logical indicating whether LRdb should be extended only
@@ -17,7 +17,7 @@ ligand and receptor.}
 Returns `NULL`, invisibly.
 }
 \description{
-User can provide a data frame with 2 columns named
+Users can provide a data frame with 2 columns named
 ligand and receptor.
 This can be used to extend or replace the existing
 LRdb.

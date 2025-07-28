@@ -14,13 +14,15 @@
 #' orthologs exist.
 #' @export
 #' @examples
-#' new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #'
 setClass("BSRDataModel",
@@ -34,7 +36,7 @@ setClass("BSRDataModel",
     ),
     prototype = list(
         initial.organism = "hsapiens",
-        initial.orthologs = list("A", "B", "C"),
+        initial.orthologs = list(), #list("A", "B", "C"),
         ncounts = matrix(1.0,
             nrow = 2, ncol = 1,
             dimnames = list(c("A", "B"), "C")
@@ -64,6 +66,9 @@ setValidity(
         TRUE
     }
 )
+
+# NOTE: the constructor of BRSDataModel class is defined in the
+# file dataPrepare.R for "historical" reasons
 
 setMethod(
     "show", "BSRDataModel",
@@ -97,13 +102,15 @@ setGeneric("initialOrganism", signature="x",
 #' @param x Object BSRDataModel
 #' @return initialOrganism
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' initialOrganism(bsrdm)
 #' @export
@@ -120,13 +127,15 @@ setGeneric("initialOrthologs", signature="x",
 #' @param x Object BSRDataModel
 #' @return initialOrthologs
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' initialOrthologs(bsrdm)
 #' @export
@@ -143,13 +152,15 @@ setGeneric("ncounts", signature="x",
 #' @param x object BSRDataModel
 #' @return ncounts
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' ncounts(bsrdm)
 #' @export
@@ -181,13 +192,15 @@ setGeneric("parameters", signature="x",
 #' @param x BSRDataModel oject
 #' @return param
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' parameters(bsrdm)
 #' @export
@@ -218,13 +231,15 @@ setGeneric("logTransformed", signature="x",
 #' @param x Object BRSDataModel
 #' @return logTransformed
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' logTransformed(bsrdm)
 #' @export
@@ -240,13 +255,15 @@ setGeneric("normalization", signature="x",
 #' @param x object BSRDatamModel
 #' @return normalization
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' normalization(bsrdm)
 #' @export

@@ -2,7 +2,7 @@
 % Please edit documentation in R/resource.R
 \name{.formatPathwaysFromJson}
 \alias{.formatPathwaysFromJson}
-\title{Format dataframe according to json input}
+\title{Format a data frame according to json input}
 \usage{
 .formatPathwaysFromJson(file, resourceName = NULL)
 }
@@ -12,8 +12,8 @@
 \item{resourceName}{Two options "GO-BP" or "REACTOME".}
 }
 \value{
-Dataframe with pathwayID, geneName and pathwayName
+Data frame with pathwayID, geneName and pathwayName
 }
 \description{
-Format dataframe according to json input
+Format a data frame according to json input
 }

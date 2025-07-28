@@ -75,11 +75,14 @@ initial BSRInferenceComp object. If a restriction on the targets
 was applied, then the update is likely to miss some targets, i.e.,
 the statistical analysis will be wrong.
 
+In case no L-R interaction is above the required thresholds, the
+value `NULL` is returned.
+
 Note that correlations are set to 1 to avoid
 lengthy computations with scRNA-seq data and multiple cell
 populations.
 
-The main function of this method is to support our SingleCellSignalR v2
+The main role of this method is to support our SingleCellSignalR v2
 package.
 }
 \description{

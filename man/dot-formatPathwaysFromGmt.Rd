@@ -2,7 +2,7 @@
 % Please edit documentation in R/resource.R
 \name{.formatPathwaysFromGmt}
 \alias{.formatPathwaysFromGmt}
-\title{Transform gmt file to dataframe}
+\title{Transform gmt file to data frame}
 \usage{
 .formatPathwaysFromGmt(file, resourceName = NULL)
 }
@@ -15,17 +15,15 @@
 Dataframe with pathwayID, geneName and pathwayName
 }
 \description{
-We note discrepancy between format available
-over internet.
+We note discrepancies between the formats available
+from internet sources. Here, we consider a valid gmt file format defined
+on each lines as follows:
+First is Pathway name,
+then comes the ID,
+finally you will find genes symbols
+part of the pathway defined on the line.
 }
 \details{
-Here we consider a valid gmt file format defined
-on each lines as follows :
-First is Pathway name,
-Then comes the ID,
-Finally you will find genes symbols
-according to the pathway defined on the line.
-
 You can find an example here.
 - For Reactome. (Directly from their website)
 \url{https://reactome.org/download/current/ReactomePathways.gmt.zip}

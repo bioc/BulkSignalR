@@ -27,11 +27,10 @@ bubblePlotPathwaysLR(
 
 \item{color}{Main color used for the gradient.}
 
-\item{pointsize}{Global pointsize.}
+\item{pointsize}{Global point size.}
 }
 \value{
-A bubble plot displayed in the current viewport or in a file
-in case a filename was provided.
+A bubble plot displayed in the current viewport.
 
 This is a convenience function to propose a simple way
 of representing LR - Pathways association

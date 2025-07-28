@@ -27,10 +27,9 @@
 #' @param filter.L     Vector of ligands to keep.
 #' @param filter.R     Vector of receptors to keep.
 #' @param color     Main color used for the gradient.
-#' @param pointsize Global pointsize.
+#' @param pointsize Global point size.
 #'
-#' @return  A bubble plot displayed in the current viewport or in a file
-#' in case a filename was provided.
+#' @return  A bubble plot displayed in the current viewport.
 #'
 #' This is a convenience function to propose a simple way
 #' of representing LR - Pathways association
@@ -144,116 +143,139 @@ bubblePlotPathwaysLR <- function(
 } # bubblePlotPathwaysLR
 
 
-#' Heatmap function for gene expression of signature
+#' Heatmap function for gene signature expression
 #'
-#' Generate one heatmap re-used by
-#' by
-#' \code{"\link[=BSRDataModel-class]{scoreLRGeneSignatures}"}
+#' Generate one heatmap used by
+#' \code{signatureHeatmaps}.
 #'
-#' @param counts  Matrice of counts exported from a
-#  BulksignalR data model object.
-#' @param h.width   Heatmap  width in cm.
+#' @param counts  Matrix of counts.
+#' @param name    Name of the heatmap to generate.
 #' @param h.height  Heatmap  height in cm.
-#' @param fontsize  Fontsize.
-#' @param scoring Vector of scored sample for a
-#' a previously choosen pathway.
+#' @param fontsize  Font size for row (gene) names.
+#' @param col.fontsize  Font size for column (sample) names.
+#' @param legend.fontsize  Font size for the legends.
+#' @param annot.fontsize   Font size for column annotation names.
+#' @param scoring Vector of sample scores for a
+#' chosen pathway. If NULL, then no column annotation is produced.
 #' @param cols.scoring   Fixed colorRamp2 object.
 #' @param hcl.palette   Palette from
 #' HCL colormaps supported by ComplexHeatmap.
-#' @param show_column_names   Add column names on heatmap.
 #'
-#' @return ComplexHeatmap object.
+#' @return A ComplexHeatmap object.
 #'
 #' This is a convenience function that relies
 #' on the \code{ComplexHeatmap}
-#' package to propose a simple way
-#' of representing expression of genes involved in a specific
-#' pathway.
+#' package.
 #'
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
 #' @keywords internal
 .customheatmap <- function(
     counts,
-    h.width = 5,
-    h.height = 10,
+    name,
     fontsize = 6,
-    scoring = c(-1.5, 0, 4, 5, 6.1, 0.3),
-    cols.scoring,
+    col.fontsize = 6,
+    legend.fontsize = 8,
+    annot.fontsize = 8,
+    h.height = 3,
+    scoring = NULL,
+    cols.scoring = NULL,
     hcl.palette = "Blues 3",
     show_column_names = FALSE) {
-    counts <- data.matrix(counts)
-    counts.scaled <- t(scale(t(counts)))
 
-    cols <- circlize::colorRamp2(
-        breaks = c(-1, 0, 3),
-        hcl_palette = hcl.palette, reverse = TRUE
+  counts.scaled <- t(scale(t(counts)))
+  
+  cols <- circlize::colorRamp2(
+    breaks = c(-1, 0, 3),
+    hcl_palette = hcl.palette, reverse = TRUE
+  )
+  
+  if (!is.null(scoring)){
+    top.annotation <- ComplexHeatmap::HeatmapAnnotation(
+      LR.scoring = as.vector(scoring),
+      border = c(LR.scoring = TRUE),
+      show_legend = TRUE,
+      simple_anno_size = grid::unit(2.5, "mm"),
+      show_annotation_name = TRUE,
+      col = list(LR.scoring = cols.scoring),
+      annotation_name_gp= gpar(fontsize = annot.fontsize)
     )
-
-    top.annotation <- HeatmapAnnotation(
-        border = c(scoring = TRUE),
-        show_legend = FALSE,
-        simple_anno_size = grid::unit(2.5, "mm"),
-        show_annotation_name = FALSE,
-        scoring = as.vector(scoring),
-        col = list(scoring = cols.scoring)
+  }
+  
+  di.gene <- stats::dist(counts.scaled)
+  hc.gene <- stats::hclust(di.gene, method = "ward.D")
+  dend.row <- stats::as.dendrogram(hc.gene)
+  
+  di.spl <- stats::dist(t(counts.scaled))
+  hc.spl <- stats::hclust(di.spl, method = "ward.D")
+  dend.spl <- stats::as.dendrogram(hc.spl)
+  
+  ComplexHeatmap::ht_opt(
+    heatmap_border = TRUE,
+    annotation_border = FALSE
+  )
+  
+  if (!is.null(scoring)){
+    ComplexHeatmap::Heatmap(counts.scaled,
+                         name = name,
+                         cluster_rows = dend.row, cluster_columns = dend.spl,
+                         show_row_dend = FALSE, show_column_dend = TRUE,
+                         col = cols, show_row_names = TRUE,
+                         show_column_names = show_column_names,
+                         use_raster = TRUE, raster_device = "png",
+                         raster_quality = 8, raster_by_magick = FALSE,
+                         rect_gp = grid::gpar(col = "white"),
+                         row_names_gp = grid::gpar(fontsize = fontsize),
+                         column_names_gp = grid::gpar(fontsize = col.fontsize),
+                         top_annotation = top.annotation,
+                         height = grid::unit(h.height, "cm"),
+                         column_gap = grid::unit(0.5, "mm"),
+                         heatmap_legend_param = list(
+                           labels_gp = gpar(fontsize = legend.fontsize)
+                         )
     )
-
-    di.gene <- stats::dist(counts.scaled)
-    hc.gene <- stats::hclust(di.gene, method = "ward.D")
-    dend.row <- stats::as.dendrogram(hc.gene)
-
-    di.spl <- stats::dist(t(counts.scaled))
-    hc.spl <- stats::hclust(di.spl, method = "ward.D")
-    dend.spl <- stats::as.dendrogram(hc.spl)
-
-    ComplexHeatmap::ht_opt(
-        heatmap_border = TRUE,
-        annotation_border = FALSE
+  }
+  else{
+    ComplexHeatmap::Heatmap(counts.scaled,
+                         name = name,
+                         cluster_rows = dend.row, cluster_columns = dend.spl,
+                         show_row_dend = FALSE, show_column_dend = TRUE,
+                         col = cols, show_row_names = TRUE,
+                         show_column_names = show_column_names,
+                         use_raster = TRUE, raster_device = "png",
+                         raster_quality = 8, raster_by_magick = FALSE,
+                         rect_gp = grid::gpar(col = "white"),
+                         row_names_gp = grid::gpar(fontsize = fontsize),
+                         column_names_gp = grid::gpar(fontsize = col.fontsize),
+                         height = grid::unit(h.height, "cm"),
+                         column_gap = grid::unit(0.5, "mm"),
+                         heatmap_legend_param = list(
+                           labels_gp = gpar(fontsize = legend.fontsize)
+                         )
     )
-
-    p <- ComplexHeatmap::Heatmap(counts.scaled,
-        cluster_rows = dend.row, cluster_columns = dend.spl,
-        show_row_dend = FALSE, show_column_dend = TRUE,
-        col = cols, show_row_names = TRUE,
-        show_column_names = show_column_names,
-        use_raster = TRUE, raster_device = "png",
-        raster_quality = 8, raster_by_magick = FALSE,
-        rect_gp = grid::gpar(col = "white"),
-        row_names_gp = grid::gpar(fontsize = fontsize),
-        column_names_gp = grid::gpar(fontsize = fontsize - 2),
-        top_annotation = top.annotation,
-        show_heatmap_legend = FALSE,
-        width = grid::unit(h.width, "cm"),
-        height = grid::unit(h.height, "cm"),
-        column_gap = grid::unit(0.5, "mm")
-    )
-
-    return(p)
+  }
+  
 } # .customheatmap
 
 
-#' Heatmap function for gene expression of signature
+#' Heatmap function to dissect one pathway signature
 #'
-#' Generate a list of heatmaps for ligand,
-#' receptor and target genes
-#' for a specific pathway
+#' Plots a stack of three heatmaps to assess the expression of
+#' the target genes or proteins in a chosen pathway, the receptor expressions,
+#' and the ligand expressions.
 #'
-#' @param pathway        Pathway name
+#' @param pathway        The chosen pathway name.
 #' @param bsrdm     BulkSignalR data model object.
 #' @param bsrsig     BulkSignalR signature object.
-#' to display on screen.
-#' @param h.width     Heatmap width in cm.
-#' @param h.height    Heatmap height in cm.
-#' @param fontsize    Fontsize.
-#' @param show_column_names   Add column names on heatmap.
+#' @param heights    A vector of 3 heights (in cm) for the 3 heatmaps.
+#' @param fontsize    Font size for the gene names.
+#' @param legend.fontsize  Font size for the legends.
+#' @param title.fontsize   Font size for the pathway name as plot title.
+#' @param col.fontsize  Font size for column (sample) names.
+#' @param annot.fontsize   Font size for column annotation names.
+#' @param show_column_names   Add column names in the heatmaps.
 
 #' @return  A plot is created.
-#'
-#' This is a convenience function
-#' to propose a simple way
-#' of representing expression of genes
-#' involved in a specific pathway.
 #'
 #' @export
 #' @examples
@@ -268,160 +290,116 @@ bubblePlotPathwaysLR <- function(
 #' pathway = pathway1,
 #' bsrdm = bsrdm,
 #' bsrsig = bsrsig.redPBP,
-#' h.width = 3,
-#' h.height = 4,
-#' fontsize = 1,
 #' show_column_names = TRUE)
 #' }
 #' @import ComplexHeatmap
+#' @importFrom ComplexHeatmap %v%
 #' @importFrom circlize colorRamp2
 #' @import grid
 signatureHeatmaps <- function(pathway,
-                            bsrdm,
-                            bsrsig,
-                            h.width = 6,
-                            h.height = 9,
-                            fontsize = 6,
-                            show_column_names = FALSE) {
-
-    idx.path.sig <- which(pathways(bsrsig) == pathway)
-
-    if (rlang::is_empty(idx.path.sig)) {
-        stop("Pathway is not defined in signature.")
-    }
-
-    scoresPathway <- scoreLRGeneSignatures(bsrdm, 
-        bsrsig, name.by.pathway = TRUE, rownames.LRP = FALSE)
-
-    counts <- as.data.frame(bsrdm@ncounts)
-
-    filter.L <- unlist(ligands(bsrsig)[idx.path.sig])
-
-    counts.L <- counts[filter.L, ]
-
-    palette.L <- "RdPu"
-    cols.L <- circlize::colorRamp2(breaks = c(-1, 0, 1),
-        hcl_palette = palette.L, reverse = TRUE)
-
-    filter.R <- unlist(receptors(bsrsig)[idx.path.sig])
-    filter.T <- unlist(tgGenes(bsrsig)[idx.path.sig])
-    
-    # Remove in receptors, genes that are potential targets.
-    filter.R <- filter.R[!filter.R %in% filter.T]
-
-    counts.R <- counts[filter.R, ]
-    palette.R <- "YlGn"
-    cols.R <- circlize::colorRamp2(breaks = c(-1, 0, 1),
-        hcl_palette = palette.R, reverse = TRUE)
-
-    counts.T <- counts[filter.T, ]
-    palette.T <- "Blues 3"
-    cols.T <- circlize::colorRamp2(breaks = c(-1, 0, 1),
-        hcl_palette = palette.T, reverse = TRUE)
-
-    cols.scoring <- circlize::colorRamp2(breaks = c(-1, 0, 1),
-        colors = c("blue", "white", "red"))
-
-    abundance.samples <- dim(counts.T)[2]
-    abundance.genes <- c(dim(counts.T)[1], dim(counts.R)[1], dim(counts.L)[1])
-
-    # Adjust size image / heatmaps
-    # We know that 1 inch is equal to 2.54 cm.
-    # So there are 96 pixels per 2.54 cm.
-    # Than 1 centimeter = (96 / 2.54) = 38 px. T
-
-    # Given size in cm transformed to inch
-    height <- (h.height / 2.54) * 4
-    width <- ((h.width * 2) + 3) / 2.54
-
-    p.T <- .customheatmap(
-        counts = counts.T,
-        h.width = h.width, h.height = h.height,
-        scoring = as.vector(scoresPathway[idx.path.sig[1],]),
-        hcl.palette = palette.T, cols.scoring = cols.scoring,
-        show_column_names = show_column_names
-    )
-
-    p.R <- .customheatmap(
-        counts = counts.R,
-        h.width = h.width, h.height = h.height,
-        scoring = as.vector(scoresPathway[idx.path.sig[1],]),
-        hcl.palette = palette.R, cols.scoring = cols.scoring,
-        show_column_names = show_column_names
-    )
-
-    p.L <- .customheatmap(
-        counts = counts.L,
-        h.width = h.width, h.height = h.height,
-        scoring = as.vector(scoresPathway[idx.path.sig[1], ]),
-        hcl.palette = palette.L, cols.scoring = cols.scoring,
-        show_column_names = show_column_names
-    )
-
-    grid::grid.newpage()
-    grid::pushViewport(grid::viewport(
-        layout = grid::grid.layout(nr = 3, nc = 2)))
-
-    grid::pushViewport(grid::viewport(layout.pos.row = 1, layout.pos.col = 1))
-    ComplexHeatmap::draw(p.L, newpage = FALSE)
-    grid::upViewport()
-
-    grid::pushViewport(grid::viewport(layout.pos.row = 2, layout.pos.col = 1))
-    ComplexHeatmap::draw(p.R, newpage = FALSE)
-    grid::upViewport()
-
-    grid::pushViewport(grid::viewport(layout.pos.row = 3, layout.pos.col = 1))
-    ComplexHeatmap::draw(p.T, newpage = FALSE)
-    grid::upViewport()
-
-    lgd_score <- ComplexHeatmap::Legend(
-        col_fun = cols.scoring, direction = "horizontal",
-        title = "Gene signature scores", title_position = "topleft",
-        grid_height = unit(0.2, "mm"),
-        labels_gp = grid::gpar(fontsize = fontsize+4),
-        title_gp = grid::gpar(fontsize = fontsize+4, fontface = "bold")
-    )
-    lgd_heatmap.L <- ComplexHeatmap::Legend(
-        col_fun = cols.L, direction = "horizontal",
-        title = "Expression ligand", title_position = "topleft",
-        grid_width = grid::unit(0.7, "mm"),
-        grid_height = grid::unit(0.4, "mm"),
-        labels_gp = grid::gpar(fontsize = fontsize+4),
-        title_gp = grid::gpar(fontsize = fontsize+4, fontface = "bold")
-    )
-
-    lgd_heatmap.R <- ComplexHeatmap::Legend(
-        col_fun = cols.R, direction = "horizontal",
-        title = "Expression receptor", title_position = "topleft",
-        grid_width = grid::unit(0.7, "mm"),
-        grid_height = grid::unit(0.4, "mm"),
-        labels_gp = grid::gpar(fontsize = fontsize+4),
-        title_gp = grid::gpar(fontsize = fontsize+4, fontface = "bold")
-    )
-
-    lgd_heatmap.T <- ComplexHeatmap::Legend(
-        col_fun = cols.T, direction = "horizontal",
-        title = "Expression target", title_position = "topleft",
-        grid_width = grid::unit(0.7, "mm"),
-        grid_height = grid::unit(0.4, "mm"),
-        labels_gp = grid::gpar(fontsize = fontsize+4),
-        title_gp = grid::gpar(fontsize = fontsize+4, fontface = "bold")
-    )
-
-    grid::pushViewport(grid::viewport(layout.pos.row = 1,
-        layout.pos.col = 2))
-    ComplexHeatmap::draw(lgd_score, y = grid::unit(h.height, "cm"),
-        x = grid::unit(h.width-4, "cm"))
-    ComplexHeatmap::draw(lgd_heatmap.L, y = grid::unit((h.height - 2), "cm"),
-        x = grid::unit(h.width-4, "cm"))
-    ComplexHeatmap::draw(lgd_heatmap.R, y = grid::unit((h.height - 4), "cm"),
-        x = grid::unit(h.width-4, "cm"))
-    ComplexHeatmap::draw(lgd_heatmap.T, y = grid::unit((h.height - 6), "cm"),
-        x = grid::unit(h.width-4, "cm"))
-
-
-    grid::upViewport()
-
+                              bsrdm,
+                              bsrsig,
+                              heights = c(4,2,4),
+                              fontsize = 6,
+                              legend.fontsize = 8,
+                              title.font.size = 8,
+                              col.fontsize = 6,
+                              annot.fontsize = 8,
+                              ht_gap = grid::unit(3, "mm"),
+                              show_column_names = TRUE) {
+  
+  idx.path.sig <- which(pathways(bsrsig) == pathway)
+  
+  if (rlang::is_empty(idx.path.sig)) {
+    stop("Pathway is not defined in signature.")
+  }
+  if (!is.numeric(heights)){
+    stop("heights must be provided as a numerical vector.")
+  }
+  if (length(heights) != 3){
+    stop("Three heights must be provided exactly.")
+  }
+  
+  scoresPathway <- scoreLRGeneSignatures(bsrdm, bsrsig)
+  
+  counts <- ncounts(bsrdm)
+  
+  filter.L <- unique(unlist(ligands(bsrsig)[idx.path.sig]))
+  
+  counts.L <- counts[filter.L, ]
+  
+  palette.L <- "RdPu"
+  cols.L <- circlize::colorRamp2(breaks = c(-1, 0, 1),
+                                 hcl_palette = palette.L, reverse = TRUE)
+  
+  filter.R <- unique(unlist(receptors(bsrsig)[idx.path.sig]))
+  filter.T <- unique(unlist(tgGenes(bsrsig)[idx.path.sig]))
+  
+  # Remove in receptors, genes that are potential targets.
+  filter.R <- filter.R[!filter.R %in% filter.T]
+  
+  counts.R <- counts[filter.R, ]
+  palette.R <- "YlGn"
+  cols.R <- circlize::colorRamp2(breaks = c(-1, 0, 1),
+                                 hcl_palette = palette.R, reverse = TRUE)
+  
+  counts.T <- counts[filter.T, ]
+  palette.T <- "Blues 3"
+  cols.T <- circlize::colorRamp2(breaks = c(-1, 0, 1),
+                                 hcl_palette = palette.T, reverse = TRUE)
+  
+  cols.scoring <- circlize::colorRamp2(breaks = c(-1, 0, 1),
+                                       colors = c("blue", "white", "red"))
+  
+  abundance.samples <- dim(counts.T)[2]
+  abundance.genes <- c(dim(counts.T)[1], dim(counts.R)[1], dim(counts.L)[1])
+  
+  if (length(idx.path.sig) == 1){
+    scoring = as.vector(scoresPathway[idx.path.sig[1],])
+  }
+  else{
+    scoring = colMeans(scoresPathway[idx.path.sig,])
+  }
+  
+  p.T <- .customheatmap(
+    counts = counts.T,
+    name = "Targets",
+    h.height = heights[1],
+    scoring = scoring,
+    hcl.palette = palette.T,
+    cols.scoring = cols.scoring,
+    show_column_names = FALSE,
+    fontsize = fontsize,
+    legend.fontsize = legend.fontsize,
+    annot.fontsize = annot.fontsize
+  )
+  
+  p.R <- .customheatmap(
+    counts = counts.R,
+    name = "Receptors",
+    h.height = heights[2],
+    hcl.palette = palette.R,
+    show_column_names = FALSE,
+    fontsize = fontsize,
+    legend.fontsize = legend.fontsize,
+  )
+  
+  p.L <- .customheatmap(
+    counts = counts.L,
+    name = "Ligands",
+    h.height = heights[3],
+    hcl.palette = palette.L,
+    show_column_names = show_column_names,
+    fontsize = fontsize,
+    legend.fontsize = legend.fontsize,
+    col.fontsize = col.fontsize,
+  )
+  
+  ComplexHeatmap::draw(p.T %v% p.R %v% p.L,
+                       ht_gap = ht_gap,
+                       column_title = pathway,
+                       column_title_gp = gpar(fontsize=title.font.size))
+  
 } # signatureHeatmaps
 
 
@@ -435,9 +413,7 @@ signatureHeatmaps <- function(pathway,
 #' @param dend.row       A precomputed row dendrogram.
 #' @param dend.spl       A precompute sample (column) dendrogram.
 #' @param cols           A vector of colors to use for the heatmap.
-#' @param width          Heatmap width.
-#' @param height         Heatmap height.
-#' @param pointsize      Heatmap fontsize
+#' @param pointsize      Heatmap font point size
 #' @param bottom.annotation  \code{ComplexHeatmap} package bottom annotations.
 #' @param n.col.clust    Number of column clusters.
 #' @param n.row.clust    Number of row clusters.
@@ -450,7 +426,7 @@ signatureHeatmaps <- function(pathway,
 #' using color mapping function with circlize::colorRamp2().
 #' palettes are listed in grDevides::hcl.pals().
 #' of row (gene) names.
-#' @param reverse    A logicial to reverse or not colors in hcl.palette.
+#' @param reverse    A logical to reverse or not colors in hcl.palette.
 #'
 #' @return A heatmap. Since heatmap plotting tend to be slow on the screen,
 #' it is advisable to provide a
@@ -482,14 +458,10 @@ signatureHeatmaps <- function(pathway,
 #' )
 #' simpleHeatmap(scoresLR[1:3, ],
 #'     column.names = TRUE,
-#'     hcl.palette = "Cividis",
-#'     width=2, 
-#'     height=1.5)
+#'     hcl.palette = "Cividis")
 #' @import ComplexHeatmap
 #' @importFrom circlize colorRamp2
-simpleHeatmap <- function(mat.c, 
-    width=4, 
-    height=3, 
+simpleHeatmap <- function(mat.c,
     dend.row = NULL,
     dend.spl = NULL, cols = NULL, pointsize = 4,
     bottom.annotation = NULL, n.col.clust = 0,
@@ -558,9 +530,7 @@ simpleHeatmap <- function(mat.c,
                 show_row_dend = TRUE, bottom_annotation = bottom.annotation,
                 split = n.row.clust, gap = grid::unit(gap.size, "mm"),
                 column_split = n.col.clust,
-                column_gap = grid::unit(gap.size, "mm"),
-                heatmap_width =unit(width, "in"),
-                heatmap_height =unit(height, "in") 
+                column_gap = grid::unit(gap.size, "mm")
             ))
         } else {
             plot(ComplexHeatmap::Heatmap(mat.c,
@@ -572,9 +542,7 @@ simpleHeatmap <- function(mat.c,
                 raster_quality = 8, raster_by_magick = FALSE,
                 row_names_gp = grid::gpar(fontsize = pointsize),
                 show_row_dend = TRUE, bottom_annotation = bottom.annotation,
-                split = n.row.clust, gap = grid::unit(gap.size, "mm"),
-                heatmap_width =unit(width, "in"),
-                heatmap_height =unit(height, "in") 
+                split = n.row.clust, gap = grid::unit(gap.size, "mm") 
             ))
         }
     } else if (n.col.clust) {
@@ -587,9 +555,7 @@ simpleHeatmap <- function(mat.c,
             row_names_gp = grid::gpar(fontsize = pointsize),
             column_names_gp = grid::gpar(fontsize = pointsize),
             show_row_dend = TRUE, bottom_annotation = bottom.annotation,
-            column_split = n.col.clust, column_gap = grid::unit(gap.size, "mm"),
-            heatmap_width =unit(width, "in"),
-            heatmap_height =unit(height, "in") 
+            column_split = n.col.clust, column_gap = grid::unit(gap.size, "mm")
         ))
     } else {
         plot(ComplexHeatmap::Heatmap(mat.c,
@@ -601,9 +567,7 @@ simpleHeatmap <- function(mat.c,
             column_names_gp = grid::gpar(fontsize = pointsize),
             use_raster = TRUE, raster_device = "png",
             raster_quality = 8, raster_by_magick = FALSE,
-            show_row_dend = TRUE, bottom_annotation = bottom.annotation,
-            heatmap_width =unit(width, "in"),
-            heatmap_height =unit(height, "in") 
+            show_row_dend = TRUE, bottom_annotation = bottom.annotation
         ))
     }
 
@@ -690,18 +654,18 @@ scoreSignatures <- function(ds, ref.signatures, robust = FALSE) {
 #' Alluvial plot
 #'
 #' @description Representation of the links
-#' between Ligands,Receptors and Pathways.
+#' between ligands, receptors, and pathways.
 #'
-#' @param bsrinf object bsrinf inference.
-#' @param keywords vector of pathways.
+#' @param bsrinf A BSRInference object.
+#' @param keywords vector of keywoprds to filter pathways.
 #' @param type filter on Ligand, Receptor or pathway id.
 #' @param qval.thres threshold over Q-value.
 #' @return NULL
 #'
 #' This is a convenience function that relies on the \code{ggalluvial}
 #' package to propose a simple way
-#' of representing Ligands, Receptors
-#  and underlying Pathways associated.
+#' of representing ligands, receptors,
+#  and downstream pathways associations.
 #' @import ggplot2
 #' @import ggalluvial
 #' @export
@@ -787,10 +751,10 @@ alluvialPlot <- function(bsrinf, keywords, type = c("L", "R", "pw.id"),
 #'
 #' @description Chord diagram.
 #'
-#' @param bsrinf bsrinf object
+#' @param bsrinf A BSRInference object
 #' @param pw.id.filter One Pathway ID accepted only to
 #  retrieve the respective LR interactions.
-#' @param qval.thres threshold over Q-value.
+#' @param qval.thres Threshold over Q-values.
 #' @param ligand Ligand
 #' of the LR pair that you want to
 #' highlight in the chord diagram.
@@ -880,11 +844,16 @@ chordDiagramLR <- function(
         c("ligands", "receptors", "corr", "pair")])
 
 
-    cr <- circlize::colorRamp2(c(
-        min(dataframe.bsrinf$corr),
-        max(dataframe.bsrinf$corr)
-    ), c("white", "#febd17"))
-
+    if (length(unique(dataframe.bsrinf$corr)) == 1){
+        cr <- "#febd17" # for BSRInferenceComp class with all corr = 1
+    }
+    else{
+        cr <- circlize::colorRamp2(c(
+            min(dataframe.bsrinf$corr),
+            max(dataframe.bsrinf$corr)
+        ), c("white", "#febd17"))
+    }
+    
     myList.ligands <- rep("gray25", 
         times = length(dataframe.bsrinf$ligands))
     names(myList.ligands) <- as.list(dataframe.bsrinf$ligands)

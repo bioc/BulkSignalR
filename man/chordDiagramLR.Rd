@@ -14,11 +14,11 @@ chordDiagramLR(
 )
 }
 \arguments{
-\item{bsrinf}{bsrinf object}
+\item{bsrinf}{A BSRInference object}
 
 \item{pw.id.filter}{One Pathway ID accepted only to}
 
-\item{qval.thres}{threshold over Q-value.}
+\item{qval.thres}{Threshold over Q-values.}
 
 \item{ligand}{Ligand
 of the LR pair that you want to

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataPrepare.R
 \name{.testCacheFiles}
 \alias{.testCacheFiles}
-\title{Check there is a well formated cache}
+\title{Check there is a well formatted cache}
 \usage{
 .testCacheFiles()
 }
@@ -10,5 +10,5 @@
 Returns `NULL`, invisibly.
 }
 \description{
-Check there is a well formated cache
+Check there is a well formatted cache
 }

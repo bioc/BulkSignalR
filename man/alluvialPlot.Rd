@@ -7,9 +7,9 @@
 alluvialPlot(bsrinf, keywords, type = c("L", "R", "pw.id"), qval.thres = 0.01)
 }
 \arguments{
-\item{bsrinf}{object bsrinf inference.}
+\item{bsrinf}{A BSRInference object.}
 
-\item{keywords}{vector of pathways.}
+\item{keywords}{vector of keywoprds to filter pathways.}
 
 \item{type}{filter on Ligand, Receptor or pathway id.}
 
@@ -20,11 +20,11 @@ NULL
 
 This is a convenience function that relies on the \code{ggalluvial}
 package to propose a simple way
-of representing Ligands, Receptors
+of representing ligands, receptors,
 }
 \description{
 Representation of the links
-between Ligands,Receptors and Pathways.
+between ligands, receptors, and pathways.
 }
 \examples{
 data(bsrinf, package = "BulkSignalR")

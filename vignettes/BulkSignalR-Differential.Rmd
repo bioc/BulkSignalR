@@ -63,27 +63,21 @@ In the next chunk of code, we illustrate the differential mode using
 Salivary Duct Carcinoma (SDC) samples where we compare two clusters 
 of patients.  
 
-We first create a **BSRDataModel** object as follows : 
+We first create a **BSRDataModelComp** object as follows: 
 
 ```{r diffmode1,eval=TRUE}
 data(sdc, package = "BulkSignalR")
 normal <- grep("^N", names(sdc))
-bsrdm <- BSRDataModel(sdc[, -normal])
+bsrdm.comp <- BSRDataModelComp(sdc[, -normal])
 ```
 
-As an example here, we generate random values
+To make a very small example we generate random values,
 but user should provide his own logFC and
 associated pvalues from DGE ouputs.  
 
 ```{r diffmode2,eval=TRUE}
 colA <- as.integer(1:3)
 colB <- as.integer(12:15)
-
-# We then coerce the initial **BSRDataModel** object to 
-# a **BSRDataModelComp** object. 
-
-bsrdm.comp <- as(bsrdm, "BSRDataModelComp")
-
 
 n <- nrow(ncounts(bsrdm.comp))
 stats <- data.frame(pval = runif(n),
@@ -93,7 +87,6 @@ rownames(stats) <- rownames(ncounts(bsrdm.comp))
 ```    
 
 We define the cluster comparison and add it.  
-
 
 ```{r diffmode3,eval=TRUE}
 

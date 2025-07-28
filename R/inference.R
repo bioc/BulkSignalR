@@ -1,4 +1,4 @@
-#' Get correlated ligand-receptor pairs.
+#' Get correlated ligand-receptor pairs
 #'
 #' Internal function to compute the Spearman correlations
 #' of all the ligand-receptor

@@ -130,6 +130,10 @@ setMethod("mu<-", "BSRDataModelComp", function(x, value) {
 
 #' Convert BSRDataModel to BSRDataModelComp
 #' 
+#' Enable the promotion of a BSRDataModel object into
+#' a BSRDataModelComp object by
+#' coercion.
+#' 
 #' @name coerce
 #' @aliases coerce,BSRDataModel,BSRDataModelComp-method
 #' @param from  BSRDataModel object  
@@ -154,9 +158,6 @@ setAs("BSRDataModel", "BSRDataModelComp", function(from) {
         comp = list(),
         mu = m) 
 })
-
-
-
 
 
 setGeneric("addClusterComp", signature="obj",
@@ -220,6 +221,7 @@ setMethod("addClusterComp", "BSRDataModelComp", function(obj, cmp,
     names(tmp)[length(tmp)] <- cmp.name
     comparison(obj) <- tmp
     obj
+    
 }) # addClusterComp
 
 
@@ -282,9 +284,114 @@ setMethod("removeClusterComp", "BSRDataModelComp", function(obj, cmp.name) {
     }
 
     obj
+    
 }) # removeClusterComp
 
 
+# Constructor ==================================================================
+
+#' Constructor of the BSRDataModelComp class
+#'
+#' Take a matrix or data frame containing RNA sequencing,
+#' microarray, or expression proteomics data as input parameter
+#' and return a BSRDataModelComp
+#' object ready for subsequent use.
+#' 
+#' @param counts     A table or matrix of read counts.
+#' @param species    Data were obtained for this organism.
+#' @param normalize  A logical indicating whether \code{counts} should be
+#'   normalized according to \code{method} or if it was normalized beforehand.
+#' @param symbol.col The index of the column containing the gene symbols in case
+#'   those are not the row names of \code{counts} already.
+#' @param min.count  The minimum read count of a gene to be considered expressed
+#'   in a sample.
+#' @param prop       The minimum proportion of samples where a gene must be
+#'   expressed higher than \code{min.count} to keep that gene.
+#' @param method     The normalization method ('UQ' for upper quartile or 'TC'
+#'   for total count). If \code{normalize==FALSE}, then method must be
+#'   used to document the name of the normalization method applied by the user.
+#' @param UQ.pc      Percentile for upper-quartile normalization, number
+#' between 0 and 1 (in case the default 0.75 - hence the name - is not
+#' appropriate).
+#' @param log.transformed  A logical indicating whether expression data were
+#'   already log2-transformed, e.g., some microarray data.
+#' @param min.LR.found  The minimum number of ligands or receptors found in
+#'   \code{count} row names after eliminating the rows containing too many
+#'   zeros according to \code{min.count} and \code{prop}.
+#' @param conversion.dict  Correspondence table of HUGO gene symbols
+#' human/nonhuman. Not used unless the organism is different from human.
+#' @param x.col In a SpatialExperiment object, the index of the column
+#' containing the x coordinates in the dafaframe returned by rowData(), usually 
+#' named array_row.
+#' @param y.col  In a SpatialExperiment object, the index of the column
+#' containing the y coordinates in the dafaframe returned by rowData(), usually 
+#' named array_col.
+#' @param barcodeID.col   In a SpatialExperiment object, the index of the column
+#' containing the barcodeID in the dafaframe returned by colData(), usually
+#' named barcode_id.
+#'
+#' @return A BSRModelDataComp object with empty model parameters.
+#'
+#' @details The \code{counts} matrix or table should be provided with expression
+#'   levels of protein coding genes in each samples (column) and
+#'   \code{rownames(counts)} set to HUGO official gene symbols.
+#'   For commodity, it is also possible 
+#'   to provide \code{counts} with the
+#'   gene symbols stored in one of its columns. This column must be specified
+#'   with \code{symbol.col}. In such a case, \code{BSRDataModel} will extract
+#'   this column and use it to set the row names. Because row names must be
+#'   unique, \code{BSRDataModel} will eliminate rows with duplicated gene
+#'   symbols by keeping the rows with maximum average expression. Gene symbol
+#'   duplication may occur in protein coding genes after genome alignment
+#'   due to errors in genome feature annotation files (GTF/GFF), where a handful
+#'   of deprecated gene annotations might remain, or
+#'   some genes are not given their fully specific symbols. If your read count
+#'   extraction pipeline does not take care of this phenomenon, the maximum mean
+#'   expression selection strategy implemented here should solve this difficulty
+#'   for the sake of inferring ligand-receptor interactions.
+#'
+#'   If \code{normalize} is \code{TRUE} then normalization is performed
+#'   according to \code{method}. If those two simple methods are not satisfying,
+#'   then it is possible to provide a pre-normalized matrix setting
+#'   \code{normalize} to \code{FALSE}. In such a case, the parameter
+#'   \code{method} must be used to document the name of the normalization
+#'   algorithm used.
+#'
+#'   In case proteomic or microarray data are provided, \code{min.count} must be
+#'   understood as its equivalent with respect to those data types.
+#'
+#' @importFrom matrixStats rowMeans2 rowSums2 colSums2
+#' @export
+#' @examples
+#' data(sdc, package = "BulkSignalR")
+#' idx <- sample(nrow(sdc), 4000)
+#' bsrdm.comp <- BSRDataModelComp(sdc[idx, c("N22","SDC17")],
+#'                                normalize=FALSE, method="UQ")
+BSRDataModelComp <- function(
+    counts, normalize = TRUE, symbol.col = NULL, min.count = 10,
+    prop = 0.1, method = c("UQ", "TC"), 
+    log.transformed = FALSE, min.LR.found = 80,
+    species = "hsapiens", conversion.dict = NULL,
+    UQ.pc = 0.75,x.col = NULL, y.col = NULL,
+    barcodeID.col = NULL) {
+  
+  bsrdm <- BSRDataModel(counts = counts,
+                        normalize = normalize,
+                        symbol.col = symbol.col,
+                        min.count = min.count,
+                        prop = prop,
+                        method = method,
+                        log.transformed = log.transformed,
+                        min.LR.found = min.LR.found,
+                        species = species,
+                        conversion.dict = conversion.dict,
+                        UQ.pc = UQ.pc,
+                        x.col = x.col,
+                        y.col = y.col,
+                        barcodeID.col = barcodeID.col)
+  as(bsrdm, "BSRDataModelComp")
+  
+} # BSRDataModelComp
 
 
 
@@ -455,4 +562,5 @@ setMethod("scoreLRGeneSignatures", "BSRDataModelComp", function(obj,
     }
 
     res
+    
 }) # scoreLRGeneSignatures

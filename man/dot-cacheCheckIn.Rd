@@ -14,11 +14,11 @@ BiocFileCache::BiocFileCache()}
 }
 \value{
 logical This function returns TRUE if a record with
-the requested keyword already  exists in the file cache,
- otherwise returns FALSE.
+the requested keyword already exists in the file cache,
+ otherwise it returns FALSE.
 }
 \description{
-Check if the cache record exists or not, by passing
+Check whether the cache record exists or not by passing
 to the function an associated keyword
 related to the resource we are looking for.
 }

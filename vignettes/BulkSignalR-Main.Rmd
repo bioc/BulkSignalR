@@ -330,7 +330,7 @@ scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
 
 simpleHeatmap(scoresLR[1:20, ],
     hcl.palette="Cividis",
-    pointsize=8, width=4, height=3)
+    pointsize=8)
 
 ```
 
@@ -346,7 +346,7 @@ scoresPathway <- scoreLRGeneSignatures(bsrdm, bsrsig.redPBP,
 
 simpleHeatmap(scoresPathway,
     hcl.palette="Blue-Red 2",
-    pointsize=8, width=6, height=2)
+    pointsize=8)
 ```
 
 ## Other visualization utilities
@@ -362,16 +362,13 @@ expression of ligands (pink), receptors (green), and target genes (blue).
 On the top of each individual heatmap, the overall signature score from
 `scoreLRGeneSignatures` is reported for reference.
 
-```{r heatmapMulti,eval=TRUE,fig.dim = c(7,14)}   
+```{r heatmapMulti,eval=TRUE,fig.dim = c(7,10)}   
 pathway1 <- pathways(bsrsig.redPBP)[1]
 signatureHeatmaps(
     pathway = pathway1,
     bsrdm = bsrdm,
-    bsrsig = bsrsig.redPBP,
-    h.width = 6,
-    h.height = 8,
-    fontsize = 4,
-    show_column_names = TRUE
+    heights = c(3,2,15),
+    bsrsig = bsrsig.redPBP
 )
 ```        
 
@@ -579,11 +576,12 @@ bsrinf <- resetToInitialOrganism(bsrinf, conversion.dict = ortholog.dict)
 # For example, if you want to explore L-R interactions
 # you can proceed as shown above for a human dataset.
 
-# bsrinf.redBP <- reduceToBestPathway(bsrinf)
-# bsrsig.redBP <- BSRSignature(bsrinf.redBP, qval.thres=0.001)
-# scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP, name.by.pathway=FALSE)
-# simpleHeatmap(scoresLR[1:20,],column.names=TRUE,
-#               width=9, height=5, pointsize=8)
+bsrinf.redBP <- reduceToBestPathway(bsrinf)
+bsrsig.redBP <- BSRSignature(bsrinf.redBP, qval.thres=0.001)
+scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP, name.by.pathway=FALSE)
+head(LRinter(bsrinf.redBP))
+#simpleHeatmap(scoresLR,column.names=TRUE,
+#             pointsize=8)
 ```
 
 \

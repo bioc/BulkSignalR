@@ -4,8 +4,8 @@
 
 #' Add cache for resources & database.
 #'
-#' Add cache for resources (pathways, or PWC network)
-#' downloaded from the web or local database .
+#' Add cache for resources (pathways, or reference network)
+#' downloaded from the web or local database.
 #' This part is handled with BiocFileCache.
 #'
 #' @param fpath    Path to file on the web or local system.
@@ -55,7 +55,7 @@
 
 #' Check existence of a record in the cache.
 #'
-#' Check if the cache record exists or not, by passing
+#' Check whether the cache record exists or not by passing
 #' to the function an associated keyword
 #' related to the resource we are looking for.
 #'
@@ -65,8 +65,8 @@
 #'
 #' @keywords internal
 #' @return logical This function returns TRUE if a record with
-#' the requested keyword already  exists in the file cache,
-#'  otherwise returns FALSE.
+#' the requested keyword already exists in the file cache,
+#'  otherwise it returns FALSE.
 .cacheCheckIn <- function(bfc, resourceName) {
     cacheHits <- BiocFileCache::bfcquery(bfc, 
         query = resourceName, field = "rname")
@@ -79,7 +79,7 @@
 
 #' Delete cache content.
 #'
-#' Delete the content of cache directory.
+#' Delete the content of the cache directory.
 #'
 #' @param dir Directory to remove. Can be only 'resources' or 'database'.
 #' @return Returns `NULL`, invisibly. 
@@ -127,9 +127,9 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
     return(invisible(NULL))
 }
 
-#' Get cache content informations..
+#' Get cache content information.
 #'
-#' Get cache content informations for specific cache dir.
+#' Get cache content information for a specific cache directory.
 #'
 #' @param dir Directory to remove in order to clean the cache.
 #' Can be only 'resources', 'database' or 'both'.
@@ -193,9 +193,9 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 }
 
 
-#' Check remote files ressources are changed.
+#' Check whether remote resource files have been changed.
 #'
-#' Check to see if some ressources has
+#' Check to see whether some resource
 #' has been updated.
 #'
 #' @param dir Directory for which you want to check Version.
@@ -306,11 +306,11 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
     return(FALSE)
 }
 
-#' Check valid RDS cache file.
+#' Check for valid RDS cache file.
 #'
-#' This function checks if a cache entry is a valid RDS file.
+#' This function checks whether a cache entry is a valid RDS file.
 #' Returns TRUE if the cache entry is valid, FALSE otherwise.
-#' In the case of an invalid file the cache entry and file are
+#' In the case of an invalid file, the cache entry and file are
 #' deleted.
 #'
 #' @param bfc Object of class BiocFileCache, created by a call to

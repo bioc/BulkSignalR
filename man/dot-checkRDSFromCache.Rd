@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{.checkRDSFromCache}
 \alias{.checkRDSFromCache}
-\title{Check valid RDS cache file.}
+\title{Check for valid RDS cache file.}
 \usage{
 .checkRDSFromCache(bfc, resourceName)
 }
@@ -16,9 +16,9 @@ BiocFileCache::BiocFileCache()}
 logical TRUE/FALSE
 }
 \description{
-This function checks if a cache entry is a valid RDS file.
+This function checks whether a cache entry is a valid RDS file.
 Returns TRUE if the cache entry is valid, FALSE otherwise.
-In the case of an invalid file the cache entry and file are
+In the case of an invalid file, the cache entry and file are
 deleted.
 }
 \keyword{internal}

@@ -7,15 +7,15 @@
 getInteractions(idRelease = NULL)
 }
 \arguments{
-\item{idRelease}{integer id version Release
-Default is NULL so last version is selected.}
+\item{idRelease}{integer ID of the chosen release
+Default is NULL such that the latest version is selected.}
 }
 \value{
-Returns dataframe LR interactions, invisibly.
+Returns data frame LR interactions, invisibly.
 }
 \description{
-Fetch LR interactions from database and
-and return a dataframe
+Fetch LR interactions from reference database and
+and return a data frame
 }
 \examples{
 getInteractions(idRelease=1)

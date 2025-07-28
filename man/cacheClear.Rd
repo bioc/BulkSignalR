@@ -13,7 +13,7 @@ cacheClear(dir = c("both", "resources", "database"))
 Returns `NULL`, invisibly.
 }
 \description{
-Delete the content of cache directory.
+Delete the content of the cache directory.
 }
 \examples{
 cacheClear(dir="database")

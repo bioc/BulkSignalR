@@ -2,31 +2,31 @@
 % Please edit documentation in R/resource.R
 \name{resetNetwork}
 \alias{resetNetwork}
-\title{Import Network from your own}
+\title{Import a refernce network of your own}
 \usage{
 resetNetwork(network)
 }
 \arguments{
-\item{network}{Network dataframe is defined with 3 columns
+\item{network}{Network data frame made of 3 columns
 a.gn, b.gn & type. 'a.gn' & 'b.gn' should be gene symbols
 of gene interactions. 'type'  should be set as
-'controls-expression-of' when user provide
+'controls-expression-of' when a user provides
 his own file.}
 }
 \value{
 Returns `NULL`, invisibly.
 }
 \description{
-Network is a dataframe that gives relation between
-genes. It's composed of 3 columns annoted as
-follows :
+Network is a data frame that defines interactions between
+genes. It's composed of 3 columns named as
+follows:
 }
 \details{
-a.gn : Gene Symbol 1
-type : controls-expression-of
-b.gn : Gene Symbol 2
+a.gn: Gene Symbol 1
+type: controls-expression-of
+b.gn: Gene Symbol 2
 
-When the user provide his own network
+When the user provides his own network,
 'type' should be set to 'controls-expression-of'.
 }
 \examples{

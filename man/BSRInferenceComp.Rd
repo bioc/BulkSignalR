@@ -98,9 +98,7 @@ In the autocrine case, a single cluster comparison name is provided.
 In the corresponding cluster comparison, a group of samples A was
 compared to a group of samples B to determine fold-changes and associated
 P-values. The inferred ligand-receptor interactions take place in the
-samples of group A. They are paracrine interactions in the case of
-single-cell data or they take place in the same tissue represented by
-cluster A. A typical single-cell example would be a population of
+samples of group A. A typical single-cell example would be a population of
 macrophages (group A) compared to all the other populations (group B) to
 represent specific increased or decreased expression in macrophages. The
 resulting ligand-receptor interactions will be autocrine interactions
@@ -108,9 +106,10 @@ that are exacerbated (or reduced depending on the chosen parameters) in
 macrophages.
 
 In the paracrine case, two cluster comparison names must be provided.
-For instance, a first comparison coul involved macrophages versus all
+For instance, a first comparison could involve macrophages versus all
 the other cell populations as above. The second comparison could be
-B-cells against all the other populations. Now, calling BSRInferenceComp()
+B-cells against all the other populations. Now, calling
+\code{BSRInferenceComp()}
 with comparison macrophages vs. the rest and, as source comparison, B-cells
 vs. the rest, will result in inferring interactions between B-cells
 (ligands) and macrophages (receptors and downstream pathways). To obtain

@@ -90,9 +90,7 @@ setMethod(
 #' In the corresponding cluster comparison, a group of samples A was
 #' compared to a group of samples B to determine fold-changes and associated
 #' P-values. The inferred ligand-receptor interactions take place in the
-#' samples of group A. They are paracrine interactions in the case of
-#' single-cell data or they take place in the same tissue represented by
-#' cluster A. A typical single-cell example would be a population of
+#' samples of group A. A typical single-cell example would be a population of
 #' macrophages (group A) compared to all the other populations (group B) to
 #' represent specific increased or decreased expression in macrophages. The
 #' resulting ligand-receptor interactions will be autocrine interactions
@@ -100,9 +98,10 @@ setMethod(
 #' macrophages.
 #'
 #' In the paracrine case, two cluster comparison names must be provided.
-#' For instance, a first comparison coul involved macrophages versus all
+#' For instance, a first comparison could involve macrophages versus all
 #' the other cell populations as above. The second comparison could be
-#' B-cells against all the other populations. Now, calling BSRInferenceComp()
+#' B-cells against all the other populations. Now, calling
+#' \code{BSRInferenceComp()}
 #' with comparison macrophages vs. the rest and, as source comparison, B-cells
 #' vs. the rest, will result in inferring interactions between B-cells
 #' (ligands) and macrophages (receptors and downstream pathways). To obtain
@@ -349,10 +348,11 @@ BSRInferenceComp <- function(obj, cmp.name,
         tg.pval = tgpval, tg.logFC = tglogFC, tg.expr = tgexpr, 
         cmp.name = cmp.name, src.cmp.name = src.cmp.name.char
     )
+    
 } # BSRInferenceComp
 
-# Accessors & setters ========================================================
 
+# Accessors & setters ========================================================
 
 setGeneric("comparisonName", signature="x",
     function(x) standardGeneric("comparisonName")
@@ -402,6 +402,7 @@ setGeneric("sourceComparisonName", signature="x",
 setMethod("sourceComparisonName", "BSRInferenceComp", 
     function(x) x@src.cmp.name)
 
+
 setGeneric("sourceComparisonName<-", signature=c("x", "value"),
     function(x, value) standardGeneric("sourceComparisonName<-")
 )
@@ -416,10 +417,10 @@ setMethod("sourceComparisonName<-", "BSRInferenceComp", function(x, value) {
     x
 })
 
+
 setGeneric("tgPval", signature="x",
     function(x) standardGeneric("tgPval")
 )
-
 #' Target gene P-values accessor
 #'
 #' @name tgPval
@@ -431,6 +432,7 @@ setGeneric("tgPval", signature="x",
 #' tgPval(bsrinf)
 #' @export
 setMethod("tgPval", "BSRInferenceComp", function(x) x@tg.pval)
+
 
 setGeneric("tgPval<-", signature=c("x", "value"),
     function(x, value) standardGeneric("tgPval<-")
@@ -478,6 +480,7 @@ setMethod("tgLogFC<-", "BSRInferenceComp", function(x, value) {
     x
 })
 
+
 setGeneric("tgExpr", signature="x",
     function(x) standardGeneric("tgExpr")
 )
@@ -492,6 +495,7 @@ setGeneric("tgExpr", signature="x",
 #' tgExpr(bsrinf)
 #' @export
 setMethod("tgExpr", "BSRInferenceComp", function(x) x@tg.expr)
+
 
 setGeneric("tgExpr<-", signature=c("x", "value"),
     function(x, value) standardGeneric("tgExpr<-")
@@ -530,6 +534,7 @@ setMethod(
         )]
     }
 )
+
 
 setGeneric("LRinterScore", signature="x",
     function(x) standardGeneric("LRinterScore")
@@ -641,8 +646,8 @@ setMethod("rescoreInference", "BSRInferenceComp", function(obj,
     LRinter(obj) <- pairs
 
     obj
+    
 }) # rescoreInference
-
 
 
 setGeneric("updateInference", signature="obj",
@@ -696,12 +701,15 @@ setGeneric("updateInference", signature="obj",
 #' initial BSRInferenceComp object. If a restriction on the targets
 #' was applied, then the update is likely to miss some targets, i.e.,
 #' the statistical analysis will be wrong.
+#' 
+#' In case no L-R interaction is above the required thresholds, the
+#' value `NULL` is returned.
 #'
 #' Note that correlations are set to 1 to avoid
 #' lengthy computations with scRNA-seq data and multiple cell
 #' populations.
 #'
-#' The main function of this method is to support our SingleCellSignalR v2
+#' The main role of this method is to support our SingleCellSignalR v2
 #' package.
 #'
 #' @export
@@ -825,7 +833,7 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     }
     good <- good & inter$LR.score >= min.LR.score
     if (sum(good) == 0) {
-        stop("No selection")
+        return(NULL)
     }
     inter <- inter[good, ]
     L <- L[good]
@@ -908,13 +916,11 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
 
     # rescore and return
     rescoreInference(obj, par, rank.p = rank.p, fdr.proc = fdr.proc)
-}) # updateInferenceComp
-
-
+    
+}) # updateInference
 
 
 # Reduction and pathway stat methods ===========================================
-
 
 #' Keep one pathway per ligand-receptor pair
 #'
@@ -985,6 +991,7 @@ setMethod("reduceToBestPathway", "BSRInferenceComp", function(obj) {
     obj@inf.param$pathway.reduced <- TRUE
 
     obj
+    
 }) # reduceToBestPathway
 
 
@@ -1060,6 +1067,7 @@ setMethod("reduceToReceptor", "BSRInferenceComp", function(obj) {
     obj@inf.param$ligand.reduced <- TRUE
 
     obj
+    
 }) # reduceToReceptor
 
 
@@ -1137,6 +1145,7 @@ setMethod("reduceToLigand", "BSRInferenceComp", function(obj) {
     obj@inf.param$receptor.reduced <- TRUE
 
     obj
+    
 }) # reduceToLigand
 
 
@@ -1224,6 +1233,5 @@ setMethod("reduceToPathway", "BSRInferenceComp", function(obj) {
     obj@inf.param$receptor.reduced <- TRUE
 
     obj
+    
 }) # reduceToPathway
-
-

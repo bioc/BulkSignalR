@@ -3,7 +3,7 @@
 \docType{data}
 \name{bsrinf}
 \alias{bsrinf}
-\title{A skinny BSR-Inference object related to sdc.}
+\title{A skinny BSRInference object related to sdc.}
 \format{
 An example of an object created by inference function
 }
@@ -13,8 +13,8 @@ data(bsrinf)
 \description{
 From the previous object `bsrdm`, 
 you can generate inferences by calling its
-method `BSRInference`. 
-The resulting BSR-Inference object is `bsrinf`,
+constructor `BSRInference`. 
+The resulting BSRInference object is `bsrinf`,
 It contains all the inferred L-R interactions 
 with their associated pathways and corrected p-values.
 }

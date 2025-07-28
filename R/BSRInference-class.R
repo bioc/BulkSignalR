@@ -95,10 +95,8 @@ setMethod(
 #' @name BSRInference
 #'
 #' @param obj         A BSRDataModel output by \code{\link{BSRDataModel}} with
-#' statistical model parameters trained by
-#' \code{"\link[=BSRDataModel-class]{learnParameters}"}
-#'
-#' method.
+#' statistical model parameters trained by the
+#' \code{"\link[=BSRDataModel-class]{learnParameters}"} method.
 #' @param rank.p        A number between 0 and 1 defining the rank of the last
 #' considered target genes.
 #' @param min.cor         The minimum Spearman correlation required between
@@ -248,6 +246,7 @@ BSRInference <- function(obj, rank.p = 0.55,
         inf.param = inf.param
     )
 } # BSRInference
+
 
 # Accessors & setters ========================================================
 
@@ -420,6 +419,7 @@ setMethod("inferenceParameters<-", "BSRInference", function(x, value) {
 
 
 # simplified table view ========================================================
+
 setGeneric("LRinterShort", signature="x",
     function(x) standardGeneric("LRinterShort")
 )
@@ -481,7 +481,8 @@ setGeneric("rescoreInference", signature="obj",
 #' data(bsrdm, package = "BulkSignalR")
 #' 
 #' bsrinf.new <- rescoreInference(bsrinf,
-#' param = parameters(bsrdm))
+#'                   param = parameters(bsrdm)
+#'               )
 setMethod("rescoreInference", "BSRInference", function(obj, param, 
     rank.p = 0.55, fdr.proc = c("BH", "Bonferroni", "Holm",
         "Hochberg", "SidakSS", "SidakSD", "BY", "ABH", "TSBH"
@@ -941,7 +942,7 @@ setMethod("reduceToPathway", "BSRInference", function(obj) {
 setGeneric("resetToInitialOrganism", signature="obj",
     function(obj,...) standardGeneric("resetToInitialOrganism")
 )
-#'  Reset gene names to initial organism providen in first instance
+#'  Reset gene names to initial organism provided in the first instance
 #'
 #' @name resetToInitialOrganism
 #' @aliases resetToInitialOrganism,BSRInference-method
@@ -951,7 +952,7 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #'
 #' @return An BSRInference object updated for gene names.
 #' The gene names are replaced by the ones from
-#' the organism providen in first instance.
+#' the organism provided in the first instance.
 #'
 #' @export
 #' @examples
@@ -1015,18 +1016,18 @@ setMethod("resetToInitialOrganism", "BSRInference", function(obj,
 }) # resetToInitialOrganism
 
 
-#' @title Convert gene symbol to another organism
+#' @title Convert gene symbols to another organism
 #'
-#' @description Convert gene symbol to another organism
-#' based on a dictionary with human and ortholog species.
+#' @description Convert gene symbols to another organism
+#' based on a dictionary with human and orthologs in the other species.
 #'
-#' @param genes genes you want to convert
+#' @param genes The genes you want to convert.
 #' @param conversion.dict A data frame containing
-#' gene names for source species and Homo Sapiens.
+#' gene names for the source species and Homo sapiens.
 #'
-#' @return Depend type of input genes
+#' @return Depend on the type of input genes
 #' LRinter return a vector of genes
-#' tgGenes receptors ligands : return list of list of genes
+#' tgGenes receptors ligands: return list of list of genes
 #' @keywords internal
 .geneNameConversion <- function(genes, conversion.dict) {
     # print(".geneNameConversion")

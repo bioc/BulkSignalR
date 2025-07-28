@@ -18,7 +18,7 @@ log-fold-changes (logFC), and expression values.
 
 \item{\code{differential.stats}}{Comparison statistics A versus B 
 as a data.frame and
-containing at least two columns named 'pval', 'logFC', and 'expr'.}
+containing at least 3 columns named 'pval', 'logFC', and 'expr'.}
 }}
 
 \examples{

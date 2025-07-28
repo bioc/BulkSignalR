@@ -21,8 +21,8 @@
 Returns `NULL`, invisibly.
 }
 \description{
-Add cache for resources (pathways, or PWC network)
-downloaded from the web or local database .
+Add cache for resources (pathways, or reference network)
+downloaded from the web or local database.
 This part is handled with BiocFileCache.
 }
 \keyword{internal}

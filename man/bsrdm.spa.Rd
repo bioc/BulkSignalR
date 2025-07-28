@@ -3,10 +3,10 @@
 \docType{data}
 \name{bsrdm.spa}
 \alias{bsrdm.spa}
-\title{A skinny BSR-dataModel object related to spatial dataset}
+\title{A skinny BSRDataModel object related to a spatial data set}
 \format{
 An example of an object created by `BSRDataModel`
-applied to a subset of a spatial dataset.
+applied to a subset of a spatial data set.
 `learnParameters` was also called to get statistical 
 model parameters.
 }
@@ -17,7 +17,7 @@ model parameters.
 data(bsrdm.spa)
 }
 \description{
-obtained from STexampleData::Visium_humanDLPFC. 
+Obtained from STexampleData::Visium_humanDLPFC. 
 A single sample (sample 151673)
 of human brain dorsolateral prefrontal cortex (DLPFC)
 in the human brain, measured using the 10x Genomics 
@@ -31,6 +31,6 @@ name.idx <- c("10x32","3x47","4x50",
 \details{
 Output from the `learnParameters` function to get
 BulkSignalR statistical model parameters for a subset
-of a spatial dataset.
+of a spatial data set.
 }
 \keyword{datasets}

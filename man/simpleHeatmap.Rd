@@ -6,8 +6,6 @@
 \usage{
 simpleHeatmap(
   mat.c,
-  width = 4,
-  height = 3,
   dend.row = NULL,
   dend.spl = NULL,
   cols = NULL,
@@ -27,17 +25,13 @@ simpleHeatmap(
 \item{mat.c}{A matrix with the signature scores such as output by
 \code{scoreLRGeneSignatures()}.}
 
-\item{width}{Heatmap width.}
-
-\item{height}{Heatmap height.}
-
 \item{dend.row}{A precomputed row dendrogram.}
 
 \item{dend.spl}{A precompute sample (column) dendrogram.}
 
 \item{cols}{A vector of colors to use for the heatmap.}
 
-\item{pointsize}{Heatmap fontsize}
+\item{pointsize}{Heatmap font point size}
 
 \item{bottom.annotation}{\code{ComplexHeatmap} package bottom annotations.}
 
@@ -59,7 +53,7 @@ using color mapping function with circlize::colorRamp2().
 palettes are listed in grDevides::hcl.pals().
 of row (gene) names.}
 
-\item{reverse}{A logicial to reverse or not colors in hcl.palette.}
+\item{reverse}{A logical to reverse or not colors in hcl.palette.}
 }
 \value{
 A heatmap. Since heatmap plotting tend to be slow on the screen,
@@ -96,7 +90,5 @@ scoresLR <- scoreLRGeneSignatures(bsrdm, bsrsig.redBP,
 )
 simpleHeatmap(scoresLR[1:3, ],
     column.names = TRUE,
-    hcl.palette = "Cividis",
-    width=2, 
-    height=1.5)
+    hcl.palette = "Cividis")
 }

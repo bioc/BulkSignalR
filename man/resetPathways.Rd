@@ -2,7 +2,7 @@
 % Please edit documentation in R/resource.R
 \name{resetPathways}
 \alias{resetPathways}
-\title{Import pathways from a file or dataframe}
+\title{Import pathways from a file or data frame}
 \usage{
 resetPathways(
   dataframe = NULL,
@@ -12,7 +12,7 @@ resetPathways(
 )
 }
 \arguments{
-\item{dataframe}{Dataframe formated as 
+\item{dataframe}{Data frame formated as follows.
 When \code{resourceName} is set to "Reactome",
 dataframe colnames must be defined as :
 "Reactome ID", "Gene name" & "Reactome name"
@@ -32,18 +32,18 @@ Returns `NULL`, invisibly.
 }
 \description{
 \code{resetPathways} is a function
-we provide to user to refresh REACTOME
+we provide to users who want to refresh REACTOME
 and GO-BP content included in BulkSignalR.
 }
 \details{
-Pathways are defined in Reactome and
-GoBP databases.
+Pathways in `BulkSignalR` (as sets of genes/proteins) are defined
+after Reactome and GOBP databases.
 Those can be updated using
 json files from
 the Human Molecular Signatures Database (MSigDB)
 at \url{https://www.gsea-msigdb.org/}
 Gmt file format also can be imported.
-A dataframe can be used directly also.
+A data frame can be used directly also.
 }
 \examples{
 reactSubset <- getResource(resourceName = "Reactome",

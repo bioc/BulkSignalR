@@ -2,16 +2,16 @@
 % Please edit documentation in R/database.R
 \name{createDatabase}
 \alias{createDatabase}
-\title{Fetch the database from internet.}
+\title{Fetch the LR reference database from internet}
 \usage{
 createDatabase(onRequest = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{onRequest}{logical True if you force
-download again. This will overwrite
-pre-existing database. Default is True.}
+\item{onRequest}{logical TRUE to force
+downloading again. This will overwrite the
+pre-existing local database. Default is TRUE.}
 
-\item{verbose}{Logical TRUE/FALSE}
+\item{verbose}{Logical}
 }
 \value{
 Returns `NULL`, invisibly.

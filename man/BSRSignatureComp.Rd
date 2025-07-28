@@ -2,7 +2,7 @@
 % Please edit documentation in R/BSRSignatureComp-class.R
 \name{BSRSignatureComp}
 \alias{BSRSignatureComp}
-\title{Extract gene signatures of LR pair activity}
+\title{Extract gene signatures of LR pairs activity}
 \usage{
 BSRSignatureComp(obj, pval.thres = NULL, qval.thres = NULL, with.pw.id = FALSE)
 }
