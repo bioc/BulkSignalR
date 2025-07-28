@@ -892,7 +892,7 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
         }
     }
     if (sum(keep) == 0) {
-        stop("No selection")
+        return(NULL)
     }
     inter <- inter[keep, ]
     L <- L[keep]
