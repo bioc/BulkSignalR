@@ -59,7 +59,7 @@ setMethod("show", "BSRSignatureComp", function(object) {
 
 # Constructor ========================================================
 
-# Obtain gene signatures from a BSRInference object ============================
+# Obtain gene signatures from a BSRInference object
 
 #' Extract gene signatures of LR pair activity
 #'

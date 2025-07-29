@@ -1,4 +1,4 @@
-#' Get correlated ligand-receptor pairs.
+#' Get correlated ligand-receptor pairs
 #'
 #' Internal function to compute the Spearman correlations
 #' of all the ligand-receptor
@@ -67,6 +67,7 @@
 
     good <- pairs$corr >= min.cor
     pairs[good, ]
+    
 } # .getCorrelatedLR
 
 
@@ -258,6 +259,7 @@
         "L", "R", "corr", "pwid", "pwname", "len", "target.genes",
         "target.corr"
     )]
+    
 } # .downstreamSignaling
 
 
@@ -400,6 +402,7 @@
     }
 
     results$merged.pairs
+    
 } # .checkReceptorSignaling
 
 
@@ -502,4 +505,5 @@
     res$qval <- adj$adjp[order(adj$index), fdr.proc]
 
     res
+    
 } # .pValuesLR

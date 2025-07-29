@@ -4,8 +4,8 @@
 
 #' Add cache for resources & database.
 #'
-#' Add cache for resources (pathways, or PWC network)
-#' downloaded from the web or local database .
+#' Add cache for resources (pathways, or reference network)
+#' downloaded from the web or local database.
 #' This part is handled with BiocFileCache.
 #'
 #' @param fpath    Path to file on the web or local system.
@@ -49,15 +49,16 @@
     if (verbose) {
         cli::cli_alert("{.path {BiocFileCache::bfccache(bfc)}}")
         BiocFileCache::bfcinfo(bfc)
-        message("")
+        cat("", file=stderr())
     }
 
     return(invisible(NULL))
 }
 
+
 #' Check existence of a record in the cache.
 #'
-#' Check if the cache record exists or not, by passing
+#' Check whether the cache record exists or not by passing
 #' to the function an associated keyword
 #' related to the resource we are looking for.
 #'
@@ -67,8 +68,8 @@
 #'
 #' @keywords internal
 #' @return logical This function returns TRUE if a record with
-#' the requested keyword already  exists in the file cache,
-#'  otherwise returns FALSE.
+#' the requested keyword already exists in the file cache,
+#' otherwise it returns FALSE.
 .cacheCheckIn <- function(bfc, resourceName) {
     cacheHits <- BiocFileCache::bfcquery(bfc, 
         query = resourceName, field = "rname")
@@ -121,17 +122,18 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
 
     # dir.create(resourcesCacheDir)
     cli::cli_alert("BulkSignalR cache {.val {dir}} has been deleted.\n")
-    message(
-        "- Location: ", cacheDir, "\n",
-        "- No. of files: 0", "\n"
+    cat(
+      "- Location:", cacheDir, "\n",
+      "- No. of files: 0", "\n", file=stderr()
     )
 
     return(invisible(NULL))
 }
 
-#' Get cache content informations..
+
+#' Get cache content information.
 #'
-#' Get cache content informations for specific cache dir.
+#' Get cache content information for a specific cache directory.
 #'
 #' @param dir Directory to remove in order to clean the cache.
 #' Can be only 'resources', 'database' or 'both'.
@@ -162,7 +164,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
     # safeguard
     if (!dir.exists(cacheDir)) {
         cli::cli_alert("BulkSignalR {.val {dir}} cache uninitialized.")
-        message("- Location: ", cacheDir, "\n")
+        cat("- Location:", cacheDir, "\n", file=stderr())
         return(invisible(NULL))
     }
 
@@ -171,8 +173,8 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 
     if (length(files) == 0) {
         cli::cli_alert("BulkSignalR {.val {dir}} cache uninitialized.")
-        message("- Location: ", cacheDir, "\n",
-            "- No. of files: ", length(files), "\n"
+        cat("- Location:", cacheDir, "\n",
+            "- No. of files: ", length(files), "\n", file=stderr()
         )
         return(invisible(NULL))
     } else {
@@ -182,22 +184,23 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
         # print(size_obj)
 
         cli::cli_alert("BulkSignalR {.val {dir}} cache :")
-        message(
-            "- Location:  ", cacheDir, " \n",
-            "- No. of files:  ", length(files), "\n",
-            "- Total size:  ", format(size_obj, units = "auto"), "\n"
+        cat(
+            "- Location:", cacheDir, "\n",
+            "- No. of files:", length(files), "\n",
+            "- Total size:", format(size_obj, units = "auto"), "\n",
+            file=stderr()
         )
         listing <- paste0(files, "\n")
-        message(listing)
+        cat(listing, "\n", file=stderr())
     }
 
     return(invisible(NULL))
 }
 
 
-#' Check remote files ressources are changed.
+#' Check whether remote resource files have been changed.
 #'
-#' Check to see if some ressources has
+#' Check to see whether some resource
 #' has been updated.
 #'
 #' @param dir Directory for which you want to check Version.
@@ -214,6 +217,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #' cacheVersion()
 cacheVersion <- function(dir = c("both", "resources", "database")) {
     dir <- match.arg(dir)
+    
     # bypass ssl
     config <- list(ssl_verifypeer = 0L, ssl_verifyhost = 0L)
 
@@ -310,11 +314,12 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
     return(FALSE)
 }
 
-#' Check valid RDS cache file.
+
+#' Check for valid RDS cache file.
 #'
-#' This function checks if a cache entry is a valid RDS file.
+#' This function checks whether a cache entry is a valid RDS file.
 #' Returns TRUE if the cache entry is valid, FALSE otherwise.
-#' In the case of an invalid file the cache entry and file are
+#' In the case of an invalid file, the cache entry and file are
 #' deleted.
 #'
 #' @param bfc Object of class BiocFileCache, created by a call to

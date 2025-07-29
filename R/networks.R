@@ -84,6 +84,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     g <- igraph::set_edge_attr(g, name = "log10.pval", value = -log10(pval))
     g <- igraph::set_edge_attr(g, name = "qval", value = qval)
     g <- igraph::set_edge_attr(g, name = "log10.qval", value = -log10(qval))
+    
 } # getLRNetwork
 
 
@@ -144,7 +145,6 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         "controls-state-of-by-metab"
     )
 
-
     arcs <- foreach::foreach(i = seq_len(nrow(pairs)), .combine = rbind) %do% {
         # arcs <- NULL
         # for (i in 1:nrow(pairs)) {
@@ -188,9 +188,18 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
         ret <- int[!directed, c("b.gn", "a.gn")]
         names(ret) <- c("a.gn", "b.gn")
         d.int <- unique(rbind(int[, c("a.gn", "b.gn")], ret))
+        d.int <- d.int[!is.na(d.int$a.gn) & !is.na(d.int$b.gn),]
         g <- igraph::graph_from_data_frame(d.int, directed = TRUE)
+        
+        # get the reachable targets (in the graph and at finite distance)
         targets <- intersect(targets, c(d.int$a.gn, d.int$b.gn))
-
+        targets <- targets[!is.na(targets)]
+        sp <- igraph::distances(g,
+                                v = igraph::V(g)[igraph::V(g)$name == r],
+                                to = igraph::V(g)[igraph::V(g)$name %in% targets],
+                                mode = "out")
+        targets <- colnames(sp)[!is.infinite(sp[r, ])]
+        
         # keep shortest paths from the receptor to the targets only
         if ((r %in% d.int$a.gn || r %in% d.int$b.gn) && length(targets) > 0) {
             paths <- try(igraph::shortest_paths(g,
@@ -231,6 +240,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     }
 
     unique(arcs)
+    
 } # .edgesLRIntracell
 
 
@@ -442,7 +452,9 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     from <- ret$from
     ret$from <- ret$to
     ret$to <- from
+    
     d.int <- unique(rbind(all.edges, ret))
+    d.int <- d.int[!is.na(d.int$from) & !is.na(d.int$to),]
     g <- igraph::graph_from_data_frame(d.int, directed = TRUE)
 
     g.names <- igraph::vertex_attr(g, "name")
@@ -457,4 +469,5 @@ getLRIntracellNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
     g.colors[g.names %in% pairs$R] <- "red"
     g.colors[g.names %in% pairs$L] <- "green"
     g <- igraph::set_vertex_attr(g, name = "color", value = g.colors)
+    
 } # getLRIntracellNetwork

@@ -45,6 +45,7 @@ setClass("BSRInference",
     )
 )
 
+
 setValidity(
     "BSRInference",
     function(object) {
@@ -71,11 +72,12 @@ setValidity(
     }
 )
 
+
 setMethod(
     "show", "BSRInference",
     function(object) {
         cat("Reference database: ", object@inf.param$reference, "\n", sep = "")
-        message(utils::head(object@LRinter[
+        print(utils::head(object@LRinter[
             order(object@LRinter$qval),
             c("L", "R", "pval", "qval", "pw.id", "pw.name"),
         ]))[5, ]
@@ -83,6 +85,7 @@ setMethod(
         utils::str(object@inf.param)
     }
 )
+
 
 # Constructor ========================================================
 
@@ -95,10 +98,8 @@ setMethod(
 #' @name BSRInference
 #'
 #' @param obj         A BSRDataModel output by \code{\link{BSRDataModel}} with
-#' statistical model parameters trained by
-#' \code{"\link[=BSRDataModel-class]{learnParameters}"}
-#'
-#' method.
+#' statistical model parameters trained by the
+#' \code{"\link[=BSRDataModel-class]{learnParameters}"} method.
 #' @param rank.p        A number between 0 and 1 defining the rank of the last
 #' considered target genes.
 #' @param min.cor         The minimum Spearman correlation required between
@@ -247,7 +248,9 @@ BSRInference <- function(obj, rank.p = 0.55,
         receptors = receptors, tg.genes = tg, tg.corr = tgcorr,
         inf.param = inf.param
     )
+    
 } # BSRInference
+
 
 # Accessors & setters ========================================================
 
@@ -265,6 +268,7 @@ setGeneric("LRinter", signature="x",
 #' LRinter(bsrinf)
 #' @export
 setMethod("LRinter", "BSRInference", function(x) x@LRinter)
+
 
 setGeneric("LRinter<-", signature=c("x", "value"),
     function(x, value) standardGeneric("LRinter<-")
@@ -294,6 +298,7 @@ setGeneric("ligands", signature="x",
 #' @export
 setMethod("ligands", "BSRInference", function(x) x@ligands)
 
+
 setGeneric("ligands<-", signature=c("x", "value"),
     function(x, value) standardGeneric("ligands<-")
 )
@@ -308,6 +313,7 @@ setMethod("ligands<-", "BSRInference", function(x, value) {
     x
 })
 
+
 setGeneric("receptors", signature="x",
     function(x) standardGeneric("receptors")
 )
@@ -319,6 +325,7 @@ setGeneric("receptors", signature="x",
 #' @return receptors
 #' @export
 setMethod("receptors", "BSRInference", function(x) x@receptors)
+
 
 setGeneric("receptors<-", signature=c("x", "value"),
     function(x, value) standardGeneric("receptors<-")
@@ -335,6 +342,7 @@ setMethod("receptors<-", "BSRInference", function(x, value) {
     x
 })
 
+
 setGeneric("tgGenes", signature="x",
     function(x) standardGeneric("tgGenes")
 )
@@ -346,6 +354,7 @@ setGeneric("tgGenes", signature="x",
 #' @return tgGenes
 #' @export
 setMethod("tgGenes", "BSRInference", function(x) x@tg.genes)
+
 
 setGeneric("tgGenes<-", signature=c("x", "value"),
     function(x, value) standardGeneric("tgGenes<-")
@@ -361,6 +370,7 @@ setMethod("tgGenes<-", "BSRInference", function(x, value) {
     methods::validObject(x)
     x
 })
+
 
 setGeneric("tgCorr", signature="x",
     function(x) standardGeneric("tgCorr")
@@ -388,6 +398,7 @@ setMethod("tgCorr<-", "BSRInference", function(x, value) {
     x
 })
 
+
 setGeneric("inferenceParameters", signature="x",
     function(x) standardGeneric("inferenceParameters")
 )
@@ -402,6 +413,7 @@ setGeneric("inferenceParameters", signature="x",
 #' inferenceParameters(bsrinf)
 #' @export
 setMethod("inferenceParameters", "BSRInference", function(x) x@inf.param)
+
 
 setGeneric("inferenceParameters<-", signature=c("x", "value"),
     function(x, value) standardGeneric("inferenceParameters<-")
@@ -420,6 +432,7 @@ setMethod("inferenceParameters<-", "BSRInference", function(x, value) {
 
 
 # simplified table view ========================================================
+
 setGeneric("LRinterShort", signature="x",
     function(x) standardGeneric("LRinterShort")
 )
@@ -481,7 +494,8 @@ setGeneric("rescoreInference", signature="obj",
 #' data(bsrdm, package = "BulkSignalR")
 #' 
 #' bsrinf.new <- rescoreInference(bsrinf,
-#' param = parameters(bsrdm))
+#'                       param = parameters(bsrdm)
+#'               )
 setMethod("rescoreInference", "BSRInference", function(obj, param, 
     rank.p = 0.55, fdr.proc = c("BH", "Bonferroni", "Holm",
         "Hochberg", "SidakSS", "SidakSD", "BY", "ABH", "TSBH"
@@ -555,6 +569,7 @@ setMethod("rescoreInference", "BSRInference", function(obj, param,
     LRinter(obj) <- pairs
 
     obj
+    
 }) # rescoreInference
 
 
@@ -656,7 +671,9 @@ setMethod("getPathwayStats", "BSRInference", function(obj,
             stringsAsFactors = FALSE
         )
     }
+    
 }) # getPathwayStats
+
 
 setGeneric("reduceToBestPathway", signature="obj",
     function(obj,...) standardGeneric("reduceToBestPathway")
@@ -718,8 +735,8 @@ setMethod("reduceToBestPathway", "BSRInference", function(obj) {
     obj@inf.param$pathway.reduced <- TRUE
 
     obj
+    
 }) # reduceToBestPathway
-
 
 
 setGeneric("reduceToReceptor", signature="obj",
@@ -785,8 +802,8 @@ setMethod("reduceToReceptor", "BSRInference", function(obj) {
     obj@inf.param$ligand.reduced <- TRUE
 
     obj
+    
 }) # reduceToReceptor
-
 
 
 setGeneric("reduceToLigand", signature="obj",
@@ -854,6 +871,7 @@ setMethod("reduceToLigand", "BSRInference", function(obj) {
     obj@inf.param$receptor.reduced <- TRUE
 
     obj
+    
 }) # reduceToLigand
 
 
@@ -931,17 +949,16 @@ setMethod("reduceToPathway", "BSRInference", function(obj) {
     obj@inf.param$receptor.reduced <- TRUE
 
     obj
+    
 }) # reduceToPathway
 
 
-# Reset gene names to initial organism
-# ====================================
-
+# Reset gene names to initial organism =========================================
 
 setGeneric("resetToInitialOrganism", signature="obj",
     function(obj,...) standardGeneric("resetToInitialOrganism")
 )
-#'  Reset gene names to initial organism providen in first instance
+#'  Reset gene names to initial organism provided in the first instance
 #'
 #' @name resetToInitialOrganism
 #' @aliases resetToInitialOrganism,BSRInference-method
@@ -951,7 +968,7 @@ setGeneric("resetToInitialOrganism", signature="obj",
 #'
 #' @return An BSRInference object updated for gene names.
 #' The gene names are replaced by the ones from
-#' the organism providen in first instance.
+#' the organism provided in the first instance.
 #'
 #' @export
 #' @examples
@@ -1012,21 +1029,22 @@ setMethod("resetToInitialOrganism", "BSRInference", function(obj,
     tgGenes(obj) <- .geneNameConversion(tgGenes(obj), conversion.dict)
 
     obj
+    
 }) # resetToInitialOrganism
 
 
-#' @title Convert gene symbol to another organism
+#' @title Convert gene symbols to another organism
 #'
-#' @description Convert gene symbol to another organism
-#' based on a dictionary with human and ortholog species.
+#' @description Convert gene symbols to another organism
+#' based on a dictionary with human and orthologs in the other species.
 #'
-#' @param genes genes you want to convert
+#' @param genes The genes you want to convert.
 #' @param conversion.dict A data frame containing
-#' gene names for source species and Homo Sapiens.
+#' gene names for the source species and Homo sapiens.
 #'
-#' @return Depend type of input genes
+#' @return Depend on the type of input genes
 #' LRinter return a vector of genes
-#' tgGenes receptors ligands : return list of list of genes
+#' tgGenes receptors ligands: return list of list of genes
 #' @keywords internal
 .geneNameConversion <- function(genes, conversion.dict) {
     # print(".geneNameConversion")
@@ -1068,4 +1086,5 @@ setMethod("resetToInitialOrganism", "BSRInference", function(obj,
     } else {
         stop("Something went wrong during gene conversion.", call. = FALSE)
     }
+  
 } # .geneNameConversion

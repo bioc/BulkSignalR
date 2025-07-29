@@ -2,17 +2,17 @@
 ###     Create / Get Ressources                  ###
 ####################################################
 
-#' Create all resources.
+#' Create all resources
 #'
-#' Create cache for all resources (pathways, or PWC network)
-#' downloaded from the web when library is first loaded.
-#' This part is handled with BiocFileCache.
-#' Otherwise datatabase, is handled by another process
-#' not relying on BiocFileCache instance.
+#' Create a cache for all resources (pathways, or PWC network)
+#' downloaded from the web when the library is first loaded.
+#' This functionality is handled with BiocFileCache.
+#' Otherwise database, is handled by another process
+#' not relying on a BiocFileCache instance.
 #'
-#' @param onRequest logical True if you force
-#' download again. This will overwrite
-#' pre-existing database. Default is True.
+#' @param onRequest logical TRUE if you want to force
+#' downloading again. This will overwrite the
+#' pre-existing local database. Default is TRUE.
 #' @param verbose Default is FALSE
 #' @return Returns `NULL`, invisibly. 
 #' @importFrom curl has_internet
@@ -29,17 +29,17 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
     
     if (!hasInternet & 
     !file.exists(resourcesCacheDir)) {
-        cli::cli_alert_danger("Your internet connection is off :")
+        cli::cli_alert_danger("Your internet connection is off:")
         stop(
-        "- Remote resources can't be downloaded.\n"
+        "- Remote resources cannot be downloaded.\n"
         )   
     }
 
     if (!hasInternet & 
         onRequest) {
-        cli::cli_alert_danger("Your internet connection is off :")
+        cli::cli_alert_danger("Your internet connection is off:")
         stop(
-        "- Remote resources can't be downloaded.\n"
+        "- Remote resources cannot be downloaded.\n"
         )   
     }
 
@@ -66,17 +66,16 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
 }
 
 
-
-#' Get ressource from the cache.
+#' Get resources from the cache
 #'
-#' Get  resources (pathways, or PathwayCommons network
+#' Get resources (pathways, or PathwayCommons network
 #' from \url{https://www.pathwaycommons.org/})
 #' stored in the cache.
 #'
-#' @param resourceName   Ressource name.
-#' @param cache   True/False. Defautlt is False
-#' If True, you will use environment variables.
-#' @return Returns a dataframe of the requested
+#' @param resourceName   Resource name.
+#' @param cache   Logical. Default is FALSE
+#' If TRUE, you will use environment variables.
+#' @return Returns a data frame containing the requested
 #' resource.
 #' @importFrom cli cli_alert_danger
 #' @export
@@ -96,7 +95,7 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
 
         # safeguard
         if (!dir.exists(resourcesCacheDir)) {
-            cli::cli_alert_danger("Resources repository doesn't exist.\n")
+            cli::cli_alert_danger("Resources repository does not exist.\n")
             stop()
         }
 
@@ -152,27 +151,28 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
     return(dataframe)
 }
 
+
 ####################################################
 ###     / Parse / Format / Import Ressources     ###
 ####################################################
 
-#' Import Network from your own
+#' Import a refernce network of your own
 #'
-#' Network is a dataframe that gives relation between
-#' genes. It's composed of 3 columns annoted as
-#' follows :
+#' Network is a data frame that defines interactions between
+#' genes. It's composed of 3 columns named as
+#' follows:
 #'
-#' a.gn : Gene Symbol 1
-#' type : controls-expression-of
-#' b.gn : Gene Symbol 2
+#' a.gn: Gene Symbol 1
+#' type: controls-expression-of
+#' b.gn: Gene Symbol 2
 #'
-#' When the user provide his own network
+#' When the user provides his own network,
 #' 'type' should be set to 'controls-expression-of'.
 #'
-#' @param network   Network dataframe is defined with 3 columns
+#' @param network   Network data frame made of 3 columns
 #' a.gn, b.gn & type. 'a.gn' & 'b.gn' should be gene symbols
 #' of gene interactions. 'type'  should be set as
-#' 'controls-expression-of' when user provide
+#' 'controls-expression-of' when a user provides
 #' his own file.
 #'
 #' @return Returns `NULL`, invisibly. 
@@ -188,7 +188,7 @@ resetNetwork <- function(network) {
         stop("Column names of network should be defined as a.gn, type & b.gn.")
     }
 
-    message("")
+    cat("", file=stderr())
     cli::cli_alert_info("New resource defined for {.val Network}.\n")
 
     assign("BulkSignalR_Network", 
@@ -198,28 +198,28 @@ resetNetwork <- function(network) {
 } # resetNetwork
 
 
-#' Import pathways from a file or dataframe
+#' Import pathways from a file or data frame
 #'
 #' \code{resetPathways} is a function
-#' we provide to user to refresh REACTOME
+#' we provide to users who want to refresh REACTOME
 #' and GO-BP content included in BulkSignalR.
 #' 
-#' Pathways are defined in Reactome and
-#' GoBP databases.
+#' Pathways in `BulkSignalR` (as sets of genes/proteins) are defined
+#' after Reactome and GOBP databases.
 #' Those can be updated using
 #' json files from
 #' the Human Molecular Signatures Database (MSigDB)
 #' at \url{https://www.gsea-msigdb.org/}
 #' Gmt file format also can be imported.
-#' A dataframe can be used directly also.
+#' A data frame can be used directly also.
 #'
-#' @param dataframe  Dataframe formated as 
+#' @param dataframe  Data frame formated as follows.
 #' When \code{resourceName} is set to "Reactome",
-#' dataframe colnames must be defined as :
-#' "Reactome ID", "Gene name" & "Reactome name"
+#' dataframe colnames must be defined as
+#' "Reactome ID", "Gene name", and "Reactome name"
 #' When \code{resourceName} is set to "GO-BP",
-#' #' dataframe colnames must be defined as :
-#' "GO ID", "Gene name" & "GO name"
+#' #' dataframe colnames must be defined as
+#' "GO ID", "Gene name", and "GO name"
 #' @param file    Path to file.
 #' @param fileType    Default is Json.
 #' Other options are gmt or txt files.
@@ -280,9 +280,9 @@ resetPathways <- function(
             stop("File format accepted are `json` , `gmt` or `txt` only.")
         }
 
-        message("")
+        cat("", file=stderr())
         cli::cli_alert_info("New resource defined for {.val {resourceName}}.\n")
-        message(utils::head(dataframe))
+        print(utils::head(dataframe))
 
 
         if (resourceName == "Reactome") {
@@ -331,6 +331,7 @@ resetPathways <- function(
     return(invisible(NULL))
 } # resetPathways
 
+
 #' Read dataframe from txt file
 #'
 #' @param file    Path to a tabular file.
@@ -370,12 +371,12 @@ resetPathways <- function(
 } # .formatPathwaysFromTxt
 
 
-#' Format dataframe according to json input
+#' Format a data frame according to json input
 #'
 #' @param file    Path to file.
 #' @param resourceName    Two options "GO-BP" or "REACTOME".
 #'
-#' @return Dataframe with pathwayID, geneName and pathwayName
+#' @return Data frame with pathwayID, geneName and pathwayName
 #'
 #' @importFrom foreach %do% %dopar%
 #' @import doParallel
@@ -418,17 +419,16 @@ resetPathways <- function(
     return(db)
 } # .formatPathwaysFromJson
 
-#' Transform gmt file to dataframe
+
+#' Transform gmt file to data frame
 #'
-#' We note discrepancy between format available
-#' over internet.
-#'
-#' Here we consider a valid gmt file format defined
-#' on each lines as follows :
+#' We note discrepancies between the formats available
+#' from internet sources. Here, we consider a valid gmt file format defined
+#' on each lines as follows:
 #' First is Pathway name,
-#' Then comes the ID,
-#' Finally you will find genes symbols
-#' according to the pathway defined on the line.
+#' then comes the ID,
+#' finally you will find genes symbols
+#' part of the pathway defined on the line.
 #'
 #' You can find an example here.
 #' - For Reactome. (Directly from their website)

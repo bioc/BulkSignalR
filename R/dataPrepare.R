@@ -1,4 +1,4 @@
-#' Check server is up
+#' Check whether the reference DB server is up
 #'
 #' @return Returns `NULL`, invisibly. 
 #'
@@ -27,10 +27,10 @@
     } 
 
     return(invisible(NULL))
-
 }
 
-#' Check there is a well formated cache
+
+#' Check there is a well formatted cache
 #'
 #' @return Returns `NULL`, invisibly.
 #'
@@ -67,14 +67,15 @@
     return(invisible(NULL))
 }
 
+
 #' Modify LRdb database
 #'
-#' User can provide a data frame with 2 columns named
+#' Users can provide a data frame with 2 columns named
 #' ligand and receptor.
 #' This can be used to extend or replace the existing
 #' LRdb.
 #'
-#' @param db     A dataframe with 2 columns named
+#' @param db     A data frame with 2 columns named
 #' ligand and receptor.
 #' @param switch  A logical indicating whether LRdb should be extended only
 #' (FALSE, default) or completely replaced (TRUE).
@@ -106,36 +107,38 @@ resetLRdb <- function(db, switch = FALSE) {
         )
     }
 
-    message("")
+    cat("", file=stderr())
     cli::cli_alert_info(
         "New database defined for {.val LRdb}."
     )
 
     return(invisible(NULL))
+    
 } # resetLRdb
 
-#' Internal function to check and extract
-#' counts matrix if a more complex object
-#' is given as parameter.
+
+#' Internal function to check and extract a
+#' count matrix if a more complex object than a simple matrix or data frame
+#' is given as parameter. Main usage is to link with Bioconductor objects.
 #'
-#' @param counts A table or matrix of read counts.
+#' @param counts A table or matrix of read counts (or protein abundance).
 #' It can also be a SummarizedExperiment or SpatialExperiment
-#' object from which counts matrix are extracted.
+#' object from which the count matrix should be extracted.
 #' See \code{\link{BSRDataModel}}.
 #' @param symbol.col The index of the column containing the gene symbols in case
 #' those are not the row names of \code{counts} already. In a
-#' SpatialExperiment object, the index in the dafaframe returned by rowData().
+#' SpatialExperiment object, the index in the data frame returned by rowData().
 #' @param x.col In a SpatialExperiment object, the index of the column
-#' containing x coordinates in the dafaframe returned by rowData(), usually 
-#' named array_row
+#' containing the x coordinates in the dafaframe returned by rowData(), usually 
+#' named array_row.
 #' @param y.col  In a SpatialExperiment object, the index of the column
-#' containing y coordinates in the dafaframe returned by rowData(), usually 
-#' named array_col
+#' containing the y coordinates in the dafaframe returned by rowData(), usually 
+#' named array_col.
 #' @param barcodeID.col   In a SpatialExperiment object, the index of the column
-#' containing barcodeID in the dafaframe returned by colData(), usually named
-#' barcode_id
+#' containing the barcodeID in the dafaframe returned by colData(), usually
+#' named barcode_id.
 #'
-#' @return A matrix of counts
+#' @return A matrix of count (or abundance) values
 #'
 #' @import SummarizedExperiment
 #' @import SpatialExperiment
@@ -194,14 +197,20 @@ resetLRdb <- function(db, switch = FALSE) {
         else {countsChecked <- counts}
     
     return(countsChecked)
+    
 } # .checkInteroperabilityForCounts
 
-#' Prepare a BSRDataModel object from expression data
+
+#' Constructor of the BSRDataModel class
 #'
 #' Take a matrix or data frame containing RNA sequencing,
-#' microarray, or expression proteomics data and return a BSRDataModel
-#' object ready for subsequent training. Normally, BSRDataModel objects
-#' are not instantiated directly, but through this function.
+#' microarray, or expression proteomics data as input parameter
+#' and return a BSRDataModel
+#' object ready for subsequent training.
+#' 
+#' Note that this constructor replaces
+#' the function prepareDataset that was part of the previous version of
+#' BulkSignalR library.
 #'
 #' @param counts     A table or matrix of read counts.
 #' @param species    Data were obtained for this organism.
@@ -227,14 +236,14 @@ resetLRdb <- function(db, switch = FALSE) {
 #' @param conversion.dict  Correspondence table of HUGO gene symbols
 #' human/nonhuman. Not used unless the organism is different from human.
 #' @param x.col In a SpatialExperiment object, the index of the column
-#' containing x coordinates in the dafaframe returned by rowData(), usually 
-#' named array_row
+#' containing the x coordinates in the dafaframe returned by rowData(), usually 
+#' named array_row.
 #' @param y.col  In a SpatialExperiment object, the index of the column
-#' containing y coordinates in the dafaframe returned by rowData(), usually 
-#' named array_col
+#' containing the y coordinates in the dafaframe returned by rowData(), usually 
+#' named array_col.
 #' @param barcodeID.col   In a SpatialExperiment object, the index of the column
-#' containing barcodeID in the dafaframe returned by colData(), usually named
-#' barcode_id
+#' containing the barcodeID in the dafaframe returned by colData(), usually
+#' named barcode_id.
 #'
 #' @return A BSRModelData object with empty model parameters.
 #'
@@ -264,7 +273,7 @@ resetLRdb <- function(db, switch = FALSE) {
 #'   algorithm used.
 #'
 #'   In case proteomic or microarray data are provided, \code{min.count} must be
-#'   understood as its equivalent with respect to those data.
+#'   understood as its equivalent with respect to those data types.
 #'
 #' @importFrom matrixStats rowMeans2 rowSums2 colSums2
 #' @export
@@ -419,6 +428,7 @@ BSRDataModel <- function(
         initial.organism = species,
         initial.orthologs = homolog.genes
     )
+    
 } # BSRDataModel
 
 
@@ -473,25 +483,26 @@ findOrthoGenes <- function(from_organism, from_values,
     orthologs_dictionary$index <- NULL
     names(orthologs_dictionary)[1] <- paste("Gene.name")
 
-    message(
-        "Dictionary Size: ",
-        dim(orthologs_dictionary)[1],
-        " genes "
+    cat(
+      "Dictionary Size:",
+      dim(orthologs_dictionary)[1],
+      "genes\n", file=stderr()
     )
 
     nL <- length(intersect(
         .SignalR$BulkSignalR_LRdb$ligand,
         rownames(orthologs_dictionary)
     ))
-    message("-> ", nL, " : Ligands ")
+    cat("->", nL, ": Ligands\n", file=stderr())
 
     nR <- length(intersect(
         .SignalR$BulkSignalR_LRdb$receptor,
         rownames(orthologs_dictionary)
     ))
-    message("-> ", nR, " : Receptors ")
+    cat("->", nR, ": Receptors\n", file=stderr())
 
     orthologs_dictionary
+    
 } # findOrthoGenes
 
 
@@ -575,4 +586,5 @@ convertToHuman <- function(counts, dictionary) {
     } else {
         counts.transposed
     }
+    
 } # convertToHuman

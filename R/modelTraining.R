@@ -98,8 +98,9 @@
     mu <- mean(d)
     sigma <- stats::sd(d)
     if (verbose) {
-        message("Initial estimate of the mean: ", mu)
-        message("Initial estimate of the standard deviation: ", sigma)
+        cat("Initial estimate of the mean:", mu, "\n", file=stderr())
+        cat("Initial estimate of the standard deviation:", sigma, "\n",
+            file=stderr())
     }
 
     # ML fit of a censored Gaussian on [-1;1]
@@ -121,8 +122,9 @@
     mu <- res$par[1]
     sigma <- res$par[2]
     if (verbose) {
-        message("Censored normal mean: ", mu)
-        message("Censored normal standard deviation: ", sigma)
+        cat("Censored normal mean:", mu, "\n", file=stderr())
+        cat("Censored normal standard deviation:", sigma, "\n",
+            file=stderr())
     }
     q <- stats::pnorm(1, mu, sigma) - stats::pnorm(-1, mu, sigma)
     start <- stats::pnorm(-1, mu, sigma)
@@ -134,7 +136,7 @@
     # KS test D statistics
     x <- seq(-1, 1, by = 0.005)
     y <- stats::dnorm(x, mu, sigma) / q
-    params$D <- stats::ks.test(d, y)$statistic
+    params$D <- stats::ks.test(d, y, simulate.p.value=TRUE)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -168,6 +170,7 @@
     }
 
     params
+    
 } # .getGaussianParam
 
 
@@ -243,10 +246,10 @@
         stop("optim() could not fit the mixed normal distribution parameters")
     }
     if (verbose) {
-        message(
+        cat(
             "Censored mixed normal parameters",
-            " (alpha, mean1, sd1, mean2, sd2): ",
-            paste(res$par, collapse = ", ")
+            "(alpha, mean1, sd1, mean2, sd2):",
+            paste(res$par, collapse = ", "), "\n", file=stderr()
         )
     }
     alpha <- res$par[1]
@@ -271,7 +274,7 @@
     y <- alpha * stats::dnorm(x, mu1, sigma1) +
         (1 - alpha) * stats::dnorm(x, mu2, sigma2) / q
 
-    params$D <- stats::ks.test(d, y)$statistic
+    params$D <- stats::ks.test(d, y, simulate.p.value=TRUE)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -304,6 +307,7 @@
     }
 
     params
+    
 } # .getMixedGaussianParam
 
 
@@ -370,6 +374,7 @@
     }
 
     list(empirCDF = empir, distrib = "empirical")
+    
 } # .getEmpiricalParam
 
 
@@ -424,7 +429,7 @@
     )
 
     # KS test D statistics
-    params$D <- stats::ks.test(d,df$y)$statistic
+    params$D <- stats::ks.test(d,df$y, simulate.p.value=TRUE)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -457,6 +462,7 @@
     }
 
     params
+    
 } # .getKernelEmpiricalParam
 
 
@@ -519,9 +525,9 @@
     }
     par.0 <- c(1.5, 0.5, sqrt(stats::sd(d)), mean(d))
     if (verbose) {
-        message(
-            "Starting stable distribution parameter estimation. ",
-            "This can take a few dozens of minutes..."
+        cat(
+            "Starting stable distribution parameter estimation.",
+            "This can take a few dozens of minutes...\n", file=stderr()
         )
     }
     res <- stats::optim(par.0, stableLL,
@@ -534,9 +540,9 @@
         stop("optim() could not fit the censored stable distribution")
     }
     if (verbose) {
-        message(
-            "Censored stable parameters (alpha, beta, gamma, delta): ",
-            paste(res$par, collapse = ", ")
+        cat(
+            "Censored stable parameters (alpha, beta, gamma, delta):",
+            paste(res$par, collapse = ", "), "\n", file=stderr()
         )
     }
     alpha <- res$par[1]
@@ -576,6 +582,7 @@
         alpha = alpha, beta = beta, gamma = gamma, delta = delta, factor = q,
         start = start, distrib = "censored_stable"
     )
+    
 } # .getAlphaStableParam
 
 
@@ -652,6 +659,7 @@
             ))
         }
     }
+    
 } # .getEmpiricalNull
 
 
@@ -697,4 +705,5 @@
             list(.getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR))
         }
     }
+    
 } # .getEmpiricalNullCorrLR
