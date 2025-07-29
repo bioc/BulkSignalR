@@ -3,7 +3,7 @@
 \name{resetToInitialOrganism}
 \alias{resetToInitialOrganism}
 \alias{resetToInitialOrganism,BSRInference-method}
-\title{Reset gene names to initial organism providen in first instance}
+\title{Reset gene names to initial organism provided in the first instance}
 \usage{
 \S4method{resetToInitialOrganism}{BSRInference}(obj, conversion.dict)
 }
@@ -15,10 +15,10 @@
 \value{
 An BSRInference object updated for gene names.
 The gene names are replaced by the ones from
-the organism providen in first instance.
+the organism provided in the first instance.
 }
 \description{
-Reset gene names to initial organism providen in first instance
+Reset gene names to initial organism provided in the first instance
 }
 \examples{
 data(bodyMap.mouse, package = "BulkSignalR")

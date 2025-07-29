@@ -7,15 +7,15 @@
 getComplexes(idRelease = NULL)
 }
 \arguments{
-\item{idRelease}{integer id version Release
-Default is NULL so last version is selected.}
+\item{idRelease}{integer ID of the chosen release
+Default is NULL such that the latest version is selected.}
 }
 \value{
-Returns dataframe Complexex, invisibly.
+Returns data frame Complexes, invisibly.
 }
 \description{
-Fetch LR complexes from database and
-and return a dataframe
+Fetch LR complexes from reference database and
+and return a data frame
 }
 \examples{
 getComplexes(idRelease=1)

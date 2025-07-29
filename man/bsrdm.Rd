@@ -3,7 +3,7 @@
 \docType{data}
 \name{bsrdm}
 \alias{bsrdm}
-\title{A skinny BSR-dataModel object related to sdc.}
+\title{A skinny BSRDataModel object related to sdc.}
 \format{
 An example of an object created by `BSRDataModel`
 applied to an sdc subset (Patients N20,N22,SDC17,SDC25) and

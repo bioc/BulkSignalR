@@ -2,22 +2,22 @@
 % Please edit documentation in R/resource.R
 \name{getResource}
 \alias{getResource}
-\title{Get ressource from the cache.}
+\title{Get resources from the cache}
 \usage{
 getResource(resourceName = NULL, cache = FALSE)
 }
 \arguments{
-\item{resourceName}{Ressource name.}
+\item{resourceName}{Resource name.}
 
-\item{cache}{True/False. Defautlt is False
-If True, you will use environment variables.}
+\item{cache}{Logical. Default is FALSE
+If TRUE, you will use environment variables.}
 }
 \value{
-Returns a dataframe of the requested
+Returns a data frame containing the requested
 resource.
 }
 \description{
-Get  resources (pathways, or PathwayCommons network
+Get resources (pathways, or PathwayCommons network
 from \url{https://www.pathwaycommons.org/})
 stored in the cache.
 }

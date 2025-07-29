@@ -3,15 +3,15 @@
 \docType{data}
 \name{bsrinf.spa}
 \alias{bsrinf.spa}
-\title{A skinny BSR-inference object related to spatial dataset}
+\title{A skinny BSR-inference object related to spatial data set}
 \format{
 From the previous object `bsrdm.spa`, 
 you can generate inferences by calling its
 method `BSRInference`. 
-The resulting BSR-Inference object is `bsrinf.spa`,
+The resulting BSRInference object is `bsrinf.spa`,
 It contains all the inferred L-R interactions 
 with their associated pathways and corrected p-values.
-`learnParameters` was also called to get statistical 
+`learnParameters` was also called to train the statistical 
 model parameters.
 }
 \source{

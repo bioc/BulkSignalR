@@ -24,10 +24,10 @@ comprised of the ligand, the receptor,
 and all the target genes with rank equal or superior to \code{pairs$rank}.
 }
 \description{
-Obtains gene signatures reflecting ligand-receptor as well as
+Obtain gene signatures reflecting ligand-receptor as well as
 receptor downstream activity to
 score ligand-receptor pairs across samples subsequently with
-\code{"\link[=BSRInference-class]{scoreLRGeneSignatures}"}
+\code{"\link[=BSRDataModel-class]{scoreLRGeneSignatures}"}
 }
 \examples{
 data(bsrinf, package = "BulkSignalR")

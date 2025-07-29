@@ -22,10 +22,8 @@ BSRInference(
 }
 \arguments{
 \item{obj}{A BSRDataModel output by \code{\link{BSRDataModel}} with
-statistical model parameters trained by
-\code{"\link[=BSRDataModel-class]{learnParameters}"}
-
-method.}
+statistical model parameters trained by the
+\code{"\link[=BSRDataModel-class]{learnParameters}"} method.}
 
 \item{rank.p}{A number between 0 and 1 defining the rank of the last
 considered target genes.}

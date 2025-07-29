@@ -8,7 +8,7 @@
 #' @param verbose Logical
 #' @return Returns `NULL`, invisibly. 
 #' 
-#' @import httr
+#' @import httr2
 #' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export

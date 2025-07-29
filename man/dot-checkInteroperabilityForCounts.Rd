@@ -2,9 +2,9 @@
 % Please edit documentation in R/dataPrepare.R
 \name{.checkInteroperabilityForCounts}
 \alias{.checkInteroperabilityForCounts}
-\title{Internal function to check and extract
-counts matrix if a more complex object
-is given as parameter.}
+\title{Internal function to check and extract a
+count matrix if a more complex object than a simple matrix or data frame
+is given as parameter. Main usage is to link with Bioconductor objects.}
 \usage{
 .checkInteroperabilityForCounts(
   counts,
@@ -15,33 +15,33 @@ is given as parameter.}
 )
 }
 \arguments{
-\item{counts}{A table or matrix of read counts.
+\item{counts}{A table or matrix of read counts (or protein abundance).
 It can also be a SummarizedExperiment or SpatialExperiment
-object from which counts matrix are extracted.
+object from which the count matrix should be extracted.
 See \code{\link{BSRDataModel}}.}
 
 \item{symbol.col}{The index of the column containing the gene symbols in case
 those are not the row names of \code{counts} already. In a
-SpatialExperiment object, the index in the dafaframe returned by rowData().}
+SpatialExperiment object, the index in the data frame returned by rowData().}
 
 \item{x.col}{In a SpatialExperiment object, the index of the column
-containing x coordinates in the dafaframe returned by rowData(), usually 
-named array_row}
+containing the x coordinates in the dafaframe returned by rowData(), usually 
+named array_row.}
 
 \item{y.col}{In a SpatialExperiment object, the index of the column
-containing y coordinates in the dafaframe returned by rowData(), usually 
-named array_col}
+containing the y coordinates in the dafaframe returned by rowData(), usually 
+named array_col.}
 
 \item{barcodeID.col}{In a SpatialExperiment object, the index of the column
-containing barcodeID in the dafaframe returned by colData(), usually named
-barcode_id}
+containing the barcodeID in the dafaframe returned by colData(), usually
+named barcode_id.}
 }
 \value{
-A matrix of counts
+A matrix of count (or abundance) values
 }
 \description{
-Internal function to check and extract
-counts matrix if a more complex object
-is given as parameter.
+Internal function to check and extract a
+count matrix if a more complex object than a simple matrix or data frame
+is given as parameter. Main usage is to link with Bioconductor objects.
 }
 \keyword{internal}
