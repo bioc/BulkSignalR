@@ -274,6 +274,7 @@ bubblePlotPathwaysLR <- function(
 #' @param title.fontsize   Font size for the pathway name as plot title.
 #' @param col.fontsize  Font size for column (sample) names.
 #' @param annot.fontsize   Font size for column annotation names.
+#' @param ht.gap   Space between heatmaps (in mm).
 #' @param show_column_names   Add column names in the heatmaps.
 
 #' @return  A plot is created.
@@ -303,10 +304,10 @@ signatureHeatmaps <- function(pathway,
                               heights = c(4,2,4),
                               fontsize = 6,
                               legend.fontsize = 8,
-                              title.font.size = 8,
+                              title.fontsize = 8,
                               col.fontsize = 6,
                               annot.fontsize = 8,
-                              ht_gap = grid::unit(3, "mm"),
+                              ht.gap = 3,
                               show_column_names = TRUE) {
   
   idx.path.sig <- which(pathways(bsrsig) == pathway)
@@ -397,9 +398,9 @@ signatureHeatmaps <- function(pathway,
   )
   
   ComplexHeatmap::draw(p.T %v% p.R %v% p.L,
-                       ht_gap = ht_gap,
+                       ht_gap = grid::unit(ht.gap, "mm"),
                        column_title = pathway,
-                       column_title_gp = gpar(fontsize=title.font.size))
+                       column_title_gp = gpar(fontsize=title.fontsize))
   
 } # signatureHeatmaps
 

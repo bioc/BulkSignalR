@@ -11,10 +11,10 @@ signatureHeatmaps(
   heights = c(4, 2, 4),
   fontsize = 6,
   legend.fontsize = 8,
-  title.font.size = 8,
+  title.fontsize = 8,
   col.fontsize = 6,
   annot.fontsize = 8,
-  ht_gap = grid::unit(3, "mm"),
+  ht.gap = 3,
   show_column_names = TRUE
 )
 }
@@ -31,13 +31,15 @@ signatureHeatmaps(
 
 \item{legend.fontsize}{Font size for the legends.}
 
+\item{title.fontsize}{Font size for the pathway name as plot title.}
+
 \item{col.fontsize}{Font size for column (sample) names.}
 
 \item{annot.fontsize}{Font size for column annotation names.}
 
-\item{show_column_names}{Add column names in the heatmaps.}
+\item{ht.gap}{Space between heatmaps (in mm).}
 
-\item{title.fontsize}{Font size for the pathway name as plot title.}
+\item{show_column_names}{Add column names in the heatmaps.}
 }
 \value{
 A plot is created.
