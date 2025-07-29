@@ -14,7 +14,7 @@
 expression (transcriptomics/proteomics) data, or medium resolution spatial
 transcriptomics such as the 10x Genomics Visium platform.  
 
-Known L-RI interactions are taken from the
+Known L-R interactions are taken from the
 LR*db* database, which was previously included in our other package 
 **SingleCellSignalR**, also available from Bioconductor 
 [here](https://www.bioconductor.org/packages/release/bioc/html/SingleCellSignalR.html).
