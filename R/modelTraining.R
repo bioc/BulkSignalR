@@ -98,9 +98,8 @@
     mu <- mean(d)
     sigma <- stats::sd(d)
     if (verbose) {
-        cat("Initial estimate of the mean:", mu, "\n", file=stderr())
-        cat("Initial estimate of the standard deviation:", sigma, "\n",
-            file=stderr())
+        message("Initial estimate of the mean: ", mu)
+        message("Initial estimate of the standard deviation: ", sigma)
     }
 
     # ML fit of a censored Gaussian on [-1;1]
@@ -122,9 +121,8 @@
     mu <- res$par[1]
     sigma <- res$par[2]
     if (verbose) {
-        cat("Censored normal mean:", mu, "\n", file=stderr())
-        cat("Censored normal standard deviation:", sigma, "\n",
-            file=stderr())
+        message("Censored normal mean: ", mu)
+        message("Censored normal standard deviation: ", sigma)
     }
     q <- stats::pnorm(1, mu, sigma) - stats::pnorm(-1, mu, sigma)
     start <- stats::pnorm(-1, mu, sigma)
@@ -245,10 +243,10 @@
         stop("optim() could not fit the mixed normal distribution parameters")
     }
     if (verbose) {
-        cat(
+        message(
             "Censored mixed normal parameters",
-            "(alpha, mean1, sd1, mean2, sd2):",
-            paste(res$par, collapse = ", "), "\n", file=stderr()
+            " (alpha, mean1, sd1, mean2, sd2): ",
+            paste(res$par, collapse = ", ")
         )
     }
     alpha <- res$par[1]
@@ -521,9 +519,9 @@
     }
     par.0 <- c(1.5, 0.5, sqrt(stats::sd(d)), mean(d))
     if (verbose) {
-        cat(
+        message(
             "Starting stable distribution parameter estimation.",
-            "This can take a few dozens of minutes...\n", file=stderr()
+            " This can take a few dozens of minutes..."
         )
     }
     res <- stats::optim(par.0, stableLL,
@@ -536,9 +534,9 @@
         stop("optim() could not fit the censored stable distribution")
     }
     if (verbose) {
-        cat(
-            "Censored stable parameters (alpha, beta, gamma, delta):",
-            paste(res$par, collapse = ", "), "\n", file=stderr()
+        message(
+            "Censored stable parameters (alpha, beta, gamma, delta): ",
+            paste(res$par, collapse = ", ")
         )
     }
     alpha <- res$par[1]

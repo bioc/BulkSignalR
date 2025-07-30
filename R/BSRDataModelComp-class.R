@@ -375,7 +375,7 @@ BSRDataModelComp <- function(
     UQ.pc = 0.75,x.col = NULL, y.col = NULL,
     barcodeID.col = NULL) {
   
-  bsrdm <- BSRDataModel(counts = counts,
+    bsrdm <- BSRDataModel(counts = counts,
                         normalize = normalize,
                         symbol.col = symbol.col,
                         min.count = min.count,
@@ -389,7 +389,7 @@ BSRDataModelComp <- function(
                         x.col = x.col,
                         y.col = y.col,
                         barcodeID.col = barcodeID.col)
-  as(bsrdm, "BSRDataModelComp")
+    as(bsrdm, "BSRDataModelComp")
   
 } # BSRDataModelComp
 
