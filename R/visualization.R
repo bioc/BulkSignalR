@@ -89,8 +89,7 @@ bubblePlotPathwaysLR <- function(
         message("Try to reduce (Qval-Threshold, number of pathways...).")
     }
 
-    cat(length(unique(filtered.brinf$LR)), "LR interactions detected.\n",
-        file=stderr())
+    message(length(unique(filtered.brinf$LR)), " LR interactions detected.")
 
     plot(ggplot2::ggplot(
         filtered.brinf,
@@ -356,10 +355,10 @@ signatureHeatmaps <- function(pathway,
   abundance.genes <- c(dim(counts.T)[1], dim(counts.R)[1], dim(counts.L)[1])
   
   if (length(idx.path.sig) == 1){
-    scoring = as.vector(scoresPathway[idx.path.sig[1],])
+    scoring <- as.vector(scoresPathway[idx.path.sig[1],])
   }
   else{
-    scoring = colMeans(scoresPathway[idx.path.sig,])
+    scoring <- colMeans(scoresPathway[idx.path.sig,])
   }
   
   p.T <- .customheatmap(
@@ -704,8 +703,8 @@ alluvialPlot <- function(bsrinf, keywords, type = c("L", "R", "pw.id"),
     }
 
     if (dim(subset.interactions)[1] == 0) {
-        cat(paste(keywords, collapse = " "),
-            "for", type, "not found.\n", file=stderr())
+        message(paste(keywords, collapse = " "),
+            " for ", type, " not found.")
         stop("Try another value for filtering.")
     }
     subset.interactions <- subset.interactions[

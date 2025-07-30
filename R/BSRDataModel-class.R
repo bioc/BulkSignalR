@@ -434,8 +434,7 @@ setMethod(
         # LR correlation null ----------------
 
         if (verbose) {
-          cat("Learning ligand-receptor correlation null distribution...\n",
-              file=stderr())
+            message("Learning ligand-receptor correlation null distribution...")
         }
 
         parameters(obj)$min.corr.LR <- min.corr.LR
@@ -470,29 +469,27 @@ setMethod(
             }
             kp <- .getKernelEmpiricalParam(rc, "LR correlation (null)")
             if (verbose) {
-              cat("Automatic null",
-                  "model choice:\n", file=stderr())
+              message("Automatic null model choice:")
               if (is.null(np)) {
-                cat("  Censored normal estimation did not converge\n",
-                    file=stderr())
+                message("  Censored normal estimation did not converge")
               } else {
-                cat(
-                  "  Censored normal D=", np$D,
-                  ", Chi2=", np$Chi2, "\n", sep="", file=stderr()
+                message(
+                    "  Censored normal D=", np$D,
+                    ", Chi2=", np$Chi2
                 )
               }
               if (is.null(mp)) {
-                cat("  Censored Mixture of normals",
-                    "estimation did not converge\n", file=stderr())
+                message("  Censored Mixture of normals",
+                    " estimation did not converge")
               } else {
-                cat(
-                  "  Censored mixture D=", mp$D,
-                  ", Chi2=", mp$Chi2, "\n", sep="", file=stderr()
+                message(
+                    "  Censored mixture D=", mp$D,
+                    ", Chi2=", mp$Chi2
                 )
               }
-              cat(
-                "  Gaussian kernel empirical D=", kp$D,
-                ", Chi2=", kp$Chi2, "\n", sep="", file=stderr()
+              message(
+                  "  Gaussian kernel empirical D=", kp$D,
+                  ", Chi2=", kp$Chi2
               )
             }
             npchi <- ifelse(is.null(np), 100, sqrt(np$Chi2))
@@ -501,19 +498,17 @@ setMethod(
             if ((npchi < 1.25 * mpchi) && (npchi < 2 * kpchi)) {
               trainModel <- .getGaussianParam
               if (verbose) {
-                cat("  ==> select censored normal\n", file=stderr())
+                  message("  ==> select censored normal")
               }
             } else if (mpchi < 2 * kpchi) {
               trainModel <- .getMixedGaussianParam
               if (verbose) {
-                cat("  ==> select censored mixture of 2 normals\n",
-                    file=stderr())
+                  message("  ==> select censored mixture of 2 normals")
               }
             } else {
               trainModel <- .getKernelEmpiricalParam
               if (verbose) {
-                cat("  ==> select Gaussian kernel-based empirical\n",
-                    file=stderr())
+                  message("  ==> select Gaussian kernel-based empirical")
               }
             }
         }
@@ -529,17 +524,16 @@ setMethod(
         if (parameters(obj)$quick) {
           # RT correlations are assumed to be equal to LR correlations
           if (verbose) {
-            cat("Quick learning, receptor-target correlation null",
-                "distribution assumed to be equal to ligand-receptor...",
-                "\n", file=stderr())
+              message("Quick learning, receptor-target correlation null",
+                  " distribution assumed to be equal to ligand-receptor...")
           }
           parameters(obj)$RT.0$n <- parameters(obj)$LR.0$n
           parameters(obj)$RT.0$model <- parameters(obj)$LR.0$model
         } else {
           # RT correlations are actually learnt
           if (verbose) {
-            cat("Learning receptor-target",
-                "correlation null distribution...\n", file=stderr())
+              message("Learning receptor-target",
+                  " correlation null distribution...")
           }
           ds.RT.null <- .getEmpiricalNull(obj)
           
@@ -572,8 +566,7 @@ setMethod(
         }
         
         if (verbose) {
-          cat("Learning of statistical model parameters completed\n",
-              file=stderr())
+            message("Learning of statistical model parameters completed")
         }
         obj
     }
