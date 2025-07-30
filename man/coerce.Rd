@@ -11,7 +11,9 @@
 A BSRDataModelComp object
 }
 \description{
-Convert BSRDataModel to BSRDataModelComp
+Enable the promotion of a BSRDataModel object into
+a BSRDataModelComp object by
+coercion.
 }
 \examples{
 bsrdm <- new("BSRDataModel")

@@ -3,9 +3,9 @@
 \docType{data}
 \name{ortholog.dict}
 \alias{ortholog.dict}
-\title{A skinny dataframe used in the mouse workflow}
+\title{A skinny data frame used in the mouse workflow}
 \format{
-An example of a dataframe created by findOrthoGenes
+An example of a data frame created by findOrthoGenes
 }
 \usage{
 data(ortholog.dict)

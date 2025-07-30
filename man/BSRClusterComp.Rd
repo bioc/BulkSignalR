@@ -27,7 +27,8 @@ A BSRClusterComp object.
 \description{
 Define the columns of the expression matrix that belong to each cluster,
 and store the result of the cluster differences statistical analysis
-obtained by an external tool such as edgeR, DESeq2, etc.
+obtained by an external tool such as edgeR or DESeq2 in a dedicated
+data frame.
 }
 \details{
 Create a BSRClusterComp object describing a comparison

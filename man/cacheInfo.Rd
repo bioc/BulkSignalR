@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{cacheInfo}
 \alias{cacheInfo}
-\title{Get cache content informations..}
+\title{Get cache content information.}
 \usage{
 cacheInfo(dir = c("both", "resources", "database"))
 }
@@ -14,7 +14,7 @@ Can be only 'resources', 'database' or 'both'.}
 Returns `NULL`, invisibly.
 }
 \description{
-Get cache content informations for specific cache dir.
+Get cache content information for a specific cache directory.
 }
 \examples{
 cacheInfo()

@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{cacheVersion}
 \alias{cacheVersion}
-\title{Check remote files ressources are changed.}
+\title{Check whether remote resource files have been changed.}
 \usage{
 cacheVersion(dir = c("both", "resources", "database"))
 }
@@ -14,7 +14,7 @@ Can be only 'resources', 'database' or 'both'.}
 Returns `NULL`, invisibly.
 }
 \description{
-Check to see if some ressources has
+Check to see whether some resource
 has been updated.
 }
 \examples{

@@ -73,10 +73,10 @@ setMethod("show", "BSRSignature", function(object) {
 
 #' Extract gene signatures of LR pair activity
 #'
-#' Obtains gene signatures reflecting ligand-receptor as well as
+#' Obtain gene signatures reflecting ligand-receptor as well as
 #' receptor downstream activity to
 #' score ligand-receptor pairs across samples subsequently with
-#' \code{"\link[=BSRInference-class]{scoreLRGeneSignatures}"}
+#' \code{"\link[=BSRDataModel-class]{scoreLRGeneSignatures}"}
 #'
 #' @name BSRSignature
 #'

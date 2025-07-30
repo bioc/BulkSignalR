@@ -2,46 +2,52 @@
 % Please edit documentation in R/visualization.R
 \name{signatureHeatmaps}
 \alias{signatureHeatmaps}
-\title{Heatmap function for gene expression of signature}
+\title{Heatmap function to dissect one pathway signature}
 \usage{
 signatureHeatmaps(
   pathway,
   bsrdm,
   bsrsig,
-  h.width = 6,
-  h.height = 9,
+  heights = c(4, 2, 4),
   fontsize = 6,
-  show_column_names = FALSE
+  legend.fontsize = 8,
+  title.fontsize = 8,
+  col.fontsize = 6,
+  annot.fontsize = 8,
+  ht.gap = 3,
+  show_column_names = TRUE
 )
 }
 \arguments{
-\item{pathway}{Pathway name}
+\item{pathway}{The chosen pathway name.}
 
 \item{bsrdm}{BulkSignalR data model object.}
 
-\item{bsrsig}{BulkSignalR signature object.
-to display on screen.}
+\item{bsrsig}{BulkSignalR signature object.}
 
-\item{h.width}{Heatmap width in cm.}
+\item{heights}{A vector of 3 heights (in cm) for the 3 heatmaps.}
 
-\item{h.height}{Heatmap height in cm.}
+\item{fontsize}{Font size for the gene names.}
 
-\item{fontsize}{Fontsize.}
+\item{legend.fontsize}{Font size for the legends.}
 
-\item{show_column_names}{Add column names on heatmap.}
+\item{title.fontsize}{Font size for the pathway name as plot title.}
+
+\item{col.fontsize}{Font size for column (sample) names.}
+
+\item{annot.fontsize}{Font size for column annotation names.}
+
+\item{ht.gap}{Space between heatmaps (in mm).}
+
+\item{show_column_names}{Add column names in the heatmaps.}
 }
 \value{
 A plot is created.
-
-This is a convenience function
-to propose a simple way
-of representing expression of genes
-involved in a specific pathway.
 }
 \description{
-Generate a list of heatmaps for ligand,
-receptor and target genes
-for a specific pathway
+Plots a stack of three heatmaps to assess the expression of
+the target genes or proteins in a chosen pathway, the receptor expressions,
+and the ligand expressions.
 }
 \examples{
 data(bsrdm, package = "BulkSignalR")
@@ -55,9 +61,6 @@ signatureHeatmaps(
 pathway = pathway1,
 bsrdm = bsrdm,
 bsrsig = bsrsig.redPBP,
-h.width = 3,
-h.height = 4,
-fontsize = 1,
 show_column_names = TRUE)
 }
 }

@@ -14,13 +14,15 @@
 #' orthologs exist.
 #' @export
 #' @examples
-#' new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #'
 setClass("BSRDataModel",
@@ -34,7 +36,7 @@ setClass("BSRDataModel",
     ),
     prototype = list(
         initial.organism = "hsapiens",
-        initial.orthologs = list("A", "B", "C"),
+        initial.orthologs = list(), #list("A", "B", "C"),
         ncounts = matrix(1.0,
             nrow = 2, ncol = 1,
             dimnames = list(c("A", "B"), "C")
@@ -65,6 +67,9 @@ setValidity(
     }
 )
 
+# NOTE: the constructor of BRSDataModel class is defined in the
+# file dataPrepare.R for "historical" reasons
+
 setMethod(
     "show", "BSRDataModel",
     function(object) {
@@ -85,6 +90,7 @@ setMethod(
     }
 )
 
+
 # Accessors & setters ========================================================
 
 setGeneric("initialOrganism", signature="x",
@@ -97,13 +103,15 @@ setGeneric("initialOrganism", signature="x",
 #' @param x Object BSRDataModel
 #' @return initialOrganism
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' initialOrganism(bsrdm)
 #' @export
@@ -120,13 +128,15 @@ setGeneric("initialOrthologs", signature="x",
 #' @param x Object BSRDataModel
 #' @return initialOrthologs
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' initialOrthologs(bsrdm)
 #' @export
@@ -143,17 +153,20 @@ setGeneric("ncounts", signature="x",
 #' @param x object BSRDataModel
 #' @return ncounts
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' ncounts(bsrdm)
 #' @export
 setMethod("ncounts", "BSRDataModel", function(x) x@ncounts)
+
 
 setGeneric("ncounts<-", signature=c("x", "value"),
     function(x, value) standardGeneric("ncounts<-")
@@ -181,17 +194,20 @@ setGeneric("parameters", signature="x",
 #' @param x BSRDataModel oject
 #' @return param
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' parameters(bsrdm)
 #' @export
 setMethod("parameters", "BSRDataModel", function(x) x@param)
+
 
 setGeneric("parameters<-", signature=c("x", "value"),
     function(x, value) standardGeneric("parameters<-")
@@ -208,6 +224,7 @@ setMethod("parameters<-", "BSRDataModel", function(x, value) {
     x
 })
 
+
 setGeneric("logTransformed", signature="x",
     function(x) standardGeneric("logTransformed")
 )
@@ -218,17 +235,20 @@ setGeneric("logTransformed", signature="x",
 #' @param x Object BRSDataModel
 #' @return logTransformed
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' logTransformed(bsrdm)
 #' @export
 setMethod("logTransformed", "BSRDataModel", function(x) x@log.transformed)
+
 
 setGeneric("normalization", signature="x",
     function(x) standardGeneric("normalization")
@@ -240,17 +260,20 @@ setGeneric("normalization", signature="x",
 #' @param x object BSRDatamModel
 #' @return normalization
 #' @examples
-#' bsrdm <- new("BSRDataModel",
-#'     ncounts = matrix(1.5,
-#'         nrow = 2, ncol = 2,
-#'         dimnames = list(c("A", "B"), c("C", "D"))
-#'     ),
+#' bsrdm <- BSRDataModel(
+#'     counts = matrix(1.5,
+#'                 nrow = 2, ncol = 2,
+#'                 dimnames = list(c("A", "B"), c("C", "D"))
+#'                    ),
+#'     method = "TC",
 #'     log.transformed = TRUE,
-#'     normalization = "TC"
+#'     normalize = FALSE,
+#'     min.LR.found = 0
 #' )
 #' normalization(bsrdm)
 #' @export
 setMethod("normalization", "BSRDataModel", function(x) x@normalization)
+
 
 setGeneric("learnParameters", signature="obj",
     function(obj, ...) standardGeneric("learnParameters")
@@ -446,113 +469,112 @@ setMethod(
             }
             kp <- .getKernelEmpiricalParam(rc, "LR correlation (null)")
             if (verbose) {
-                message("Automatic null ",
-                    "model choice:")
-                if (is.null(np)) {
-                    message("  Censored normal estimation did not converge")
-                } else {
-                    message(
-                        "  Censored normal D=", np$D,
-                        ", Chi2=", np$Chi2
-                    )
-                }
-                if (is.null(mp)) {
-                    message("  Censored Mixture of normals",
-                        " estimation did not converge")
-                } else {
-                    message(
-                        "  Censored mixture D=", mp$D,
-                        ", Chi2=", mp$Chi2
-                    )
-                }
+              message("Automatic null model choice:")
+              if (is.null(np)) {
+                message("  Censored normal estimation did not converge")
+              } else {
                 message(
-                    "  Gaussian kernel empirical D=", kp$D,
-                    ", Chi2=", kp$Chi2
+                    "  Censored normal D=", np$D,
+                    ", Chi2=", np$Chi2
                 )
+              }
+              if (is.null(mp)) {
+                message("  Censored Mixture of normals",
+                    " estimation did not converge")
+              } else {
+                message(
+                    "  Censored mixture D=", mp$D,
+                    ", Chi2=", mp$Chi2
+                )
+              }
+              message(
+                  "  Gaussian kernel empirical D=", kp$D,
+                  ", Chi2=", kp$Chi2
+              )
             }
             npchi <- ifelse(is.null(np), 100, sqrt(np$Chi2))
             mpchi <- ifelse(is.null(mp), 100, sqrt(mp$Chi2))
             kpchi <- sqrt(kp$Chi2)
             if ((npchi < 1.25 * mpchi) && (npchi < 2 * kpchi)) {
-                trainModel <- .getGaussianParam
-                if (verbose) {
-                    message("  ==> select censored normal")
-                }
+              trainModel <- .getGaussianParam
+              if (verbose) {
+                  message("  ==> select censored normal")
+              }
             } else if (mpchi < 2 * kpchi) {
-                trainModel <- .getMixedGaussianParam
-                if (verbose) {
-                    message("  ==> select censored mixture of 2 normals")
-                }
+              trainModel <- .getMixedGaussianParam
+              if (verbose) {
+                  message("  ==> select censored mixture of 2 normals")
+              }
             } else {
-                trainModel <- .getKernelEmpiricalParam
-                if (verbose) {
-                    message("  ==> select Gaussian kernel-based empirical")
-                }
+              trainModel <- .getKernelEmpiricalParam
+              if (verbose) {
+                  message("  ==> select Gaussian kernel-based empirical")
+              }
             }
         }
         # actual training with the chosen model
         gp <- trainModel(rc, "LR correlation (null)",
-            verbose = verbose,
-            file.name = file.name
+                         verbose = verbose,
+                         file.name = file.name
         )
         parameters(obj)$LR.0$model <- gp
-
+        
         # RT correlation null ------------------------------------
-
+        
         if (parameters(obj)$quick) {
-            # RT correlations are assumed to be equal to LR correlations
-            if (verbose) {
-                message("Quick learning, receptor-target correlation null ",
-                    "distribution assumed to be equal to ligand-receptor...")
-            }
-            parameters(obj)$RT.0$n <- parameters(obj)$LR.0$n
-            parameters(obj)$RT.0$model <- parameters(obj)$LR.0$model
+          # RT correlations are assumed to be equal to LR correlations
+          if (verbose) {
+              message("Quick learning, receptor-target correlation null",
+                  " distribution assumed to be equal to ligand-receptor...")
+          }
+          parameters(obj)$RT.0$n <- parameters(obj)$LR.0$n
+          parameters(obj)$RT.0$model <- parameters(obj)$LR.0$model
         } else {
-            # RT correlations are actually learnt
-            if (verbose) {
-                message("Learning receptor-target ",
-                "correlation null distribution...")
-            }
-            ds.RT.null <- .getEmpiricalNull(obj)
-            
-            t <- ds.RT.null[[1]]
-            if (length(ds.RT.null) > 1) {
-                for (i in 2:length(ds.RT.null)) t <- rbind(t, ds.RT.null[[i]])
-            }
-            above <- unlist(strsplit(t$target.corr, split = "\\|"))
-            r.corrs <- NULL
-            for (i in seq_len(length(above))) {
-                corr <- as.numeric(strsplit(above[i], split = ";")[[1]])
-                r.corrs <- c(r.corrs, corr)
-            }
-            if (null.model == "stable") {
-                # sub-sample randomized R-T correlations to limit compute time
-                r.corrs <- sample(r.corrs, parameters(obj)$LR.0$n)
-            }
-            parameters(obj)$RT.0$n <- length(r.corrs)
-
-            # fit null model
-            if (!is.null(plot.folder)) {
-                file.name <- paste0(plot.folder, "/", filename, "_RT-null.pdf")
-            } else {
-                file.name <- NULL
-            }
-            gp <- trainModel(r.corrs, "RT correlation (null)",
-                verbose = verbose, file.name = file.name
-            )
-            parameters(obj)$RT.0$model <- gp
+          # RT correlations are actually learnt
+          if (verbose) {
+              message("Learning receptor-target",
+                  " correlation null distribution...")
+          }
+          ds.RT.null <- .getEmpiricalNull(obj)
+          
+          t <- ds.RT.null[[1]]
+          if (length(ds.RT.null) > 1) {
+            for (i in 2:length(ds.RT.null)) t <- rbind(t, ds.RT.null[[i]])
+          }
+          above <- unlist(strsplit(t$target.corr, split = "\\|"))
+          r.corrs <- NULL
+          for (i in seq_len(length(above))) {
+            corr <- as.numeric(strsplit(above[i], split = ";")[[1]])
+            r.corrs <- c(r.corrs, corr)
+          }
+          if (null.model == "stable") {
+            # sub-sample randomized R-T correlations to limit compute time
+            r.corrs <- sample(r.corrs, parameters(obj)$LR.0$n)
+          }
+          parameters(obj)$RT.0$n <- length(r.corrs)
+          
+          # fit null model
+          if (!is.null(plot.folder)) {
+            file.name <- paste0(plot.folder, "/", filename, "_RT-null.pdf")
+          } else {
+            file.name <- NULL
+          }
+          gp <- trainModel(r.corrs, "RT correlation (null)",
+                           verbose = verbose, file.name = file.name
+          )
+          parameters(obj)$RT.0$model <- gp
         }
-
+        
         if (verbose) {
             message("Learning of statistical model parameters completed")
         }
         obj
     }
+    
 ) # learnParameters
 
 
 # Scoring of gene signatures in a BSRSignature object ==========================
-
 
 setGeneric("scoreLRGeneSignatures", signature="obj",
     function(obj, ...) standardGeneric("scoreLRGeneSignatures")

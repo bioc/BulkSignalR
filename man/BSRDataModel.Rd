@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataPrepare.R
 \name{BSRDataModel}
 \alias{BSRDataModel}
-\title{Prepare a BSRDataModel object from expression data}
+\title{Constructor of the BSRDataModel class}
 \usage{
 BSRDataModel(
   counts,
@@ -57,27 +57,31 @@ between 0 and 1 (in case the default 0.75 - hence the name - is not
 appropriate).}
 
 \item{x.col}{In a SpatialExperiment object, the index of the column
-containing x coordinates in the dafaframe returned by rowData(), usually 
-named array_row}
+containing the x coordinates in the dafaframe returned by rowData(), usually 
+named array_row.}
 
 \item{y.col}{In a SpatialExperiment object, the index of the column
-containing y coordinates in the dafaframe returned by rowData(), usually 
-named array_col}
+containing the y coordinates in the dafaframe returned by rowData(), usually 
+named array_col.}
 
 \item{barcodeID.col}{In a SpatialExperiment object, the index of the column
-containing barcodeID in the dafaframe returned by colData(), usually named
-barcode_id}
+containing the barcodeID in the dafaframe returned by colData(), usually
+named barcode_id.}
 }
 \value{
 A BSRModelData object with empty model parameters.
 }
 \description{
 Take a matrix or data frame containing RNA sequencing,
-microarray, or expression proteomics data and return a BSRDataModel
-object ready for subsequent training. Normally, BSRDataModel objects
-are not instantiated directly, but through this function.
+microarray, or expression proteomics data as input parameter
+and return a BSRDataModel
+object ready for subsequent training.
 }
 \details{
+Note that this constructor replaces
+the function prepareDataset that was part of the previous version of
+BulkSignalR library.
+
 The \code{counts} matrix or table should be provided with expression
   levels of protein coding genes in each samples (column) and
   \code{rownames(counts)} set to HUGO official gene symbols.
@@ -104,7 +108,7 @@ The \code{counts} matrix or table should be provided with expression
   algorithm used.
 
   In case proteomic or microarray data are provided, \code{min.count} must be
-  understood as its equivalent with respect to those data.
+  understood as its equivalent with respect to those data types.
 }
 \examples{
 data(sdc, package = "BulkSignalR")

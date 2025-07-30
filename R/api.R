@@ -1,11 +1,11 @@
 #' Retrieve LR complexes
 #'
-#' Fetch LR complexes from database and
-#' and return a dataframe
+#' Fetch LR complexes from reference database and
+#' and return a data frame
 #'
-#' @param idRelease integer id version Release
-#' Default is NULL so last version is selected.
-#' @return Returns dataframe Complexex, invisibly. 
+#' @param idRelease integer ID of the chosen release
+#' Default is NULL such that the latest version is selected.
+#' @return Returns data frame Complexes, invisibly. 
 #' 
 #' @import DBI RSQLite BiocFileCache
 #' @importFrom cli cli_alert_danger cli_alert cli_abort
@@ -87,12 +87,12 @@ where Comp."id.release_fk" = ?;', release$id)
 
 #' Retrieve LR interactions.
 #'
-#' Fetch LR interactions from database and
-#' and return a dataframe
+#' Fetch LR interactions from reference database and
+#' and return a data frame
 #'
-#' @param idRelease integer id version Release
-#' Default is NULL so last version is selected.
-#' @return Returns dataframe LR interactions, invisibly. 
+#' @param idRelease integer ID of the chosen release
+#' Default is NULL such that the latest version is selected.
+#' @return Returns data frame LR interactions, invisibly. 
 #' 
 #' @import DBI RSQLite BiocFileCache
 #' @importFrom cli cli_alert_danger cli_alert cli_abort

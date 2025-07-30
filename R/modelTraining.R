@@ -121,7 +121,7 @@
     mu <- res$par[1]
     sigma <- res$par[2]
     if (verbose) {
-        message("Censored normal mean: ", mu)
+        message("Censored normal mean:" , mu)
         message("Censored normal standard deviation: ", sigma)
     }
     q <- stats::pnorm(1, mu, sigma) - stats::pnorm(-1, mu, sigma)
@@ -134,7 +134,7 @@
     # KS test D statistics
     x <- seq(-1, 1, by = 0.005)
     y <- stats::dnorm(x, mu, sigma) / q
-    params$D <- stats::ks.test(d, y)$statistic
+    params$D <- stats::ks.test(d, y, simulate.p.value=TRUE)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -168,6 +168,7 @@
     }
 
     params
+    
 } # .getGaussianParam
 
 
@@ -244,8 +245,8 @@
     }
     if (verbose) {
         message(
-            "Censored mixed normal parameters",
-            " (alpha, mean1, sd1, mean2, sd2): ",
+            "Censored mixed normal parameters ",
+            "(alpha, mean1, sd1, mean2, sd2): ",
             paste(res$par, collapse = ", ")
         )
     }
@@ -271,7 +272,7 @@
     y <- alpha * stats::dnorm(x, mu1, sigma1) +
         (1 - alpha) * stats::dnorm(x, mu2, sigma2) / q
 
-    params$D <- stats::ks.test(d, y)$statistic
+    params$D <- stats::ks.test(d, y, simulate.p.value=TRUE)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -304,6 +305,7 @@
     }
 
     params
+    
 } # .getMixedGaussianParam
 
 
@@ -370,6 +372,7 @@
     }
 
     list(empirCDF = empir, distrib = "empirical")
+    
 } # .getEmpiricalParam
 
 
@@ -424,7 +427,7 @@
     )
 
     # KS test D statistics
-    params$D <- stats::ks.test(d,df$y)$statistic
+    params$D <- stats::ks.test(d,df$y, simulate.p.value=TRUE)$statistic
     if (inherits(params$D, "try-error")) {
         params$D <- NULL
     }
@@ -457,6 +460,7 @@
     }
 
     params
+    
 } # .getKernelEmpiricalParam
 
 
@@ -576,6 +580,7 @@
         alpha = alpha, beta = beta, gamma = gamma, delta = delta, factor = q,
         start = start, distrib = "censored_stable"
     )
+    
 } # .getAlphaStableParam
 
 
@@ -652,6 +657,7 @@
             ))
         }
     }
+    
 } # .getEmpiricalNull
 
 
@@ -697,4 +703,5 @@
             list(.getCorrelatedLR(r.ds, min.cor = obj@param$min.corr.LR))
         }
     }
+    
 } # .getEmpiricalNullCorrLR

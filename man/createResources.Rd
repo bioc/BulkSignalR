@@ -2,14 +2,14 @@
 % Please edit documentation in R/resource.R
 \name{createResources}
 \alias{createResources}
-\title{Create all resources.}
+\title{Create all resources}
 \usage{
 createResources(onRequest = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{onRequest}{logical True if you force
-download again. This will overwrite
-pre-existing database. Default is True.}
+\item{onRequest}{logical TRUE if you want to force
+downloading again. This will overwrite the
+pre-existing local database. Default is TRUE.}
 
 \item{verbose}{Default is FALSE}
 }
@@ -17,11 +17,11 @@ pre-existing database. Default is True.}
 Returns `NULL`, invisibly.
 }
 \description{
-Create cache for all resources (pathways, or PWC network)
-downloaded from the web when library is first loaded.
-This part is handled with BiocFileCache.
-Otherwise datatabase, is handled by another process
-not relying on BiocFileCache instance.
+Create a cache for all resources (pathways, or PWC network)
+downloaded from the web when the library is first loaded.
+This functionality is handled with BiocFileCache.
+Otherwise database, is handled by another process
+not relying on a BiocFileCache instance.
 }
 \examples{
 createResources(onRequest=FALSE)

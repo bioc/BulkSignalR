@@ -3,18 +3,18 @@
 \docType{data}
 \name{annotation.spa}
 \alias{annotation.spa}
-\title{A skinny dataframe used in the spatial workflow}
+\title{A skinny data frame used in the spatial workflow}
 \format{
-Dataframe that contains the following columns :
+Data frame that contains the following columns:
 barcode_id,sample_id, in_tissue,array_row
-array_col,ground_truth,reference,cell_count,idSpatial
+array_col, ground_truth, reference, cell_count, idSpatial
 
 barcode_id is the id of the spot
 idSpatial is the spatial id of the spot(array_rowXarray_col)
 ground_truth is the label (Layer1/2 were only kept)
 
-They are the mandatory informations in order to
-make plots for the spatial workflow.
+They are the mandatory data necessary to
+generate plots for the spatial workflow.
 }
 \source{
 \url{http://spatial.libd.org/spatialLIBD/}
@@ -23,6 +23,6 @@ make plots for the spatial workflow.
 data(annotation.spa)
 }
 \description{
-Dataframe subset describing the spatial spots
+Data frame subset describing the spatial spots
 }
 \keyword{datasets}

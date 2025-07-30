@@ -3,9 +3,9 @@
 \docType{data}
 \name{bsrinf.comp}
 \alias{bsrinf.comp}
-\title{A skinny BSR-InferenceComp object related to sdc.}
+\title{A skinny BSRInferenceComp object related to sdc.}
 \format{
-An example of an BSR-InferenceComp object
+An example of an BSRInferenceComp object
 }
 \usage{
 data(bsrinf.comp)

@@ -3,9 +3,9 @@
 \docType{data}
 \name{bsrdm.comp}
 \alias{bsrdm.comp}
-\title{A skinny BSR-dataModelComp object related to sdc.}
+\title{A skinny BSRDataModelComp object related to sdc.}
 \format{
-An example of an BSR-dataModelComp object
+An example of an BSRDataModelComp object
 }
 \usage{
 data(bsrdm.comp)

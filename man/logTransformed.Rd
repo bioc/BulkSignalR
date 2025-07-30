@@ -17,13 +17,15 @@ logTransformed
 log.transformed accessor
 }
 \examples{
-bsrdm <- new("BSRDataModel",
-    ncounts = matrix(1.5,
-        nrow = 2, ncol = 2,
-        dimnames = list(c("A", "B"), c("C", "D"))
-    ),
+bsrdm <- BSRDataModel(
+    counts = matrix(1.5,
+                nrow = 2, ncol = 2,
+                dimnames = list(c("A", "B"), c("C", "D"))
+                   ),
+    method = "TC",
     log.transformed = TRUE,
-    normalization = "TC"
+    normalize = FALSE,
+    min.LR.found = 0
 )
 logTransformed(bsrdm)
 }

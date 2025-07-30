@@ -1,14 +1,14 @@
-#' Fetch the database from internet.
+#' Fetch the LR reference database from internet
 #'
 #' Fetch LR database from remote location.
 #'
-#' @param onRequest logical True if you force
-#' download again. This will overwrite
-#' pre-existing database. Default is True.
-#' @param verbose Logical TRUE/FALSE
+#' @param onRequest logical TRUE to force
+#' downloading again. This will overwrite the
+#' pre-existing local database. Default is TRUE.
+#' @param verbose Logical
 #' @return Returns `NULL`, invisibly. 
 #' 
-#' @import httr
+#' @import httr2
 #' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
@@ -28,17 +28,17 @@ createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
 
     if (!hasInternet & 
         !file.exists(databaseCacheDir)) {
-        cli::cli_alert_danger("Your internet connection is off :")
+        cli::cli_alert_danger("Your internet connection is off:")
         stop(
-        "- Remote database can't be downloaded."
+        "- Remote database cannot be downloaded."
         )   
     }
 
     if (!hasInternet & 
         onRequest) {
-        cli::cli_alert_danger("Your internet connection is off :")
+        cli::cli_alert_danger("Your internet connection is off:")
         stop(
-        "- Remote database can't be downloaded.\n"
+        "- Remote database cannot be downloaded.\n"
         )   
     }
 
@@ -60,8 +60,6 @@ createDatabase <- function(onRequest = TRUE, verbose = FALSE) {
     }
 
     cacheVersion(dir="database")
-
-
 
     return(invisible(NULL))
 }
