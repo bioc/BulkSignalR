@@ -430,8 +430,7 @@ signatureHeatmaps <- function(pathway,
 #' @param reverse    A logical to reverse or not colors in hcl.palette.
 #'
 #' @return A heatmap. Since heatmap plotting tend to be slow on the screen,
-#' it is advisable to provide a
-#' PDF file name and plot in a file (much faster).
+#' it is advisable to plot in a file instead.
 #'
 #' If hcl.palette is set, the colors parameter won't be used.
 #'
