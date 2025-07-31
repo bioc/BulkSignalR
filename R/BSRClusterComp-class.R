@@ -93,8 +93,7 @@ setMethod(
 #'
 #' @name BSRClusterComp
 #'
-#' @param obj    A BSRDataModelComp object output by
-#'   \code{\link{setAs}}.
+#' @param obj    A BSRDataModelComp object.
 #' @param col.clusterA   Cluster A column indices.
 #' @param col.clusterB   Cluster B column indices.
 #' @param differential.stats  A data.frame containing statistics about
