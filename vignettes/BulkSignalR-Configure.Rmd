@@ -32,20 +32,16 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::knit_hooks$set(optipng = knitr::hook_optipng)
-options(rmarkdown.html_vignette.check_title = FALSE)
 ```
+
 ```{r load-libs, message = FALSE,  warning = FALSE, results = FALSE}
 library(BulkSignalR)
 ```
 
 ## Configure local cache and hidden environment variables
 
-`BulkSignalR` donwload resource files just once after the first 
+`BulkSignalR` donwloads resource files just once after the first 
 installation.  
-
-Several data versions can be access remotely from :
-[here](https://partage-dev.montp.inserm.fr:9192/CBSB/SignalR/resources/)
-These datasets can be used to reset the sources locally.  
 
 A mecanism handled by `BioCFileCache` package informs the user 
 if the local files are up to date. 
@@ -64,10 +60,14 @@ variable  called `.SignalR`)
 The sources can be rewritten using `resetPathways`, `resetLRdb` 
 and `resetNetwork`.  
 
-```{r cash,eval=True}
+Several data versions can be access remotely from :
+[here](https://partage-dev.montp.inserm.fr:9192/CBSB/SignalR/resources/)
+These datasets can be used to reset the sources locally.  
+
+```{r cash,eval=FALSE}
 
 # You can see hidden environment variable list as follows.
-ls("BulkSignalR:::.SignalR")
+ls(BulkSignalR:::.SignalR)
 
 # Setup Pathways for reactome (can be done for GO-BP also)
 
@@ -85,18 +85,11 @@ resourceName = "Reactome")
 cacheInfo()
 cacheVersion()
 
-# Empty local cache
 cacheClear()
 
-cacheInfo()
-cacheVersion()
-
-# Ask for download
+# Ask to download again
 createResources(onRequest=TRUE)
 
-cacheInfo()
-
-dim(BulkSignalR:::.SignalR$BulkSignalR_LRdb)
 
 # Set up LRdb
 df <- data.frame(
@@ -105,12 +98,7 @@ df <- data.frame(
 )
 resetLRdb(df,switch=TRUE)
 
-dim(.SignalR$BulkSignalR_LRdb)
-
 # Set up Network
-
-dim(.SignalR$BulkSignalR_Network)
-
 df <- data.frame(
   a.gn   = c("A2M", "AANAT", "AANAT", "ACE", "ACE"),
   type  = c("regulates-transcription-of",
@@ -121,8 +109,7 @@ df <- data.frame(
   b.gn  = c("LRP1", "MTNR1A", "MTNR1B", "AGTR2", "BDKRB2")
 )
 
-resetNetwork(network)
-dim(.SignalR$BulkSignalR_Network)
+resetNetwork(df)
 
 
 ```  
