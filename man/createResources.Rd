@@ -17,11 +17,9 @@ pre-existing local database. Default is TRUE.}
 Returns `NULL`, invisibly.
 }
 \description{
-Create a cache for all resources (pathways, or PWC network)
+Create a cache for all resources (pathways, lrdb & network)
 downloaded from the web when the library is first loaded.
 This functionality is handled with BiocFileCache.
-Otherwise database, is handled by another process
-not relying on a BiocFileCache instance.
 }
 \examples{
 createResources(onRequest=FALSE)

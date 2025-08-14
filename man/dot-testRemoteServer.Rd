@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataPrepare.R
 \name{.testRemoteServer}
 \alias{.testRemoteServer}
-\title{Check the reference DB server is up}
+\title{Check whether the reference DB server is up}
 \usage{
 .testRemoteServer()
 }
@@ -10,5 +10,5 @@
 Returns `NULL`, invisibly.
 }
 \description{
-Check the reference DB server is up
+Check whether the reference DB server is up
 }

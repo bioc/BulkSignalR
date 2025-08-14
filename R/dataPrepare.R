@@ -1,4 +1,4 @@
-#' Check the reference DB server is up
+#' Check whether the reference DB server is up
 #'
 #' @return Returns `NULL`, invisibly. 
 #'
@@ -15,7 +15,7 @@
 
     if(hasInternet){
 
-        if(!url.exists(.SignalR$BulkSignalR_DB_URL,
+        if(!url.exists(.SignalR$BulkSignalR_CORE_URL,
             .opts = conf))
         {
         cli::cli_alert_danger(
@@ -27,8 +27,8 @@
     } 
 
     return(invisible(NULL))
-
 }
+
 
 #' Check there is a well formatted cache
 #'
@@ -37,25 +37,30 @@
 #' @importFrom RCurl url.exists
 #' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert_info
+#' @importFrom BiocFileCache BiocFileCache bfcinfo
 .testCacheFiles <- function() {
 
     hasInternet <- tryCatch(expr={curl::has_internet()}, 
         error = FALSE)
 
-    files<-list.files(.SignalR$BulkSignalR_CACHEDIR,
-        full.names = TRUE, recursive = TRUE)
-    
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
+
+    cacheDir <- paste(cacheDir, "resources", sep = "/")
+
+    bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
+    files <- BiocFileCache::bfcinfo(bfc)$rpath
+
     vecSizes <- vapply(files, file.size, numeric(1))
     totSize <- sum(vecSizes)
 
-    if(!hasInternet & totSize ==0){
+    if(!hasInternet){
         mess_info <- paste0("You need an internet connection",
     " to download cache files.")
         cli::cli_alert_danger(mess_info)
         stop()
     }
-
-    if(totSize !=0 & totSize < 5000000){
+    # Trick
+    if(totSize > 6000000 | totSize < 4000000 | length(files)!=4){
         mess_info <- paste0("{(.SignalR$BulkSignalR_CACHEDIR)}",
         " is corrupted. It will be deleted and downloaded again.")
 
@@ -66,53 +71,6 @@
 
     return(invisible(NULL))
 }
-
-#' Modify LRdb database
-#'
-#' Users can provide a data frame with 2 columns named
-#' ligand and receptor.
-#' This can be used to extend or replace the existing
-#' LRdb.
-#'
-#' @param db     A data frame with 2 columns named
-#' ligand and receptor.
-#' @param switch  A logical indicating whether LRdb should be extended only
-#' (FALSE, default) or completely replaced (TRUE).
-#'
-#' @return Returns `NULL`, invisibly. 
-#'
-#' @importFrom cli cli_alert_info
-#' @export
-#' @examples
-#' resetLRdb(db = data.frame(ligand = "A2M", receptor = "LRP1"), switch = FALSE)
-resetLRdb <- function(db, switch = FALSE) {
-    if (colnames(db)[1] == "ligand" & colnames(db)[2] == "receptor") {
-        if (switch) {
-            assign("BulkSignalR_LRdb", unique(db[, c("ligand", "receptor")]),
-                envir = .SignalR
-            )
-        } else {
-            db <- rbind(
-                .SignalR$BulkSignalR_LRdb[, c("ligand", "receptor")],
-                db[, c("ligand", "receptor")]
-            )
-            assign("BulkSignalR_LRdb", unique(db), 
-                envir = .SignalR)
-        }
-    } else {
-        stop(
-            "db should be a data frame with",
-            "2 columns named 'ligand' and 'receptor'."
-        )
-    }
-
-    message("")
-    cli::cli_alert_info(
-        "New database defined for {.val LRdb}."
-    )
-
-    return(invisible(NULL))
-} # resetLRdb
 
 #' Internal function to check and extract a
 #' count matrix if a more complex object than a simple matrix or data frame
@@ -194,7 +152,9 @@ resetLRdb <- function(db, switch = FALSE) {
         else {countsChecked <- counts}
     
     return(countsChecked)
+    
 } # .checkInteroperabilityForCounts
+
 
 #' Constructor of the BSRDataModel class
 #'
@@ -423,6 +383,7 @@ BSRDataModel <- function(
         initial.organism = species,
         initial.orthologs = homolog.genes
     )
+    
 } # BSRDataModel
 
 
@@ -480,7 +441,7 @@ findOrthoGenes <- function(from_organism, from_values,
     message(
         "Dictionary Size: ",
         dim(orthologs_dictionary)[1],
-        " genes\n"
+        " genes"
     )
 
     nL <- length(intersect(
@@ -580,4 +541,5 @@ convertToHuman <- function(counts, dictionary) {
     } else {
         counts.transposed
     }
+    
 } # convertToHuman
