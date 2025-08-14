@@ -22,12 +22,9 @@ biocViews: Network, RNASeq, Software, Proteomics, Transcriptomics, NetworkInfere
 Imports:
     BiocFileCache,
     httr2,
-    DBI,
     RCurl,
-    RSQLite,
     cli,
     curl,
-    dplyr,
     rlang,
     jsonlite,
     matrixStats,
