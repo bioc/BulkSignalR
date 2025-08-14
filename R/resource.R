@@ -96,7 +96,7 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
 
         # safeguard
         if (!dir.exists(resourcesCacheDir)) {
-            cli::cli_alert_danger("Resources repository do not exist.\n")
+            cli::cli_alert_danger("Resources repository does not exist.\n")
             stop()
         }
 

@@ -72,6 +72,56 @@
     return(invisible(NULL))
 }
 
+
+#' Modify LRdb database
+#'
+#' Users can provide a data frame with 2 columns named
+#' ligand and receptor.
+#' This can be used to extend or replace the existing
+#' LRdb.
+#'
+#' @param db     A data frame with 2 columns named
+#' ligand and receptor.
+#' @param switch  A logical indicating whether LRdb should be extended only
+#' (FALSE, default) or completely replaced (TRUE).
+#'
+#' @return Returns `NULL`, invisibly. 
+#'
+#' @importFrom cli cli_alert_info
+#' @export
+#' @examples
+#' resetLRdb(db = data.frame(ligand = "A2M", receptor = "LRP1"), switch = FALSE)
+resetLRdb <- function(db, switch = FALSE) {
+    if (colnames(db)[1] == "ligand" & colnames(db)[2] == "receptor") {
+        if (switch) {
+            assign("BulkSignalR_LRdb", unique(db[, c("ligand", "receptor")]),
+                envir = .SignalR
+            )
+        } else {
+            db <- rbind(
+                .SignalR$BulkSignalR_LRdb[, c("ligand", "receptor")],
+                db[, c("ligand", "receptor")]
+            )
+            assign("BulkSignalR_LRdb", unique(db), 
+                envir = .SignalR)
+        }
+    } else {
+        stop(
+            "db should be a data frame with",
+            "2 columns named 'ligand' and 'receptor'."
+        )
+    }
+
+    message("")
+    cli::cli_alert_info(
+        "New database defined for {.val LRdb}."
+    )
+
+    return(invisible(NULL))
+    
+} # resetLRdb
+
+
 #' Internal function to check and extract a
 #' count matrix if a more complex object than a simple matrix or data frame
 #' is given as parameter. Main usage is to link with Bioconductor objects.
