@@ -16,8 +16,7 @@ BiocFileCache::BiocFileCache()}
 Returns BiocFileCache::bfcquery object or FALSE
 }
 \description{
-Access  resources (pathways, or PathwayCommons network
-from \url{https://www.pathwaycommons.org/})
+Access  resources (pathways or network
 stored in the cache.
 }
 \keyword{internal}

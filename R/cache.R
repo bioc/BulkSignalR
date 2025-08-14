@@ -37,10 +37,10 @@
     }
 
     config <- httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
-    
+   
     # if fname="exact" remove the unique identifier
     BiocFileCache::bfcadd(bfc, rname = resourceName,
-        config = config$options, fpath = fpath, download = download)
+        config = config$options ,fpath = fpath, download = download)
     
     cli::cli_alert_info("{.val {resourceName}} added to cache with success.")
 
@@ -193,7 +193,7 @@ cacheInfo <- function(dir = c("resources")) {
 #'
 #' @importFrom cli cli_alert_danger cli_alert cli_alert_info
 #' @importFrom cli cli_inform
-#' @import R --v httr
+#' @import httr
 #' @importFrom curl has_internet
 #' @return Returns `NULL`, invisibly. 
 #'
@@ -203,9 +203,6 @@ cacheInfo <- function(dir = c("resources")) {
 cacheVersion <- function(dir = c("resources")) {
     dir <- match.arg(dir)
     
-    # bypass ssl
-    config <- list(ssl_verifypeer = 0L, ssl_verifyhost = 0L)
-
     if (!dir %in% c("resources")) {
         stop("Only `resources` is a valid keyword.")
     }
@@ -218,6 +215,8 @@ cacheVersion <- function(dir = c("resources")) {
         cli::cli_alert_danger("BulkSignalR {.val {dir}} cache uninitialized.")
         stop("- Location: ", cacheDir, "\n")    
     }
+
+    config <- httr::set_config(config(ssl_verifypeer = 0L, ssl_verifyhost = 0L))
 
     word <- ifelse(dir == "resources", "have", "has")
     word2 <- ifelse(dir == "resources", "are", "is")

@@ -4,11 +4,11 @@
 \alias{cacheInfo}
 \title{Get cache content information.}
 \usage{
-cacheInfo(dir = c("both", "resources", "database"))
+cacheInfo(dir = c("resources"))
 }
 \arguments{
 \item{dir}{Directory to remove in order to clean the cache.
-Can be only 'resources', 'database' or 'both'.}
+Can be only 'resources'}
 }
 \value{
 Returns `NULL`, invisibly.

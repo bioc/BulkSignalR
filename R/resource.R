@@ -61,7 +61,6 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
             verbose = verbose, download = TRUE)
 
     }
-
     cacheVersion(dir="resources")
     
     return(invisible(NULL))

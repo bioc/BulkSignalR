@@ -4,19 +4,19 @@
 \alias{cacheClear}
 \title{Delete cache content.}
 \usage{
-cacheClear(dir = c("both", "resources", "database"))
+cacheClear(dir = c("resources"))
 }
 \arguments{
-\item{dir}{Directory to remove. Can be only 'resources' or 'database'.}
+\item{dir}{Directory to remove. Can be only 'resources'.}
 }
 \value{
 Returns `NULL`, invisibly.
 }
 \description{
-Delete the content of the cache directory.
+Delete the content of cache directory.
 }
 \examples{
-cacheClear(dir="database")
+cacheClear(dir="resources")
 # need to recreate database in order to run examples well
-createDatabase(verbose=TRUE)
+createResources(verbose=TRUE)
 }

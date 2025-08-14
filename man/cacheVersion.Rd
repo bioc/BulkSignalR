@@ -4,11 +4,11 @@
 \alias{cacheVersion}
 \title{Check whether remote resource files have been changed.}
 \usage{
-cacheVersion(dir = c("both", "resources", "database"))
+cacheVersion(dir = c("resources"))
 }
 \arguments{
 \item{dir}{Directory for which you want to check Version.
-Can be only 'resources', 'database' or 'both'.}
+Can be only 'resources'.}
 }
 \value{
 Returns `NULL`, invisibly.
