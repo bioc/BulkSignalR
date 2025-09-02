@@ -296,12 +296,20 @@ BSRInferenceComp <- function(obj, cmp.name,
         inter$L.expr <- differentialStats(scc)[inter$L, "expr"]
     }
     inter$R.expr <- differentialStats(cc)[inter$R, "expr"]
-    if (inf.param$log.transformed.data) {
-        sq <- sqrt(inter$L.expr * inter$R.expr)
-    } else {
-        sq <- sqrt(log1p(inter$L.expr) / log(2) * log1p(inter$R.expr) / log(2))
-    }
-    inter$LR.score <- sq / (inf.param$mu + sq)
+	if (sum(inter$L.expr<0) + sum(inter$R.expr<0) > 0){
+	    # impossible to compute LR-score with negative values,
+		# this may happen for scProt-MS data
+		inter$LR.score <- 0
+	}
+	else{
+	    # normal case
+        if (inf.param$log.transformed.data) {
+            sq <- sqrt(inter$L.expr * inter$R.expr)
+        } ele {
+            sq <- sqrt(log1p(inter$L.expr) / log(2) * log1p(inter$R.expr) / log(2))
+        }
+        inter$LR.score <- sq / (inf.param$mu + sq)
+	}
 
     # prepare the accompanying lists
     ligands <- strsplit(inter$L, ";")
@@ -816,12 +824,21 @@ setMethod("updateInference", "BSRInferenceComp", function(obj, bsrcc,
     inter$LR.corr <- 1
 
     # LR-score
-    if (logTransf) {
-        sq <- sqrt(inter$L.expr * inter$R.expr)
-    } else {
-        sq <- sqrt(log1p(inter$L.expr) / log(2) * log1p(inter$R.expr) / log(2))
-    }
-    inter$LR.score <- sq / (mu + sq)
+	if (sum(inter$L.expr<0) + sum(inter$R.expr<0) > 0){
+	    # impossible to compute LR-score with negative values,
+		# this may happen for scProt-MS data
+		inter$LR.score <- 0
+	}
+	else{
+	    # normal case
+        if (logTransf) {
+            sq <- sqrt(inter$L.expr * inter$R.expr)
+        } else {
+            sq <- sqrt(log1p(inter$L.expr) / log(2) * 
+			           log1p(inter$R.expr) / log(2))
+        }
+        inter$LR.score <- sq / (mu + sq)
+	}
 
     # select on L & R as well as LR-scores
     good <- L.stats[inter$L, "pval"] <= max.pval & inter$L.logFC >= min.logFC &
