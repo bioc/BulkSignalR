@@ -14,11 +14,11 @@ resetPathways(
 \arguments{
 \item{dataframe}{Data frame formated as follows.
 When \code{resourceName} is set to "Reactome",
-dataframe colnames must be defined as :
-"Reactome ID", "Gene name" & "Reactome name"
+dataframe colnames must be defined as
+"Reactome ID", "Gene name", and "Reactome name"
 When \code{resourceName} is set to "GO-BP",
-#' dataframe colnames must be defined as :
-"GO ID", "Gene name" & "GO name"}
+#' dataframe colnames must be defined as
+"GO ID", "Gene name", and "GO name"}
 
 \item{file}{Path to file.}
 
