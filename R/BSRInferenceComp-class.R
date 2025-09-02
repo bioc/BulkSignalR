@@ -305,7 +305,7 @@ BSRInferenceComp <- function(obj, cmp.name,
 	    # normal case
         if (inf.param$log.transformed.data) {
             sq <- sqrt(inter$L.expr * inter$R.expr)
-        } ele {
+        } else {
             sq <- sqrt(log1p(inter$L.expr) / log(2) * log1p(inter$R.expr) / log(2))
         }
         inter$LR.score <- sq / (inf.param$mu + sq)
