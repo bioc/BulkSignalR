@@ -15,7 +15,7 @@
 
     if(hasInternet){
 
-        if(!url.exists(.SignalR$BulkSignalR_DB_URL,
+        if(!url.exists(.SignalR$BulkSignalR_CORE_URL,
             .opts = conf))
         {
         cli::cli_alert_danger(
@@ -37,25 +37,30 @@
 #' @importFrom RCurl url.exists
 #' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert_info
+#' @importFrom BiocFileCache BiocFileCache bfcinfo
 .testCacheFiles <- function() {
 
     hasInternet <- tryCatch(expr={curl::has_internet()}, 
         error = FALSE)
 
-    files<-list.files(.SignalR$BulkSignalR_CACHEDIR,
-        full.names = TRUE, recursive = TRUE)
-    
+    cacheDir <- .SignalR$BulkSignalR_CACHEDIR
+
+    cacheDir <- paste(cacheDir, "resources", sep = "/")
+
+    bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
+    files <- BiocFileCache::bfcinfo(bfc)$rpath
+
     vecSizes <- vapply(files, file.size, numeric(1))
     totSize <- sum(vecSizes)
 
-    if(!hasInternet & totSize ==0){
+    if(!hasInternet){
         mess_info <- paste0("You need an internet connection",
     " to download cache files.")
         cli::cli_alert_danger(mess_info)
         stop()
     }
-
-    if(totSize !=0 & totSize < 5000000){
+    # Trick
+    if(totSize > 6000000 | totSize < 4000000 | length(files)!=4){
         mess_info <- paste0("{(.SignalR$BulkSignalR_CACHEDIR)}",
         " is corrupted. It will be deleted and downloaded again.")
 

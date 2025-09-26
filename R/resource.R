@@ -4,11 +4,9 @@
 
 #' Create all resources
 #'
-#' Create a cache for all resources (pathways, or PWC network)
+#' Create a cache for all resources (pathways, lrdb & network)
 #' downloaded from the web when the library is first loaded.
 #' This functionality is handled with BiocFileCache.
-#' Otherwise database, is handled by another process
-#' not relying on a BiocFileCache instance.
 #'
 #' @param onRequest logical TRUE if you want to force
 #' downloading again. This will overwrite the
@@ -57,6 +55,10 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
             cacheDir = resourcesCacheDir, 
             resourceName = "Network",
             verbose = verbose, download = TRUE)
+        .cacheAdd(fpath = .SignalR$BulkSignalR_LRdb_URL,
+            cacheDir = resourcesCacheDir, 
+            resourceName = "LRdb",
+            verbose = verbose, download = TRUE)
 
     }
 
@@ -68,8 +70,7 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
 
 #' Get resources from the cache
 #'
-#' Get resources (pathways, or PathwayCommons network
-#' from \url{https://www.pathwaycommons.org/})
+#' Get resources (pathways, lrdb or network
 #' stored in the cache.
 #'
 #' @param resourceName   Resource name.
@@ -82,9 +83,9 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
 #' @examples
 #' reactome <- getResource(resourceName = "Reactome",cache=TRUE)
 getResource <- function(resourceName = NULL, cache = FALSE) {
-    if (!resourceName %in% c("GO-BP", "Reactome", "Network")) {
+    if (!resourceName %in% c("GO-BP", "Reactome", "Network","LRdb")) {
         cli::cli_alert_danger(
-            ".val {GO-BP, Reactome & Network} are the only keywords alllowed.\n"
+        ".val {GO-BP, Reactome, LRdb & Network} are the only keywords alllowed.\n"
         )
         stop()
     }
@@ -101,10 +102,24 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
 
         bfc <- BiocFileCache::BiocFileCache(resourcesCacheDir, ask = FALSE)
 
-        dataframe <- .readRDSFromCache(bfc = bfc,
+        if(resourceName=="LRdb") {
+            cacheHits <- BiocFileCache::bfcquery(bfc, query = resourceName,
+            field = "rname")
+            dataframe <- utils::read.csv(bfc[[cacheHits$rid]],
+            stringsAsFactors = FALSE, sep = "\t", check.names = FALSE) 
+        } else {
+            dataframe <- .readRDSFromCache(bfc = bfc,
             resourceName = resourceName)
-
-        # Due to the fact React and Go are organized differently
+        }
+        
+        if (resourceName == "LRdb") {
+            if (!all(
+                c("ligand","receptor") %in% 
+                colnames(dataframe))) {
+                cli::cli_alert_danger("Colnames are not well defined.\n")
+                stop()
+            }
+        }
         if (resourceName == "Reactome") {
             if (!all(
                 c("Reactome ID", "Gene name", "Reactome name") %in% 
@@ -113,7 +128,7 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
                 stop()
             }
             dataframe <- dataframe[, 
-            c("Reactome name", "Gene name", "Reactome ID")]
+            c("Reactome ID", "Gene name", "Reactome name")]
         }
 
         if (resourceName == "GO-BP") {
@@ -145,6 +160,10 @@ getResource <- function(resourceName = NULL, cache = FALSE) {
 
         if (resourceName == "Network") {
             dataframe <- .SignalR$BulkSignalR_Network
+        }
+
+        if (resourceName == "LRdb") {
+            dataframe <- .SignalR$BulkSignalR_LRdb
         }
     }
 
@@ -282,8 +301,6 @@ resetPathways <- function(
 
         message("")
         cli::cli_alert_info("New resource defined for {.val {resourceName}}.\n")
-        message(utils::head(dataframe))
-
 
         if (resourceName == "Reactome") {
             assign("BulkSignalR_Reactome", dataframe,
@@ -523,3 +540,51 @@ resetPathways <- function(
 
     return(dataframeFromGmt)
 } # .formatPathwaysFromGmt
+
+#' Modify LRdb database
+#'
+#' Users can provide a data frame with 2 columns named
+#' ligand and receptor.
+#' This can be used to extend or replace the existing
+#' LRdb.
+#'
+#' @param db     A data frame with 2 columns named
+#' ligand and receptor.
+#' @param switch  A logical indicating whether LRdb should be extended only
+#' (FALSE, default) or completely replaced (TRUE).
+#'
+#' @return Returns `NULL`, invisibly. 
+#'
+#' @importFrom cli cli_alert_info
+#' @export
+#' @examples
+#' resetLRdb(db = data.frame(ligand = "A2M", receptor = "LRP1"), switch = FALSE)
+resetLRdb <- function(db, switch = FALSE) {
+    if (all(c("ligand","receptor") %in% names(db))) {
+        if (switch) {
+            assign("BulkSignalR_LRdb", unique(db[, c("ligand", "receptor")]),
+                envir = .SignalR
+            )
+        } else {
+            db <- rbind(
+                .SignalR$BulkSignalR_LRdb[, c("ligand", "receptor")],
+                db[, c("ligand", "receptor")]
+            )
+            assign("BulkSignalR_LRdb", unique(db), 
+                envir = .SignalR)
+        }
+    } else {
+        stop(
+            "db should be a dataframe with",
+            "2 columns named 'ligand' and 'receptor'."
+        )
+    }
+
+    message("")
+    cli::cli_alert_info(
+        "New database defined for {.val LRdb}."
+    )
+
+    return(invisible(NULL))
+    
+} # resetLRdb

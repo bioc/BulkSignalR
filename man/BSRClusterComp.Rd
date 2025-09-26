@@ -7,8 +7,7 @@
 BSRClusterComp(obj, col.clusterA, col.clusterB, differential.stats)
 }
 \arguments{
-\item{obj}{A BSRDataModelComp object output by
-\code{\link{setAs}}.}
+\item{obj}{A BSRDataModelComp object.}
 
 \item{col.clusterA}{Cluster A column indices.}
 

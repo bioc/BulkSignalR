@@ -17,8 +17,7 @@ Returns a data frame containing the requested
 resource.
 }
 \description{
-Get resources (pathways, or PathwayCommons network
-from \url{https://www.pathwaycommons.org/})
+Get resources (pathways, lrdb or network
 stored in the cache.
 }
 \examples{

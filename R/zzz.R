@@ -8,20 +8,12 @@
     assign("BulkSignalR_CACHEDIR", cacheDir, envir = .SignalR)
 
     url <- "https://partage-dev.montp.inserm.fr:9192/CBSB/"
-    urlDatabase <- paste0(url,
-        "SignalR/database/SignalR.db")
-    assign("BulkSignalR_CORE_URL", url, envir = .SignalR)
 
-    assign("BulkSignalR_DB_URL", urlDatabase, envir = .SignalR)
+    assign("BulkSignalR_CORE_URL", url, envir = .SignalR)
 
     .testRemoteServer()
     .testCacheFiles()
     
-    createDatabase(onRequest = FALSE)
-
-    BulkSignalR_LRdb <- getInteractions()
-
-    assign("BulkSignalR_LRdb", BulkSignalR_LRdb, envir = .SignalR)
 
     ################################
     ##   Resource Cache Files   ###
@@ -32,12 +24,16 @@
         "SignalR/resources/reactome.rds")
     urlNetwork <- paste0(url,
         "SignalR/resources/Network.rds")
+    urlLRdb <- paste0(url,
+        "SignalR/resources/LRdb.txt")
 
     assign("BulkSignalR_GO_URL", urlGo, 
     envir = .SignalR)
     assign("BulkSignalR_Reactome_URL", urlReactome, 
     envir = .SignalR)
     assign("BulkSignalR_Network_URL", urlNetwork, 
+    envir = .SignalR)
+    assign("BulkSignalR_LRdb_URL", urlLRdb, 
     envir = .SignalR)
 
     createResources(onRequest = FALSE)
@@ -48,6 +44,8 @@
         cache = TRUE)
     BulkSignalR_Network <- getResource(resourceName = "Network",
         cache = TRUE)
+    BulkSignalR_LRdb <- getResource(resourceName = "LRdb",
+        cache = TRUE)  
 
     assign("BulkSignalR_Reactome", BulkSignalR_Reactome, 
     envir = .SignalR)
@@ -55,5 +53,6 @@
     envir = .SignalR)
     assign("BulkSignalR_Network", BulkSignalR_Network, 
     envir = .SignalR)
-
+    assign("BulkSignalR_LRdb", BulkSignalR_LRdb, 
+    envir = .SignalR)
 }

@@ -2,9 +2,9 @@
 ###     Generic Hidden Cache Functions           ###
 ####################################################
 
-#' Add cache for resources & database.
+#' Add cache for resources.
 #'
-#' Add cache for resources (pathways, or reference network)
+#' Add cache for resources (pathways, lrdb, or network)
 #' downloaded from the web or local database.
 #' This part is handled with BiocFileCache.
 #'
@@ -84,27 +84,21 @@
 #'
 #' Delete the content of cache directory.
 #'
-#' @param dir Directory to remove. Can be only 'resources' or 'database'.
+#' @param dir Directory to remove. Can be only 'resources'.
 #' @return Returns `NULL`, invisibly. 
 #' 
 #' @importFrom BiocFileCache removebfc
 #' @importFrom cli cli_alert_danger cli_alert
 #' @export
 #' @examples
-#' cacheClear(dir="database")
+#' cacheClear(dir="resources")
 #' # need to recreate database in order to run examples well
-#' createDatabase(verbose=TRUE)
-cacheClear <- function(dir = c("both", "resources", "database")) {
+#' createResources(verbose=TRUE)
+cacheClear <- function(dir = c("resources")) {
     dir <- match.arg(dir)
 
-    if (!dir %in% c("resources", "database", "both")) {
-        stop("Only `resources`, `database` or `both` cache can be cleared.")
-    }
-
-    if (dir == "both") {
-        cacheClear(dir = "resources")
-        cacheClear(dir = "database")
-        return(invisible(NULL))
+    if (!dir %in% c("resources")) {
+        stop("Only `resources`  cache can be cleared.")
     }
 
     cacheDir <- .SignalR$BulkSignalR_CACHEDIR
@@ -136,7 +130,7 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
 #' Get cache content information for a specific cache directory.
 #'
 #' @param dir Directory to remove in order to clean the cache.
-#' Can be only 'resources', 'database' or 'both'.
+#' Can be only 'resources'
 #' @return Returns `NULL`, invisibly. 
 
 #' @importFrom BiocFileCache BiocFileCache bfcinfo
@@ -144,17 +138,11 @@ cacheClear <- function(dir = c("both", "resources", "database")) {
 #' @export
 #' @examples
 #' cacheInfo()
-cacheInfo <- function(dir = c("both", "resources", "database")) {
+cacheInfo <- function(dir = c("resources")) {
     dir <- match.arg(dir)
 
-    if (!dir %in% c("resources", "database", "both")) {
-        stop("Only `resources`, `database` or `both` cache can be cleared.")
-    }
-
-    if (dir == "both") {
-        cacheInfo(dir = "resources")
-        cacheInfo(dir = "database")
-        return(invisible(NULL))
+    if (!dir %in% c("resources")) {
+        stop("Only `resources` can be cleared.")
     }
 
     cacheDir <- .SignalR$BulkSignalR_CACHEDIR
@@ -203,7 +191,7 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #' has been updated.
 #'
 #' @param dir Directory for which you want to check Version.
-#' Can be only 'resources', 'database' or 'both'.
+#' Can be only 'resources'.
 #'
 #' @importFrom cli cli_alert_danger cli_alert cli_alert_info
 #' @importFrom cli cli_inform
@@ -214,22 +202,17 @@ cacheInfo <- function(dir = c("both", "resources", "database")) {
 #' @export
 #' @examples
 #' cacheVersion()
-cacheVersion <- function(dir = c("both", "resources", "database")) {
+cacheVersion <- function(dir = c("resources")) {
     dir <- match.arg(dir)
     
     # bypass ssl
     config <- list(ssl_verifypeer = 0L, ssl_verifyhost = 0L)
 
-    if (!dir %in% c("resources", "database", "both")) {
-        stop("Only `resources`, `database` or `both` are valid keywords.")
+    if (!dir %in% c("resources")) {
+        stop("Only `resources` is a valid keyword.")
     }
 
-    if (dir == "both") {
-        cacheVersion(dir = "resources")
-        cacheVersion(dir = "database")
-        return(invisible(NULL))
-    }
-
+  
     cacheDir <- .SignalR$BulkSignalR_CACHEDIR
     cacheDir <- paste(cacheDir, dir, sep = "/")
 
@@ -276,8 +259,7 @@ cacheVersion <- function(dir = c("both", "resources", "database")) {
 
 #' Read RDS from the cache.
 #'
-#' Access  resources (pathways, or PathwayCommons network
-#' from \url{https://www.pathwaycommons.org/})
+#' Access  resources (pathways or network
 #' stored in the cache.
 #'
 #' @param bfc Object of class BiocFileCache, created by a call to

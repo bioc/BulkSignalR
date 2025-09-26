@@ -2,7 +2,7 @@
 % Please edit documentation in R/cache.R
 \name{.cacheAdd}
 \alias{.cacheAdd}
-\title{Add cache for resources & database.}
+\title{Add cache for resources.}
 \usage{
 .cacheAdd(fpath, cacheDir, resourceName, verbose = FALSE, download = TRUE)
 }
@@ -21,7 +21,7 @@
 Returns `NULL`, invisibly.
 }
 \description{
-Add cache for resources (pathways, or reference network)
+Add cache for resources (pathways, lrdb, or network)
 downloaded from the web or local database.
 This part is handled with BiocFileCache.
 }
