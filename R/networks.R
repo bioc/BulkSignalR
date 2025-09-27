@@ -250,7 +250,7 @@ getLRNetwork <- function(bsrinf, pval.thres = NULL, qval.thres = NULL,
 #' the shortest paths from the receptors to correlated
 #' target genes following Reactome and KEGG pathways.
 #'
-#' @param bsrinf        A BSRInference or BSRInference Comp object.
+#' @param bsrinf        A BSRInference or BSRInferenceComp object.
 #' @param pval.thres    P-value LR interaction threshold.
 #' @param qval.thres    Q-value LR interaction threshold.
 #' @param min.cor       Minimum correlation required for the target genes.

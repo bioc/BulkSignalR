@@ -18,7 +18,7 @@ getLRIntracellNetwork(
 )
 }
 \arguments{
-\item{bsrinf}{A BSRInference or BSRInference Comp object.}
+\item{bsrinf}{A BSRInference or BSRInferenceComp object.}
 
 \item{pval.thres}{P-value LR interaction threshold.}
 
