@@ -558,8 +558,13 @@ setMethod("rescoreInference", "BSRInference", function(obj, param,
 
     # recompute the Q-values
     rawp <- pairs$pval
-    adj <- multtest::mt.rawp2adjp(rawp, fdr.proc)
-    pairs$qval <- adj$adjp[order(adj$index), fdr.proc]
+    if (length(rawp) > 1){
+        adj <- multtest::mt.rawp2adjp(rawp, fdr.proc)
+        pairs$qval <- adj$adjp[order(adj$index), fdr.proc]
+    }
+    else {
+        pairs$qval <- rawp
+    }
 
     # update the BSRInference object
     inf.param <- inferenceParameters(obj)
