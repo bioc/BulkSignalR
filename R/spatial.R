@@ -926,10 +926,15 @@ spatialAssociation <- function(scores, areas,
     # multiple hypothesis correction on the global association P-values
     if (test %in% c("Kruskal-Wallis", "ANOVA")) {
         rawp <- res$pval
-        adj <- multtest::mt.rawp2adjp(rawp, fdr.proc)
-        res$qval <- adj$adjp[order(adj$index), fdr.proc]
+        if (length(rawp) > 1){
+            adj <- multtest::mt.rawp2adjp(rawp, fdr.proc)
+            res$qval <- adj$adjp[order(adj$index), fdr.proc]
+        }
+        else {
+            res$qval <- rawp
+        }
         label.index.stop <- ncol(res) - 1
-        res <- res[, c(seq_len(3), 
+        res <- res[, c(seq_len(3),
         ncol(res), 4:label.index.stop)] # put Q-values in column 4
     }
 

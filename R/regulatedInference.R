@@ -620,8 +620,14 @@
 
     # multiple hypothesis correction
     rawp <- res$pval
-    adj <- multtest::mt.rawp2adjp(rawp, fdr.proc)
-    res$qval <- adj$adjp[order(adj$index), fdr.proc]
+    if (length(rawp) > 1){
+        adj <- multtest::mt.rawp2adjp(rawp, fdr.proc)
+        res$qval <- adj$adjp[order(adj$index), fdr.proc]
+    }
+    else {
+        res$qval <- rawp
+    }
 
     res
+
 } # .pValuesRegulatedLR
