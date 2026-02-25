@@ -205,21 +205,25 @@
     # corrg <- corrg[unique(lr$R), ]
 
     # check each putative LR pair, loop over the receptors
-    reg.proc <- foreach::foreach(r = unique(lr$R), .combine = rbind) %do% {
+    net <- .SignalR$BulkSignalR_Network
+    # check each putative LR pair, loop over the receptors
+    reg.proc <- foreach::foreach(r = unique(lr$R), .combine = rbind) %dopar% {
         # reg.proc <- NULL
         # for (r in unique(lr$putative.pairs$R)){
-
+          # Make sure %do% exists on the worker even if foreach isn't attached
+        #`%do%` <- foreach::`%do%`    
         # loop over the pathways containing the receptor r
         pa <- intersect(pw[pw[[gene.col]] == r, id.col], names(pw.size))
         if (length(pa) > 0) {
             receptor.ligands <- unique(lr$L[lr$R == r])
-            best.2nd <- foreach::foreach(p = pa, .combine = rbind) %do% {
+            best.2nd <- do.call(rbind, lapply(pa, function(p) {
+            #best.2nd <- foreach::foreach(p = pa, .combine = rbind) %do% {
                 # best.2nd <- NULL
                 # for (p in pa){
-                int <- .SignalR$BulkSignalR_Network[
-                    .SignalR$BulkSignalR_Network$a.gn %in% 
+                int <- net[
+                    net$a.gn %in% 
                     pw[pw[[id.col]] == p, gene.col] &
-                        .SignalR$BulkSignalR_Network$b.gn %in% 
+                        net$b.gn %in% 
                         pw[pw[[id.col]] == p, gene.col],
                 ]
 
@@ -301,7 +305,7 @@
                 } else {
                     NULL
                 }
-            }
+            }))
             if (!is.null(best.2nd)) {
                 # one or several pathways containing the receptor r were found,
                 # combine them in |-separated strings
@@ -567,49 +571,44 @@
     }
 
     # estimate P-values
-    res <- NULL
-    for (i in seq_len(nrow(pairs))) {
-        # all the data related to each pathway containing a given
-        # receptor were collapsed separated by |
-        # we need to split those pathways
-        pwid <- unlist(strsplit(pairs$pwid[i], split = "\\|"))
-        pwname <- unlist(strsplit(pairs$pwname[i], split = "\\|"))
-        tg <- unlist(strsplit(pairs$target.genes[i], split = "\\|"))
-        spval <- unlist(strsplit(pairs$target.pval[i], split = "\\|"))
-        slfc <- unlist(strsplit(pairs$target.logFC[i], split = "\\|"))
-        spear <- unlist(strsplit(pairs$target.corr[i], split = "\\|"))
-        sexpr <- unlist(strsplit(pairs$target.expr[i], split = "\\|"))
-        len <- as.numeric(unlist(strsplit(pairs$len[i], split = "\\|")))
+    res <- i <- NULL
+    res <- foreach::foreach(i = seq_len(nrow(pairs))
+    ,.combine = rbind) %dopar% 
+    {
+        pwid   <- unlist(strsplit(pairs$pwid[i],         split="\\|"))
+        pwname <- unlist(strsplit(pairs$pwname[i],       split="\\|"))
+        tg     <- unlist(strsplit(pairs$target.genes[i], split="\\|"))
+        spval  <- unlist(strsplit(pairs$target.pval[i],  split="\\|"))
+        slfc   <- unlist(strsplit(pairs$target.logFC[i], split="\\|"))
+        spear  <- unlist(strsplit(pairs$target.corr[i],  split="\\|"))
+        sexpr  <- unlist(strsplit(pairs$target.expr[i],  split="\\|"))
+        len    <- as.numeric(unlist(strsplit(pairs$len[i], split="\\|")))
 
-        # get the LR correlation P-value
         p.lr <- pairs$LR.pval[i]
 
-        # estimate the target gene correlation P-value based on rank statistics
-        # for the individual correlation Gaussian model
-        for (k in seq_len(length(len))) {
-            spvals <- as.numeric(strsplit(spval[k], split = ";")[[1]])
-            spears <- as.numeric(strsplit(spear[k], split = ";")[[1]])
-            r <- min(max(1, trunc(rank.p * len[k])), len[k])
-            rank.pval <- spvals[r]
-            rank.corr <- spears[r]
-            # r-1 P-values are > rank.pval, prob to have r-1 or less
-            # P-values > rank.pval is given by a binomial with success rate
-            # equal to the probability to get a P-value > rank.pval, i.e.,
-            # 1-rank.pval. If rank.pval is low (i.e., highly significant),
-            # it becomes difficult to get as little 
-            # as r-1 P-values > rank.pval by chance!
-            p.rt <- stats::pbinom(r - 1, len[k], 1 - rank.pval) 
-            res <- rbind(res, data.frame(pairs[i, c("L", "R", "LR.pval",
-                "corr", "L.logFC", "R.logFC")],
-                pw.id = pwid[k], pw.name = pwname[k], rank = r,
-                len = len[k], rank.pval = rank.pval,
-                rank.corr = rank.corr,
-                target.genes = tg[k], target.pval = spval[k],
-                target.logFC = slfc[k], target.corr = spear[k],
-                target.expr = sexpr[k], pval = p.lr * p.rt,
-                stringsAsFactors = FALSE
-            ))
+        out_k <- vector("list", length(len))
+        for (k in seq_along(len)) {
+          spvals <- as.numeric(strsplit(spval[k], split=";")[[1]])
+          spears <- as.numeric(strsplit(spear[k], split=";")[[1]])
+
+          r <- min(max(1, trunc(rank.p * len[k])), len[k])
+          rank.pval <- spvals[r]
+          rank.corr <- spears[r]
+
+          p.rt <- stats::pbinom(r - 1, len[k], 1 - rank.pval)
+
+          out_k[[k]] <- data.frame(
+            pairs[i, c("L","R","LR.pval","corr","L.logFC","R.logFC")],
+            pw.id = pwid[k], pw.name = pwname[k], rank = r,
+            len = len[k], rank.pval = rank.pval, rank.corr = rank.corr,
+            target.genes = tg[k], target.pval = spval[k],
+            target.logFC = slfc[k], target.corr = spear[k],
+            target.expr = sexpr[k],
+            pval = p.lr * p.rt,
+            stringsAsFactors = FALSE
+          )
         }
+        do.call(rbind, out_k)
     }
     names(res)[4] <- "LR.corr"
 

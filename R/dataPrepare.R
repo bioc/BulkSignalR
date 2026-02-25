@@ -6,7 +6,6 @@
 #' @importFrom curl has_internet
 #' @importFrom cli cli_alert_danger cli_alert_info
 .testRemoteServer <- function() {
-
     conf <- list("ssl.verifypeer" = 0L,
     "ssl.verifyhost" = 0L)
 
@@ -22,7 +21,6 @@
             "Remote server is down. 
             {.val {(.SignalR$BulkSignalR_CORE_URL)}}"    
         )
-        stop()
         }
     } 
 
@@ -46,28 +44,38 @@
     cacheDir <- .SignalR$BulkSignalR_CACHEDIR
 
     cacheDir <- paste(cacheDir, "resources", sep = "/")
-
+   
+    # Create cacheDir 
     bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
     files <- BiocFileCache::bfcinfo(bfc)$rpath
 
     vecSizes <- vapply(files, file.size, numeric(1))
     totSize <- sum(vecSizes)
-
-    if(!hasInternet){
-        mess_info <- paste0("You need an internet connection",
-    " to download cache files.")
-        cli::cli_alert_danger(mess_info)
-        stop()
-    }
+    #if(!hasInternet){
+    #    mess_info <- paste0("You need an internet connection",
+    #" to download cache files.")
+    #    cli::cli_alert_danger(mess_info)
+    #    stop()
+    #}
     # Trick
+    if(totSize==0){
+        mess_info <- paste0("{(.SignalR$BulkSignalR_CACHEDIR)}",
+        " first set up.\n")
+        cli::cli_alert_info(mess_info)
+        unlink(.SignalR$BulkSignalR_CACHEDIR, recursive=TRUE)
+        return(invisible(NULL))
+    }
+
     if(totSize > 6000000 | totSize < 4000000 | length(files)!=4){
         mess_info <- paste0("{(.SignalR$BulkSignalR_CACHEDIR)}",
-        " is corrupted. It will be deleted and downloaded again.")
+        " is corrupted.\n",
+        " The directory will be removed and re-downloaded",
+        " automatically on the next attempt",
+        " when the remote server is reachable.\n")
 
         cli::cli_alert_info(mess_info)
-    
         unlink(.SignalR$BulkSignalR_CACHEDIR, recursive=TRUE)
-    }
+    } 
 
     return(invisible(NULL))
 }
@@ -484,9 +492,11 @@ findOrthoGenes <- function(from_organism, from_values,
         method = method,
         verbose = FALSE
     )
-
     orthologs_dictionary$index <- NULL
     names(orthologs_dictionary)[1] <- paste("Gene.name")
+    # Keep only Gene.name
+    orthologs_dictionary <- orthologs_dictionary[, "Gene.name",
+    drop = FALSE]
 
     message(
         "Dictionary Size: ",
@@ -557,9 +567,12 @@ convertToHuman <- function(counts, dictionary) {
         stop("Rownames should be set as human ",
         "gene names dictionary.", call. = FALSE)
     }
-    if (dim(dictionary)[2] != 1) {
-        stop("Unique column must be set for dictionary.", call. = FALSE)
+
+    # Check column exists
+    if (!"Gene.name" %in% colnames(dictionary)) {
+        stop("Gene.name column does not exist in dictionary.")
     }
+
     if (!all(apply(counts, 2, function(x) is.numeric(x)))) {
         stop("Some variables are not defined as numerics.", call. = FALSE)
     }
