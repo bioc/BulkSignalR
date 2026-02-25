@@ -934,7 +934,7 @@ spatialAssociation <- function(scores, areas,
             res$qval <- rawp
         }
         label.index.stop <- ncol(res) - 1
-        res <- res[, c(seq_len(3), 
+        res <- res[, c(seq_len(3),
         ncol(res), 4:label.index.stop)] # put Q-values in column 4
     }
 

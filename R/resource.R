@@ -26,7 +26,7 @@ createResources <- function(onRequest = TRUE, verbose = FALSE) {
         error = FALSE)
     
     if (!hasInternet & 
-    !file.exists(resourcesCacheDir)) {
+    !dir.exists(resourcesCacheDir)) {
         cli::cli_alert_danger("Your internet connection is off:")
         stop(
         "- Remote resources cannot be downloaded.\n"

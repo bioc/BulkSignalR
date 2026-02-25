@@ -37,7 +37,7 @@
     envir = .SignalR)
 
     createResources(onRequest = FALSE)
-
+   
     BulkSignalR_Reactome <- getResource(resourceName = "Reactome",
         cache = TRUE)
     BulkSignalR_Gobp <- getResource(resourceName = "GO-BP",

@@ -197,6 +197,7 @@ cacheInfo <- function(dir = c("resources")) {
 #' @importFrom cli cli_inform
 #' @import BiocFileCache httr2
 #' @importFrom curl has_internet
+#' @importFrom RCurl url.exists
 #' @return Returns `NULL`, invisibly. 
 #'
 #' @export
@@ -206,7 +207,12 @@ cacheVersion <- function(dir = c("resources")) {
     dir <- match.arg(dir)
     
     # bypass ssl
-    config <- list(ssl_verifypeer = 0L, ssl_verifyhost = 0L)
+    config <- list(ssl_verifypeer = 0L, 
+        ssl_verifyhost = 0L)
+
+   # bypass ssl url.exists
+    conf <- list("ssl.verifypeer" = 0L, 
+        "ssl.verifyhost" = 0L)
 
     if (!dir %in% c("resources")) {
         stop("Only `resources` is a valid keyword.")
@@ -229,18 +235,22 @@ cacheVersion <- function(dir = c("resources")) {
     
     if (hasInternet) {
 
-        bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
+        if(url.exists(.SignalR$BulkSignalR_CORE_URL,
+            .opts = conf))
+        {
+            bfc <- BiocFileCache::BiocFileCache(cacheDir, ask = FALSE)
 
-        if (any(BiocFileCache::bfcneedsupdate(bfc,config=config))) {
-            cli::cli_alert("Remote {.val {dir}} {word} been updated.\n")
-            mess_info <- paste0("To update locally,",
-                " clear your cache with cacheClear({.var {dir}})\n")
-            cli::cli_alert_info(mess_info)
-            return(invisible(NULL))
-        } else {
-            cli::cli_inform("Local {.val {dir}} {word2} up to date.\n",
-            class = "packageStartupMessage")
-            packageStartupMessage("")
+            if (any(BiocFileCache::bfcneedsupdate(bfc,config=config))) {
+                cli::cli_alert("Remote {.val {dir}} {word} been updated.\n")
+                mess_info <- paste0("To update locally,",
+                    " clear your cache with cacheClear({.var {dir}})\n")
+                cli::cli_alert_info(mess_info)
+                return(invisible(NULL))
+            } else {
+                cli::cli_inform("Local {.val {dir}} {word2} up to date.\n",
+                class = "packageStartupMessage")
+                packageStartupMessage("")
+            }
         }
     } 
     else {
