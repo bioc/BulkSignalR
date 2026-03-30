@@ -12,7 +12,9 @@
 
 **BulkSignalR** is used to infer ligand-receptor (L-R) interactions from bulk
 expression (transcriptomics/proteomics) data, or medium resolution spatial
-transcriptomics such as the 10x Genomics Visium platform.  
+transcriptomics such as the 10x Genomics Visium platform. Particular types of
+bulk data are also supported such as purified cell populations transcriptomics
+and proteomics, or PDX mRNA-sequencing.
 
 Known L-R interactions are taken from the
 LR*db* database, which was previously included in our other package 
@@ -22,7 +24,7 @@ Now, LR*db* is distributed and updated separately.
 
 Inferences rely on a statistical model linking potential L-R interactions
 with biological pathways downstream the receptor as defined in Reactome or
-GO Biological Processes.  
+GO Biological Processes.
 
 A number of visualization and data summary functions are proposed to
 help navigating the predicted interactions.
@@ -47,7 +49,7 @@ BiocManager::install("BulkSignalR")
 
 # or Installation goes via GitHub:
 # install.packages("devtools")
-devtools::install_github("ZheFrench/BulkSignalR",build_vignettes = TRUE)
+devtools::install_github("jcolinge/BulkSignalR",build_vignettes = TRUE)
 
 # To read the vignette
 # browseVignettes("BulkSignalR")
@@ -56,13 +58,15 @@ devtools::install_github("ZheFrench/BulkSignalR",build_vignettes = TRUE)
 
 ## Notes
 
-For a version history/change logs, see the [NEWS file](https://github.com/ZheFrench/BulksignalR/blob/master/NEWS).
+For a version history/change logs, see the [NEWS file](https://github.com/jcolinge/BulksignalR/blob/master/NEWS).
 
+**Previous versions of BulkSignalR** (before introduction in Bioconductor) are availabe in
+the branch named before_BC at GitHub.com/jcolinge/BulkSignalR.
 
 **BulkSignalR** has been successfully installed on Mac OS X, Linux, and Windows using R version 4.5.
 
 
-The code in this repository is published with the [CeCILL](https://github.com/ZheFrench/BulksignalR/blob/master/LICENSE.md) License.
+The code in this repository is published with the [CeCILL](https://github.com/jcolinge/BulksignalR/blob/master/LICENSE.md) License.
 
 
 <!-- badges: start -->
