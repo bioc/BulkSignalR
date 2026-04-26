@@ -7,7 +7,7 @@
 findOrthoGenes(
   from_organism,
   from_values,
-  method = c("gprofiler", "homologene", "babelgene")
+  method = c("homologene", "gprofiler", "babelgene")
 )
 }
 \arguments{

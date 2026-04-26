@@ -475,7 +475,7 @@ BSRDataModel <- function(
 #' )
 #'
 findOrthoGenes <- function(from_organism, from_values,
-    method = c("gprofiler", "homologene", "babelgene")) {
+    method = c("homologene", "gprofiler", "babelgene")) {
 
     method <- match.arg(method)
     if (!method %in% c("gprofiler", "homologene", "babelgene")) {
